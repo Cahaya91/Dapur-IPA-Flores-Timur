@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dapur IPA Flores Timur: Petualangan Zat & Perubahannya</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f0fdf4;
+        }
+        
+        .font-heading {
+            font-family: 'Fredoka', cursive;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 8px;
+        }
+
+        /* Custom Animations */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .animate-pulse-subtle {
+            animation: pulse-subtle 2s infinite;
+        }
+
+        .gradient-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+        }
+
+        .tenun-border {
+            border-image: linear-gradient(to right, #ef4444, #f59e0b, #10b981, #06b6d4) 1;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col justify-between custom-scrollbar bg-slate-50">
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-emerald-700 via-teal-700 to-cyan-800 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-amber-400 rounded-2xl flex items-center justify-center text-emerald-950 font-bold text-2xl shadow-inner border-2 border-amber-200 animate-pulse-subtle">
+                    <i class="fa-solid fa-flask-vial"></i>
+                </div>
+                <div>
+                    <h1 class="font-heading text-xl sm:text-2xl font-bold tracking-wide text-amber-300">Dapur IPA Flores Timur</h1>
+                    <p class="text-xs sm:text-sm text-emerald-100 font-medium">Zat & Perubahannya dalam Kuliner Nagi Larantuka</p>
+                </div>
+            </div>
+
+            <!-- Score & Audio Control -->
+            <div class="flex items-center space-x-3 sm:space-x-4 bg-emerald-900/60 backdrop-blur-md px-4 py-2 rounded-2xl border border-emerald-500/30">
+                <div class="text-center">
+                    <span class="text-xs text-emerald-200 block uppercase font-bold tracking-wider">Skor Total</span>
+                    <span id="total-score" class="font-heading text-xl sm:text-2xl font-bold text-amber-300">0</span>
+                </div>
+                <div class="h-8 w-px bg-emerald-600/50"></div>
+                <div class="text-center">
+                    <span class="text-xs text-emerald-200 block uppercase font-bold tracking-wider">Lencana</span>
+                    <span id="badge-count" class="font-heading text-xl sm:text-2xl font-bold text-cyan-300">0/4</span>
+                </div>
+                <button id="sound-btn" onclick="toggleAudio()" class="w-10 h-10 rounded-xl bg-emerald-700 hover:bg-emerald-600 flex items-center justify-center text-white transition active:scale-95 shadow">
+                    <i id="sound-icon" class="fa-solid fa-volume-high"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="bg-emerald-900/80 backdrop-blur-sm border-t border-emerald-600/40">
+            <div class="max-w-7xl mx-auto px-4 flex overflow-x-auto space-x-2 py-2 text-xs sm:text-sm font-semibold scrollbar-none">
+                <button onclick="switchTab('peta')" id="tab-peta" class="tab-btn px-4 py-2 rounded-xl flex items-center space-x-2 whitespace-nowrap bg-amber-400 text-slate-900 shadow">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    <span>1. Peta Kuliner IPA</span>
+                </button>
+                <button onclick="switchTab('lab')" id="tab-lab" class="tab-btn px-4 py-2 rounded-xl flex items-center space-x-2 whitespace-nowrap text-emerald-100 hover:bg-emerald-800/60">
+                    <i class="fa-solid fa-fire-burner"></i>
+                    <span>2. Lab Simulasi Dapur</span>
+                </button>
+                <button onclick="switchTab('game')" id="tab-game" class="tab-btn px-4 py-2 rounded-xl flex items-center space-x-2 whitespace-nowrap text-emerald-100 hover:bg-emerald-800/60">
+                    <i class="fa-solid fa-gamepad"></i>
+                    <span>3. Game Molekul Jatuh</span>
+                </button>
+                <button onclick="switchTab('kuis')" id="tab-kuis" class="tab-btn px-4 py-2 rounded-xl flex items-center space-x-2 whitespace-nowrap text-emerald-100 hover:bg-emerald-800/60">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>4. Kuis Master Chef</span>
+                </button>
+                <button onclick="switchTab('glosarium')" id="tab-glosarium" class="tab-btn px-4 py-2 rounded-xl flex items-center space-x-2 whitespace-nowrap text-emerald-100 hover:bg-emerald-800/60">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <span>5. Rangkuman Materi</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+
+        <!-- TAB 1: PETA KULINER & ENSIKLOPEDIA INTERAKTIF -->
+        <section id="sec-peta" class="tab-content block space-y-6">
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-teal-800 via-emerald-800 to-amber-900 text-white p-6 sm:p-10 shadow-xl">
+                <div class="absolute -right-10 -bottom-10 opacity-20 text-9xl text-amber-300 pointer-events-none">
+                    <i class="fa-solid fa-utensils"></i>
+                </div>
+                <div class="relative z-10 max-w-3xl space-y-3">
+                    <span class="px-3 py-1 bg-amber-400 text-amber-950 font-extrabold text-xs uppercase tracking-wider rounded-full inline-block shadow">IPA Kelas VII - Kurikulum Merdeka</span>
+                    <h2 class="font-heading text-2xl sm:text-4xl font-bold text-amber-200">Eksplorasi Zat & Perubahannya di Flores Timur</h2>
+                    <p class="text-slate-200 text-sm sm:text-base leading-relaxed">
+                        Tahukah kamu? Proses pembuatan <strong class="text-amber-300">Jagung Titi</strong>, <strong class="text-amber-300">Kolo (Nasi Bambu)</strong>, <strong class="text-amber-300">Gula Lontar</strong>, dan <strong class="text-amber-300">Ikan Kuah Asam</strong> adalah penerap nyata konsep Sains! Mari pelajari wujud zat, sifat fisika, perubahan wujud, hingga reaksi kimia di dapur khas Flores Timur.
+                    </p>
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <button onclick="switchTab('lab')" class="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold rounded-xl shadow-lg transition transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2">
+                            <i class="fa-solid fa-vial"></i> Mulai Simulasi Lab
+                        </button>
+                        <button onclick="switchTab('game')" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg transition transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2">
+                            <i class="fa-solid fa-play"></i> Mainkan Game
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Food Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1: Jagung Titi -->
+                <div class="bg-white rounded-3xl p-5 shadow-md border-2 border-amber-100 hover:border-amber-400 transition hover:shadow-xl flex flex-col justify-between group">
+                    <div class="space-y-3">
+                        <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl font-bold group-hover:scale-110 transition">
+                            <i class="fa-solid fa-wheat-awn"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">Perubahan Fisika & Mekanik</span>
+                            <h3 class="font-heading text-xl font-bold text-slate-800 mt-1">Jagung Titi</h3>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Biji jagung dipanaskan (disangrai dalam periuk tanah liat) lalu ditumbuk (dititi) sampai pipih dengan batu.
+                        </p>
+                        <div class="bg-amber-50/80 rounded-2xl p-3 text-xs space-y-1 text-slate-700 border border-amber-200">
+                            <p><strong>Wujud Zat:</strong> Padat (Kaku & Bentuk Tetap)</p>
+                            <p><strong>Konsep IPA:</strong> Perubahan bentuk dan ukuran tanpa menghasilkan zat baru (Perubahan Fisika).</p>
+                        </div>
+                    </div>
+                    <button onclick="openCulinaryModal('jagung')" class="mt-4 w-full py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-xl shadow transition">
+                        Pelajari Detail Sains <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+                <!-- Card 2: Kolo (Nasi Bambu) -->
+                <div class="bg-white rounded-3xl p-5 shadow-md border-2 border-emerald-100 hover:border-emerald-400 transition hover:shadow-xl flex flex-col justify-between group">
+                    <div class="space-y-3">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl font-bold group-hover:scale-110 transition">
+                            <i class="fa-solid fa-fire"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-red-600 bg-red-50 px-2.5 py-1 rounded-full">Perubahan Kimia (Pembakaran)</span>
+                            <h3 class="font-heading text-xl font-bold text-slate-800 mt-1">Kolo (Nasi Bambu)</h3>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Beras dan santan dimasukkan dalam potongan bambu beralas daun pisang, lalu dibakar di atas bara api.
+                        </p>
+                        <div class="bg-emerald-50/80 rounded-2xl p-3 text-xs space-y-1 text-slate-700 border border-emerald-200">
+                            <p><strong>Wujud Zat:</strong> Padat + Cair &rarr; Padat Lunak</p>
+                            <p><strong>Konsep IPA:</strong> Pembakaran kayu/bambu & denaturasi pati beras menghasilkan zat baru berpati matang & aroma khas (Reaksi Kimia).</p>
+                        </div>
+                    </div>
+                    <button onclick="openCulinaryModal('kolo')" class="mt-4 w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition">
+                        Pelajari Detail Sains <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+                <!-- Card 3: Gula Lontar & Sopi -->
+                <div class="bg-white rounded-3xl p-5 shadow-md border-2 border-cyan-100 hover:border-cyan-400 transition hover:shadow-xl flex flex-col justify-between group">
+                    <div class="space-y-3">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-100 text-cyan-700 flex items-center justify-center text-2xl font-bold group-hover:scale-110 transition">
+                            <i class="fa-solid fa-temperature-arrow-up"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-cyan-600 bg-cyan-50 px-2.5 py-1 rounded-full">Evaporasi & Penyulingan</span>
+                            <h3 class="font-heading text-xl font-bold text-slate-800 mt-1">Gula Lontar & Sopi</h3>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Air nira dari pohon lontar direbus hingga menguap menjadi kristal gula merah, atau disuling tradisional menjadi sopi.
+                        </p>
+                        <div class="bg-cyan-50/80 rounded-2xl p-3 text-xs space-y-1 text-slate-700 border border-cyan-200">
+                            <p><strong>Wujud Zat:</strong> Cair &rarr; Gas &rarr; Padat / Cair</p>
+                            <p><strong>Konsep IPA:</strong> Penguapan (Evaporasi), Kondensasi (Penyulingan), dan Kristalisasi (Perubahan Wujud Fisika).</p>
+                        </div>
+                    </div>
+                    <button onclick="openCulinaryModal('lontar')" class="mt-4 w-full py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs rounded-xl shadow transition">
+                        Pelajari Detail Sains <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+                <!-- Card 4: Ikan Kuah Asam -->
+                <div class="bg-white rounded-3xl p-5 shadow-md border-2 border-rose-100 hover:border-rose-400 transition hover:shadow-xl flex flex-col justify-between group">
+                    <div class="space-y-3">
+                        <div class="w-14 h-14 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center text-2xl font-bold group-hover:scale-110 transition">
+                            <i class="fa-solid fa-fish"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full">Sifat Asam & Perubahan Warna</span>
+                            <h3 class="font-heading text-xl font-bold text-slate-800 mt-1">Ikan Kuah Asam</h3>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Ikan segar dimasak dengan perasan jeruk nipis / belimbing wuluh dan rempah-rempah khas Flores Timur.
+                        </p>
+                        <div class="bg-rose-50/80 rounded-2xl p-3 text-xs space-y-1 text-slate-700 border border-rose-200">
+                            <p><strong>Sifat Zat:</strong> Asam (pH < 7), melunakkan serat protein ikan.</p>
+                            <p><strong>Konsep IPA:</strong> Reaksi Asam-Basa, perubahan warna kuah & struktur molekul daging ikan (Perubahan Kimia).</p>
+                        </div>
+                    </div>
+                    <button onclick="openCulinaryModal('ikankuah')" class="mt-4 w-full py-2 bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs rounded-xl shadow transition">
+                        Pelajari Detail Sains <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Particle Model Interactive Comparison -->
+            <div class="bg-white rounded-3xl p-6 shadow-lg border border-slate-200">
+                <h3 class="font-heading text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-atom text-emerald-600"></i> Model Partikel Zat dalam Dapur Flores Timur
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Padat -->
+                    <div class="bg-amber-50/60 rounded-2xl p-4 border border-amber-200 text-center space-y-3">
+                        <div class="h-32 bg-white rounded-xl border border-amber-300 relative overflow-hidden flex items-center justify-center">
+                            <canvas id="canvas-padat" width="200" height="120" class="w-full h-full"></canvas>
+                        </div>
+                        <h4 class="font-bold text-amber-900">Zat Padat (Contoh: Biji Jagung, Bambu)</h4>
+                        <ul class="text-xs text-slate-600 space-y-1 text-left list-disc list-inside">
+                            <li>Bentuk dan volume <strong>TETAP</strong>.</li>
+                            <li>Susunan partikel sangat rapat & teratur.</li>
+                            <li>Gaya tarik antar partikel sangat kuat.</li>
+                        </ul>
+                    </div>
+                    <!-- Cair -->
+                    <div class="bg-teal-50/60 rounded-2xl p-4 border border-teal-200 text-center space-y-3">
+                        <div class="h-32 bg-white rounded-xl border border-teal-300 relative overflow-hidden flex items-center justify-center">
+                            <canvas id="canvas-cair" width="200" height="120" class="w-full h-full"></canvas>
+                        </div>
+                        <h4 class="font-bold text-teal-900">Zat Cair (Contoh: Nira Lontar, Kuah Asam)</h4>
+                        <ul class="text-xs text-slate-600 space-y-1 text-left list-disc list-inside">
+                            <li>Bentuk <strong>MENGIKUTI WADAH</strong>, volume tetap.</li>
+                            <li>Partikel agak renggang dan dapat meluncur.</li>
+                            <li>Gaya tarik antar partikel cukup kuat.</li>
+                        </ul>
+                    </div>
+                    <!-- Gas -->
+                    <div class="bg-cyan-50/60 rounded-2xl p-4 border border-cyan-200 text-center space-y-3">
+                        <div class="h-32 bg-white rounded-xl border border-cyan-300 relative overflow-hidden flex items-center justify-center">
+                            <canvas id="canvas-gas" width="200" height="120" class="w-full h-full"></canvas>
+                        </div>
+                        <h4 class="font-bold text-cyan-900">Zat Gas (Contoh: Uap Pengukusan, Asap Bara)</h4>
+                        <ul class="text-xs text-slate-600 space-y-1 text-left list-disc list-inside">
+                            <li>Bentuk dan volume <strong>BERUBAH-UBAH</strong>.</li>
+                            <li>Partikel sangat renggang & bergerak bebas cepat.</li>
+                            <li>Gaya tarik antar partikel sangat lemah.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: VIRTUAL LAB SIMULASI DAPUR FLORES TIMUR -->
+        <section id="sec-lab" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-emerald-100">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-4 border-b">
+                    <div>
+                        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full uppercase tracking-wider">Simulasi Interaktif</span>
+                        <h2 class="font-heading text-2xl sm:text-3xl font-bold text-slate-800 mt-1">Laboratorium Dapur Khas Flores Timur</h2>
+                        <p class="text-xs sm:text-sm text-slate-600">Eksperimenkan efek suhu dan bahan masakan untuk mengidentifikasi Perubahan Fisika vs Perubahan Kimia!</p>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-amber-50 px-4 py-2 rounded-2xl border border-amber-200 text-amber-800 text-xs font-semibold">
+                        <i class="fa-solid fa-lightbulb text-amber-500 text-base"></i>
+                        <span>Petunjuk: Pilih menu, atur suhu kompor, dan amati perubahan zat!</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Control Panel (Left 4 cols) -->
+                    <div class="lg:col-span-4 bg-slate-50 p-5 rounded-3xl border border-slate-200 space-y-5">
+                        <h3 class="font-heading text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-emerald-600"></i> Pilih Resep & Suhu
+                        </h3>
+
+                        <!-- Recipe Selection -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-700 block">Pilih Masakan:</label>
+                            <select id="sim-recipe" onchange="updateSimRecipe()" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-sm font-semibold focus:ring-2 focus:ring-emerald-500 outline-none">
+                                <option value="jagung">🌽 Menyangrai Jagung Titi (Fisika)</option>
+                                <option value="lontar">🌴 Mendidihkan Nira Lontar / Gula (Evaporasi)</option>
+                                <option value="kolo">🎋 Membakar Kolo / Nasi Bambu (Kimia)</option>
+                                <option value="ikan">🐟 Merebus Ikan Kuah Asam (Reaksi Asam & Kimia)</option>
+                            </select>
+                        </div>
+
+                        <!-- Temperature Slider -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center text-xs font-bold text-slate-700">
+                                <span>Suhu Pemanasan:</span>
+                                <span id="temp-display" class="text-base text-red-600 font-bold">25°C (Suhu Ruang)</span>
+                            </div>
+                            <input type="range" id="temp-slider" min="25" max="250" value="25" oninput="runLabSimulation()" class="w-full accent-emerald-600 cursor-pointer">
+                            <div class="flex justify-between text-[10px] text-slate-400 font-semibold">
+                                <span>25°C (Dingin)</span>
+                                <span>100°C (Mendidih)</span>
+                                <span>250°C (Bara Api)</span>
+                            </div>
+                        </div>
+
+                        <!-- Add Ingredient Checkboxes / Toggles -->
+                        <div class="space-y-2 pt-2 border-t">
+                            <label class="text-xs font-bold text-slate-700 block">Bahan Tambahan (Katalis / Pelarut):</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer">
+                                    <input type="checkbox" id="check-air" onchange="runLabSimulation()" class="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4">
+                                    <span>Tambah Air (Pelarut)</span>
+                                </label>
+                                <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer">
+                                    <input type="checkbox" id="check-asam" onchange="runLabSimulation()" class="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4">
+                                    <span>Perasan Jeruk Nipis / Asam (Penurun pH)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Reset Button -->
+                        <button onclick="resetLab()" class="w-full py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> Reset Laboratorium
+                        </button>
+                    </div>
+
+                    <!-- Simulation Interactive Screen (Right 8 cols) -->
+                    <div class="lg:col-span-8 flex flex-col space-y-4">
+                        <!-- Canvas Display -->
+                        <div class="relative bg-slate-900 rounded-3xl overflow-hidden h-72 border-4 border-slate-800 shadow-inner flex items-center justify-center">
+                            <canvas id="sim-canvas" width="600" height="280" class="w-full h-full"></canvas>
+
+                            <!-- Live Temperature Indicator Badge -->
+                            <div class="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700 text-white text-xs font-mono flex items-center gap-2">
+                                <i class="fa-solid fa-temperature-full text-red-500"></i>
+                                <span id="canvas-temp-text">25°C</span>
+                            </div>
+
+                            <!-- Live Particle State Indicator Badge -->
+                            <div class="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700 text-white text-xs font-mono flex items-center gap-2">
+                                <i class="fa-solid fa-cubes text-cyan-400"></i>
+                                <span id="canvas-state-text">Wujud: Dominan Padat</span>
+                            </div>
+                        </div>
+
+                        <!-- Live Scientific Analysis Panel -->
+                        <div id="lab-analysis" class="bg-emerald-50 border-2 border-emerald-200 rounded-3xl p-5 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-heading font-bold text-emerald-900 text-base flex items-center gap-2">
+                                    <i class="fa-solid fa-magnifying-glass-chart text-emerald-600"></i> Hasil Analisis Sains Dapur
+                                </h4>
+                                <span id="change-type-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-400 text-amber-950">
+                                    Perubahan Fisika
+                                </span>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                                <div class="bg-white p-3 rounded-xl border border-emerald-100">
+                                    <span class="text-slate-400 block font-bold text-[10px] uppercase">Pergerakan Partikel</span>
+                                    <p id="analisis-partikel" class="font-semibold text-slate-800 mt-1">Partikel bergetar pelan di tempatnya (rapat).</p>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl border border-emerald-100">
+                                    <span class="text-slate-400 block font-bold text-[10px] uppercase">Ciri Perubahan</span>
+                                    <p id="analisis-ciri" class="font-semibold text-slate-800 mt-1">Hanya terjadi perubahan suhu & bentuk fisik.</p>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl border border-emerald-100">
+                                    <span class="text-slate-400 block font-bold text-[10px] uppercase">Pembentukan Zat Baru?</span>
+                                    <p id="analisis-zat-baru" class="font-semibold text-slate-800 mt-1">TIDAK (Zat tetap sama).</p>
+                                </div>
+                            </div>
+
+                            <p id="analisis-deskripsi" class="text-xs text-slate-700 bg-white/80 p-3 rounded-xl border border-emerald-200/60 leading-relaxed">
+                                Biji jagung segar dalam keadaan padat. Molekul-molekul pati jagung tersusun sangat rapat.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: MINI GAME "TANGKAP WUJUD ZAT KULINER" -->
+        <section id="sec-game" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-emerald-100 text-center space-y-4">
+                <div class="max-w-2xl mx-auto space-y-2">
+                    <span class="px-3 py-1 bg-cyan-100 text-cyan-800 text-xs font-bold rounded-full uppercase tracking-wider">Arcade Edukasi IPA</span>
+                    <h2 class="font-heading text-2xl sm:text-3xl font-bold text-slate-800">Tangkapan Wujud Zat Dapur Nagi</h2>
+                    <p class="text-xs sm:text-sm text-slate-600">
+                        Pindahkan keranjang sesuai Wujud Zat dari bahan kuliner khas Flores Timur yang jatuh!
+                    </p>
+                </div>
+
+                <!-- Game Controls & Dashboard -->
+                <div class="flex flex-wrap items-center justify-between max-w-2xl mx-auto bg-slate-100 p-4 rounded-2xl border border-slate-200 gap-3">
+                    <div class="text-left">
+                        <span class="text-[10px] font-bold uppercase text-slate-400 block">Skor Game</span>
+                        <span id="game-score" class="font-heading text-2xl font-bold text-emerald-600">0</span>
+                    </div>
+                    <div class="text-left">
+                        <span class="text-[10px] font-bold uppercase text-slate-400 block">Waktu Sisa</span>
+                        <span id="game-timer" class="font-heading text-2xl font-bold text-amber-600">45s</span>
+                    </div>
+                    <div class="text-left">
+                        <span class="text-[10px] font-bold uppercase text-slate-400 block">Target Keranjang Saat Ini</span>
+                        <span id="game-basket-target" class="font-heading text-sm font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-xl block">
+                            [ PADAT ]
+                        </span>
+                    </div>
+                    <button id="btn-start-game" onclick="startGame()" class="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-xl shadow-lg transition active:scale-95">
+                        <i class="fa-solid fa-play mr-1"></i> Mulai Main!
+                    </button>
+                </div>
+
+                <!-- Game Canvas -->
+                <div class="relative max-w-2xl mx-auto bg-slate-950 rounded-3xl overflow-hidden border-4 border-slate-800 shadow-2xl h-96">
+                    <canvas id="arcade-canvas" width="600" height="380" class="w-full h-full"></canvas>
+
+                    <!-- Overlay Start / Game Over -->
+                    <div id="game-overlay" class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm flex flex-col items-center justify-center text-white p-6 space-y-4">
+                        <div class="w-16 h-16 bg-amber-400 text-slate-950 rounded-2xl flex items-center justify-center text-3xl font-bold shadow-lg animate-bounce">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                        </div>
+                        <h3 id="overlay-title" class="font-heading text-2xl sm:text-3xl font-bold text-amber-300">Siap Bertualang?</h3>
+                        <p id="overlay-desc" class="text-xs sm:text-sm text-slate-300 max-w-md leading-relaxed">
+                            Gunakan tombol <strong>Kiri & Kanan</strong> (atau Sentuh Tombol di layar) untuk menggerakkan keranjang. Tekan tombol <strong class="text-amber-400">Ganti Wujud</strong> untuk mencocokkan target (Padat, Cair, atau Gas)!
+                        </p>
+                        <button onclick="startGame()" class="px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm rounded-2xl shadow-xl transition transform hover:scale-105 active:scale-95">
+                            Mulai Permainan Sekarang!
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Touch Controls for Mobile/Tablet -->
+                <div class="flex items-center justify-center gap-3 max-w-2xl mx-auto pt-2">
+                    <button onclick="moveBasketLeft()" class="px-6 py-3 bg-slate-200 active:bg-slate-300 rounded-2xl text-slate-800 font-bold text-lg shadow flex-1">
+                        <i class="fa-solid fa-arrow-left"></i> Kiri
+                    </button>
+                    <button onclick="switchBasketType()" class="px-6 py-3 bg-indigo-600 active:bg-indigo-700 text-white font-bold text-xs sm:text-sm rounded-2xl shadow-lg flex-1">
+                        <i class="fa-solid fa-arrows-rotate mr-1"></i> Ubah Keranjang
+                    </button>
+                    <button onclick="moveBasketRight()" class="px-6 py-3 bg-slate-200 active:bg-slate-300 rounded-slate-800 font-bold text-lg shadow flex-1">
+                        Kanan <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: KUIS MASTER CHEF IPA -->
+        <section id="sec-kuis" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-emerald-100 max-w-3xl mx-auto space-y-6">
+                <!-- Header -->
+                <div class="flex items-center justify-between pb-4 border-b">
+                    <div>
+                        <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full uppercase tracking-wider">Uji Pemahaman IPA</span>
+                        <h2 class="font-heading text-2xl sm:text-3xl font-bold text-slate-800 mt-1">Kuis Master Chef IPA Flores Timur</h2>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-slate-400 block font-bold uppercase">Pertanyaan</span>
+                        <span id="quiz-progress-text" class="font-heading text-xl font-bold text-emerald-600">1 / 5</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                    <div id="quiz-progress-bar" class="bg-gradient-to-r from-emerald-500 to-amber-400 h-full w-1/5 transition-all duration-300"></div>
+                </div>
+
+                <!-- Quiz Card Container -->
+                <div id="quiz-card" class="space-y-6">
+                    <h3 id="quiz-question" class="font-heading text-lg sm:text-xl font-bold text-slate-800 leading-snug">
+                        Loading pertanyaan...
+                    </h3>
+
+                    <!-- Options Grid -->
+                    <div id="quiz-options" class="grid grid-cols-1 gap-3">
+                        <!-- Options generated by JS -->
+                    </div>
+
+                    <!-- Explanation Box -->
+                    <div id="quiz-explanation" class="hidden p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">
+                        <span id="quiz-feedback-title" class="font-bold block text-sm"></span>
+                        <p id="quiz-feedback-body"></p>
+                    </div>
+
+                    <!-- Next Button -->
+                    <div class="flex justify-end">
+                        <button id="btn-next-quiz" onclick="nextQuestion()" class="hidden px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow transition">
+                            Lanjut Soal Berikutnya <i class="fa-solid fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Completion Result Screen -->
+                <div id="quiz-result" class="hidden text-center py-8 space-y-5">
+                    <div class="w-24 h-24 bg-amber-100 text-amber-600 rounded-3xl flex items-center justify-center text-5xl font-bold mx-auto shadow-inner animate-bounce">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h3 class="font-heading text-2xl sm:text-3xl font-bold text-slate-800">Selamat! Kamu Menyelesaikan Kuis!</h3>
+                    <p id="quiz-final-score" class="text-lg text-slate-600 font-medium">
+                        Skor Kuis Kamu: <strong class="text-emerald-600 text-2xl">100</strong>
+                    </p>
+                    <p id="quiz-badge-earned" class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
+                        Kamu berhasil meraih gelar <strong>"Master Chef IPA Nagi Flores Timur"</strong>!
+                    </p>
+                    <button onclick="resetQuiz()" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-xl shadow-lg transition">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Coba Kuis Lagi
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: RANGKUMAN MATERI & GLOSARIUM -->
+        <section id="sec-glosarium" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 space-y-6">
+                <div>
+                    <span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-bold rounded-full uppercase tracking-wider">Rangkuman Konsep IPA</span>
+                    <h2 class="font-heading text-2xl sm:text-3xl font-bold text-slate-800 mt-1">Materi Zat & Perubahannya Kelas VII</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Concept 1 -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2">
+                        <h3 class="font-heading text-lg font-bold text-emerald-800 flex items-center gap-2">
+                            <i class="fa-solid fa-cubes"></i> 1. Wujud Zat & Model Partikel
+                        </h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Materi adalah segala sesuatu yang memiliki massa dan menempati ruang.
+                        </p>
+                        <ul class="text-xs text-slate-700 list-disc list-inside space-y-1">
+                            <li><strong>Padat:</strong> Bentuk & volume tetap, partikel sangat rapat. (Cth: Biji Jagung Titi, Potongan Bambu).</li>
+                            <li><strong>Cair:</strong> Bentuk berubah mengikuti wadah, volume tetap. (Cth: Perasan Jeruk, Santan, Nira Lontar).</li>
+                            <li><strong>Gas:</strong> Bentuk & volume berubah mengisi ruang, partikel bebas. (Cth: Uap air rebusan kuah asam).</li>
+                        </ul>
+                    </div>
+
+                    <!-- Concept 2 -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2">
+                        <h3 class="font-heading text-lg font-bold text-amber-800 flex items-center gap-2">
+                            <i class="fa-solid fa-temperature-three-quarters"></i> 2. Perubahan Wujud Zat (Fisika)
+                        </h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Perubahan fisik tanpa menghasilkan zat jenis baru. Bersifat reversibel (dapat kembali).
+                        </p>
+                        <ul class="text-xs text-slate-700 list-disc list-inside space-y-1">
+                            <li><strong>Mencair:</strong> Padat &rarr; Cair (Lilin lontar meleleh).</li>
+                            <li><strong>Membeku:</strong> Cair &rarr; Padat (Gula lontar memadat saat dingin).</li>
+                            <li><strong>Menguap:</strong> Cair &rarr; Gas (Mendidihkan air kuah asam).</li>
+                            <li><strong>Mengembun:</strong> Gas &rarr; Cair (Penyulingan sopi tradisional).</li>
+                        </ul>
+                    </div>
+
+                    <!-- Concept 3 -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2">
+                        <h3 class="font-heading text-lg font-bold text-rose-800 flex items-center gap-2">
+                            <i class="fa-solid fa-flask"></i> 3. Perubahan Kimia
+                        </h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Perubahan yang menghasilkan <strong>zat baru</strong> dengan sifat kimia yang berbeda. Bersifat ireversibel.
+                        </p>
+                        <p class="text-xs text-slate-700 font-semibold">Ciri-ciri Reaksi Kimia di Dapur:</p>
+                        <ul class="text-xs text-slate-700 list-disc list-inside space-y-1">
+                            <li>Terjadi perubahan warna (Ikan berubah pucat saat kena asam).</li>
+                            <li>Terjadi pembentukan gas atau aroma baru (Bambu Kolo dibakar).</li>
+                            <li>Terjadi perubahan suhu dan pembentukan endapan.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Concept 4 -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2">
+                        <h3 class="font-heading text-lg font-bold text-cyan-800 flex items-center gap-2">
+                            <i class="fa-solid fa-scale-balanced"></i> 4. Sifat Fisika & Sifat Kimia
+                        </h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            <strong>Sifat Fisika:</strong> Dapat diamati tanpa mengubah identitas zat (Warna, wujud, titik didih, kelarutan).
+                        </p>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            <strong>Sifat Kimia:</strong> Kemampuan zat untuk bereaksi membentuk zat baru (Keelektrokimiaan, kemudahan terbakar, keasaman/pH).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Culinary Detail Modal -->
+    <div id="culinary-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative animate-float">
+            <button onclick="closeCulinaryModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modal-content" class="space-y-3">
+                <!-- Content injected dynamically -->
+            </div>
+            <button onclick="closeCulinaryModal()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow">
+                Tutup & Lanjutkan Eksplorasi
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 text-xs text-center">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="font-semibold text-slate-300">Dapur IPA Flores Timur - Media Pembelajaran Interaktif Kurikulum Merdeka</p>
+            <p>Mata Pelajaran IPA Kelas VII SMP | Tema: Zat dan Perubahannya | Kearifan Lokal Nusa Tenggara Timur</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sound & Audio Setup (Web Audio Synth for self-contained audio effects)
+        let soundEnabled = true;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playBeep(freq = 440, type = 'sine', duration = 0.15) {
+            if (!soundEnabled) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) { console.log(e); }
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            if (soundEnabled) {
+                icon.className = 'fa-solid fa-volume-high';
+                playBeep(600, 'triangle', 0.1);
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark';
+            }
+        }
+
+        // Global State Variable
+        let gameState = {
+            totalScore: 0,
+            badgesEarned: new Set(),
+            currentTab: 'peta',
+            labTemp: 25,
+            labRecipe: 'jagung',
+            arcadeActive: false,
+            arcadeScore: 0,
+            arcadeTime: 45,
+            basketX: 250,
+            basketType: 'PADAT', // PADAT, CAIR, GAS
+            items: [],
+            quizIndex: 0,
+            quizScore: 0
+        };
+
+        function switchTab(tabId) {
+            playBeep(520, 'sine', 0.08);
+            gameState.currentTab = tabId;
+
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-amber-400', 'text-slate-900', 'shadow');
+                btn.classList.add('text-emerald-100');
+            });
+
+            const activeContent = document.getElementById(`sec-${tabId}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-amber-400', 'text-slate-900', 'shadow');
+                activeBtn.classList.remove('text-emerald-100');
+            }
+
+            if (tabId === 'peta') initParticleCanvases();
+            if (tabId === 'lab') runLabSimulation();
+        }
+
+        function initParticleCanvases() {
+            renderStaticParticleCanvas('canvas-padat', 'padat');
+            renderStaticParticleCanvas('canvas-cair', 'cair');
+            renderStaticParticleCanvas('canvas-gas', 'gas');
+        }
+
+        function renderStaticParticleCanvas(canvasId, stateType) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const numParticles = stateType === 'padat' ? 30 : (stateType === 'cair' ? 24 : 15);
+            ctx.fillStyle = stateType === 'padat' ? '#f59e0b' : (stateType === 'cair' ? '#06b6d4' : '#ef4444');
+
+            for (let i = 0; i < numParticles; i++) {
+                let x, y;
+                if (stateType === 'padat') {
+                    const row = Math.floor(i / 6);
+                    const col = i % 6;
+                    x = 55 + col * 18 + (Math.random() - 0.5) * 2;
+                    y = 25 + row * 18 + (Math.random() - 0.5) * 2;
+                } else if (stateType === 'cair') {
+                    x = 30 + (i % 6) * 25 + (Math.random() - 0.5) * 8;
+                    y = 60 + Math.floor(i / 6) * 16 + (Math.random() - 0.5) * 6;
+                } else {
+                    x = 20 + Math.random() * 160;
+                    y = 20 + Math.random() * 80;
+                }
+
+                ctx.beginPath();
+                ctx.arc(x, y, 7, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function updateSimRecipe() {
+            gameState.labRecipe = document.getElementById('sim-recipe').value;
+            runLabSimulation();
+        }
+
+        function runLabSimulation() {
+            const slider = document.getElementById('temp-slider');
+            gameState.labTemp = parseInt(slider.value);
+            document.getElementById('temp-display').innerText = `${gameState.labTemp}°C`;
+
+            const recipe = gameState.labRecipe;
+            const temp = gameState.labTemp;
+            const hasAir = document.getElementById('check-air').checked;
+            const hasAsam = document.getElementById('check-asam').checked;
+
+            const canvas = document.getElementById('sim-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Background Stove Fire / Vessel
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Heat Glow
+            if (temp > 50) {
+                const glowGrad = ctx.createRadialGradient(300, 220, 10, 300, 220, 180);
+                glowGrad.addColorStop(0, `rgba(239, 68, 68, ${Math.min(0.8, (temp - 50) / 200)})`);
+                glowGrad.addColorStop(1, 'transparent');
+                ctx.fillStyle = glowGrad;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            // Draw Vessel
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.arc(300, 180, 100, 0, Math.PI);
+            ctx.stroke();
+
+            // Analysis Updates
+            let typeBadge = "Perubahan Fisika";
+            let partikelText = "";
+            let ciriText = "";
+            let zatBaruText = "TIDAK";
+            let descText = "";
+
+            if (recipe === 'jagung') {
+                if (temp < 100) {
+                    partikelText = "Partikel jagung tersusun sangat rapat & bergetar lambat.";
+                    ciriText = "Pemanasan ringan, permukaan jagung belum berubah.";
+                    descText = "Jagung titi dalam kondisi mentah. Struktur pati belum mengalami transformasi mekanis maupun termal.";
+                } else if (temp < 180) {
+                    partikelText = "Getaran partikel meningkat pesat karena menyerap energi kalor.";
+                    ciriText = "Uap air alami jagung keluar (Evaporasi fisik).";
+                    descText = "Proses Penyangraian! Air dalam biji jagung menguap, membuat biji jagung renyah & siap dititi (ditumbuk) jadi pipih.";
+                } else {
+                    partikelText = "Partikel karbohidrat mulai terdekomposisi akibat panas ekstrem.";
+                    ciriText = "Terbentuk warna cokelat/hitam & bau gosong (Karamelisasi / Pyrolysis).";
+                    zatBaruText = "YA (Reaksi Kimia Gosong)";
+                    typeBadge = "Perubahan Kimia (Overheat)";
+                    descText = "Jagung gosong! Terjadi perubahan kimia akibat suhu di atas batas penyangraian ideal.";
+                }
+            } else if (recipe === 'lontar') {
+                if (temp < 100) {
+                    partikelText = "Partikel cairan nira mengalir bebas menuruti wadah kuali.";
+                    ciriText = "Nira lontar manis masih berwujud cair encer.";
+                    descText = "Air nira segar hasil sadapan pohon lontar khas Flores Timur.";
+                } else if (temp < 180) {
+                    partikelText = "Molekul H2O (air) lepas menjadi gas uap, molekul gula makin rapat.";
+                    ciriText = "Penguapan (Evaporasi) & Pengentalan Sirop Gula.";
+                    descText = "Air nira mendidih hebat! Uap air keluar (Perubahan wujud cair ke gas). Cairan mengental membentuk pekatan gula lontar.";
+                } else {
+                    partikelText = "Molekul gula memadat membentuk pola kristal padat.";
+                    ciriText = "Kristalisasi Gula Lontar Merah.";
+                    typeBadge = "Kristalisasi (Fisika)";
+                    descText = "Saat didinginkan setelah penguapan mendalam, terbentuklah Gula Merah Lontar yang padat dan manis!";
+                }
+            } else if (recipe === 'kolo') {
+                if (temp < 150) {
+                    partikelText = "Beras & santan dalam potongan bambu menyerap panas.";
+                    ciriText = "Penyerap air oleh granula pati beras.";
+                    descText = "Proses awal memasak Kolo (Nasi Bambu khas Nagi Larantuka). Pati beras menyerap air santan.";
+                } else {
+                    typeBadge = "Perubahan Kimia (Pembakaran)";
+                    partikelText = "Struktur protein & karbohidrat terdenaturasi permanen.";
+                    ciriText = "Aroma wangi bambu terbakar & tekstur nasi mengumpul kenyal.";
+                    zatBaruText = "YA (Pematangan Pati)";
+                    descText = "Kolo Matang! Pembakaran kayu/bambu dan gelatinisasi beras menghasilkan rasa, tekstur, dan aroma zat baru yang lezat.";
+                }
+            } else if (recipe === 'ikan') {
+                if (hasAsam) {
+                    typeBadge = "Perubahan Kimia (Denaturasi)";
+                    partikelText = "Asam sitrat/asetat merusak ikatan tersier protein daging ikan.";
+                    ciriText = "Warna daging ikan berubah dari transparan jadi putih menggelembung.";
+                    zatBaruText = "YA (Protein Terdenaturasi)";
+                    descText = "Efek perasan Jeruk Nipis / Belimbing Wuluh! Sifat asam (pH < 7) mengubah struktur kimia protein ikan tanpa perlu panas berlebih.";
+                } else {
+                    partikelText = "Daging ikan segar dalam kuah rempah.";
+                    ciriText = "Proses pelarutan garam & bumbu beralih ke kuah.";
+                    descText = "Ikan Kuah Asam khas Flores Timur sedang disiapkan. Tambahkan jeruk nipis untuk melihat reaksi asamnya!";
+                }
+            }
+
+            // Draw Particles Animation in Vessel
+            const pCount = temp > 100 ? 40 : 25;
+            ctx.fillStyle = recipe === 'ikan' && hasAsam ? '#f87171' : (temp > 180 ? '#78350f' : '#f59e0b');
+            for (let i = 0; i < pCount; i++) {
+                let px = 240 + Math.sin(i + Date.now() * 0.003) * 50;
+                let py = 180 + Math.cos(i + Date.now() * 0.003) * 30 - (temp > 100 ? (i % 10) * 3 : 0);
+                ctx.beginPath();
+                ctx.arc(px, py, 6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Draw Steam Particles if Temp > 80
+            if (temp > 80) {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                for (let j = 0; j < 15; j++) {
+                    let sx = 220 + (j * 15) % 160;
+                    let sy = 120 - ((Date.now() * 0.05 + j * 20) % 80);
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Update DOM Elements
+            document.getElementById('canvas-temp-text').innerText = `${temp}°C`;
+            document.getElementById('canvas-state-text').innerText = `Wujud: ${temp > 100 && recipe === 'lontar' ? 'Cair + Uap Gas' : 'Padat & Cair'}`;
+            document.getElementById('change-type-badge').innerText = typeBadge;
+            document.getElementById('analisis-partikel').innerText = partikelText;
+            document.getElementById('analisis-ciri').innerText = ciriText;
+            document.getElementById('analisis-zat-baru').innerText = zatBaruText;
+            document.getElementById('analisis-deskripsi').innerText = descText;
+
+            addScore(2); // Learning reward
+        }
+
+        function resetLab() {
+            document.getElementById('temp-slider').value = 25;
+            document.getElementById('check-air').checked = false;
+            document.getElementById('check-asam').checked = false;
+            runLabSimulation();
+        }
+
+        const gameFoodItems = [
+            { name: '🌽 Biji Jagung', type: 'PADAT', color: '#f59e0b' },
+            { name: '🎋 Bambu Kolo', type: 'PADAT', color: '#10b981' },
+            { name: '🧂 Garam Laut', type: 'PADAT', color: '#f8fafc' },
+            { name: '🥥 Santan Kelapa', type: 'CAIR', color: '#e2e8f0' },
+            { name: '🌴 Nira Lontar', type: 'CAIR', color: '#06b6d4' },
+            { name: '🍋 Perasan Jeruk', type: 'CAIR', color: '#eab308' },
+            { name: '💨 Uap Sangrai', type: 'GAS', color: '#94a3b8' },
+            { name: '💨 Asap Bara', type: 'GAS', color: '#64748b' }
+        ];
+
+        let gameInterval, timerInterval;
+
+        function startGame() {
+            playBeep(880, 'sine', 0.2);
+            document.getElementById('game-overlay').classList.add('hidden');
+            gameState.arcadeActive = true;
+            gameState.arcadeScore = 0;
+            gameState.arcadeTime = 45;
+            gameState.basketX = 250;
+            gameState.items = [];
+
+            document.getElementById('game-score').innerText = '0';
+            document.getElementById('game-timer').innerText = '45s';
+
+            if (gameInterval) clearInterval(gameInterval);
+            if (timerInterval) clearInterval(timerInterval);
+
+            // Timer Tick
+            timerInterval = setInterval(() => {
+                gameState.arcadeTime--;
+                document.getElementById('game-timer').innerText = `${gameState.arcadeTime}s`;
+                if (gameState.arcadeTime <= 0) endGame();
+            }, 1000);
+
+            // Game Loop
+            requestAnimationFrame(updateArcadeCanvas);
+        }
+
+        function moveBasketLeft() {
+            gameState.basketX = Math.max(20, gameState.basketX - 40);
+        }
+
+        function moveBasketRight() {
+            gameState.basketX = Math.min(480, gameState.basketX + 40);
+        }
+
+        function switchBasketType() {
+            playBeep(600, 'square', 0.08);
+            const types = ['PADAT', 'CAIR', 'GAS'];
+            let idx = types.indexOf(gameState.basketType);
+            gameState.basketType = types[(idx + 1) % types.length];
+            document.getElementById('game-basket-target').innerText = `[ ${gameState.basketType} ]`;
+        }
+
+        // Keyboard Event Listener for Arcade
+        window.addEventListener('keydown', (e) => {
+            if (!gameState.arcadeActive) return;
+            if (e.key === 'ArrowLeft') moveBasketLeft();
+            if (e.key === 'ArrowRight') moveBasketRight();
+            if (e.key === ' ' || e.key === 'ArrowUp') switchBasketType();
+        });
+
+        function updateArcadeCanvas() {
+            if (!gameState.arcadeActive) return;
+
+            const canvas = document.getElementById('arcade-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Spawn Items Randomly
+            if (Math.random() < 0.04) {
+                const randomItem = gameFoodItems[Math.floor(Math.random() * gameFoodItems.length)];
+                gameState.items.push({
+                    x: 30 + Math.random() * (canvas.width - 60),
+                    y: 0,
+                    speed: 2 + Math.random() * 2.5,
+                    ...randomItem
+                });
+            }
+
+            // Draw falling items
+            for (let i = gameState.items.length - 1; i >= 0; i--) {
+                let item = gameState.items[i];
+                item.y += item.speed;
+
+                // Render Item
+                ctx.fillStyle = item.color;
+                ctx.beginPath();
+                ctx.arc(item.x, item.y, 14, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#0f172a';
+                ctx.font = '10px Plus Jakarta Sans';
+                ctx.fillText(item.name, item.x - 25, item.y - 18);
+
+                // Collision Detection with Basket
+                if (item.y >= 320 && item.y <= 360 && Math.abs(item.x - (gameState.basketX + 50)) < 45) {
+                    if (item.type === gameState.basketType) {
+                        gameState.arcadeScore += 10;
+                        playBeep(800, 'sine', 0.1);
+                        addScore(10);
+                    } else {
+                        gameState.arcadeScore = Math.max(0, gameState.arcadeScore - 5);
+                        playBeep(200, 'sawtooth', 0.15);
+                    }
+                    document.getElementById('game-score').innerText = gameState.arcadeScore;
+                    gameState.items.splice(i, 1);
+                    continue;
+                }
+
+                // Remove item if hit bottom
+                if (item.y > canvas.height) {
+                    gameState.items.splice(i, 1);
+                }
+            }
+
+            // Draw Basket
+            ctx.fillStyle = gameState.basketType === 'PADAT' ? '#f59e0b' : (gameState.basketType === 'CAIR' ? '#06b6d4' : '#6366f1');
+            ctx.fillRect(gameState.basketX, 330, 100, 25);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px Plus Jakarta Sans';
+            ctx.fillText(`KERANJANG: ${gameState.basketType}`, gameState.basketX + 10, 347);
+
+            requestAnimationFrame(updateArcadeCanvas);
+        }
+
+        function endGame() {
+            gameState.arcadeActive = false;
+            clearInterval(timerInterval);
+
+            document.getElementById('game-overlay').classList.remove('hidden');
+            document.getElementById('overlay-title').innerText = 'Permainan Selesai!';
+            document.getElementById('overlay-desc').innerHTML = `Hebat! Skor game kamu: <strong class="text-amber-400 text-xl">${gameState.arcadeScore}</strong>.<br>Kamu makin paham mengelompokkan wujud zat padat, cair, dan gas dalam dapur Flores Timur!`;
+
+            if (gameState.arcadeScore >= 50) {
+                earnBadge('Pengumpul Zat Nagi');
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            }
+        }
+
+        const quizQuestions = [
+            {
+                q: "Proses pembuatan Jagung Titi khas Flores Timur diawali dengan sangrai biji jagung lalu ditumbuk batu hingga pipih. Perubahan yang terjadi pada bentuk jagung ini tergolong...",
+                options: [
+                    "Perubahan Fisika (hanya berubah bentuk dan ukuran)",
+                    "Perubahan Kimia (menghasilkan gas beracun)",
+                    "Perubahan Biologis permanen",
+                    "Sublimasi zat padat ke gas"
+                ],
+                correct: 0,
+                exp: "Benar! Penumbukan biji jagung menjadi pipih hanya mengubah bentuk dan ukuran fisiknya tanpa mengubah komposisi molekul jagung (Perubahan Fisika)."
+            },
+            {
+                q: "Nira pohon lontar dimasak berjam-jam hingga airnya habis menguap dan menyisa kristal manis gula merah lontar. Perubahan wujud cair menjadi uap gas disebut...",
+                options: [
+                    "Membeku",
+                    "Evaporasi / Menguap",
+                    "Mencair / Meleleh",
+                    "Kondensasi"
+                ],
+                correct: 1,
+                exp: "Tepat sekali! Menguap (Evaporasi) adalah perubahan wujud zat cair menjadi gas akibat penerimaan energi panas."
+            },
+            {
+                q: "Pada pembuatan Kolo (Nasi Bambu), potongan bambu beralas daun pisang dibakar di atas bara api hingga nasi matang berbumbu. Pembakaran ini termasuk Perubahan Kimia karena...",
+                options: [
+                    "Bambu bisa dipakai kembali seperti semula",
+                    "Menghasilkan zat baru (pati matang & aroma kayu terbakar) dan tak dapat kembali",
+                    "Wujud nasi tetap keras seperti beras mentah",
+                    "Suhu air dalam bambu tetap dingin"
+                ],
+                correct: 1,
+                exp: "Luar biasa! Pembakaran dan proses pematangan menghasilkan senyawa rasa/aroma baru dan mengubah struktur molekul pati secara permanen (Perubahan Kimia)."
+            },
+            {
+                q: "Ikan segar yang diberi perasan jeruk nipis/belimbing wuluh pada masakan Ikan Kuah Asam akan mengalami perubahan warna daging menjadi lebih pucat dan memadat. Mengapa hal ini terjadi?",
+                options: [
+                    "Asam sitrat menurunkan pH dan mendenaturasi protein daging ikan (Reaksi Kimia)",
+                    "Jeruk nipis membekukan ikan menjadi es",
+                    "Ikan mengalami pembakaran tingkat tinggi",
+                    "Terjadi sublimasi dari daging ikan"
+                ],
+                correct: 0,
+                exp: "Benar! Perasan asam jeruk merusak struktur tersier protein (denaturasi), yang merupakan contoh reaksi dan sifat kimia zat."
+            },
+            {
+                q: "Proses pembuatan Sopi (minuman tradisional) dilakukan dengan mengumpulkan uap embun hasil pemanasan nira lontar melalui pipa bambu. Proses perubahan gas menjadi cair ini disebut...",
+                options: [
+                    "Kristalisasi",
+                    "Kondensasi / Mengembun (Penyulingan)",
+                    "Mencair",
+                    "Membeku"
+                ],
+                correct: 1,
+                exp: "Tepat! Kondensasi atau mengembun adalah perubahan wujud dari gas uap kembali menjadi zat cair saat suhu mengalami penurunan."
+            }
+        ];
+
+        function loadQuestion() {
+            const q = quizQuestions[gameState.quizIndex];
+            document.getElementById('quiz-progress-text').innerText = `${gameState.quizIndex + 1} / ${quizQuestions.length}`;
+            document.getElementById('quiz-progress-bar').style.width = `${((gameState.quizIndex + 1) / quizQuestions.length) * 100}%`;
+
+            document.getElementById('quiz-question').innerText = q.q;
+            document.getElementById('quiz-explanation').classList.add('hidden');
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 font-semibold text-slate-700 text-xs sm:text-sm transition flex items-center justify-between group';
+                btn.innerHTML = `
+                    <span>${String.fromCharCode(65 + idx)}. ${opt}</span>
+                    <i class="fa-regular fa-circle text-slate-300 group-hover:text-emerald-500"></i>
+                `;
+                btn.onclick = () => selectQuizAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectQuizAnswer(selectedIndex) {
+            const q = quizQuestions[gameState.quizIndex];
+            const optionsContainer = document.getElementById('quiz-options');
+            const buttons = optionsContainer.querySelectorAll('button');
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            const expBox = document.getElementById('quiz-explanation');
+            const expTitle = document.getElementById('quiz-feedback-title');
+            const expBody = document.getElementById('quiz-feedback-body');
+
+            if (selectedIndex === q.correct) {
+                playBeep(900, 'sine', 0.2);
+                buttons[selectedIndex].classList.add('bg-emerald-100', 'border-emerald-600', 'text-emerald-900');
+                expTitle.innerText = "🎉 Jawaban Kamu Tepat Sekali!";
+                expTitle.className = "font-bold text-emerald-700 text-sm block";
+                gameState.quizScore += 20;
+                addScore(20);
+            } else {
+                playBeep(250, 'sawtooth', 0.25);
+                buttons[selectedIndex].classList.add('bg-rose-100', 'border-rose-500', 'text-rose-900');
+                buttons[q.correct].classList.add('bg-emerald-100', 'border-emerald-600', 'text-emerald-900');
+                expTitle.innerText = "💡 Kurang Tepat, Mari Pelajari:";
+                expTitle.className = "font-bold text-rose-700 text-sm block";
+            }
+
+            expBody.innerText = q.exp;
+            expBox.classList.remove('hidden');
+            document.getElementById('btn-next-quiz').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            gameState.quizIndex++;
+            if (gameState.quizIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                showQuizResult();
+            }
+        }
+
+        function showQuizResult() {
+            document.getElementById('quiz-card').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            document.getElementById('quiz-final-score').innerHTML = `Skor Kuis Kamu: <strong class="text-emerald-600 text-3xl">${gameState.quizScore}</strong> / 100`;
+
+            if (gameState.quizScore >= 80) {
+                earnBadge('Master Chef IPA Flores Timur');
+                confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
+            }
+        }
+
+        function resetQuiz() {
+            gameState.quizIndex = 0;
+            gameState.quizScore = 0;
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-card').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        const culinaryData = {
+            jagung: {
+                title: "🌽 Jagung Titi (Kearifan Lokal Penyangraian)",
+                content: `
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        <strong>Jagung Titi</strong> adalah camilan khas masyarakat Flores Timur (Nagi Larantuka, Solor, Adonara).
+                    </p>
+                    <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-1">
+                        <p><strong>Fakta IPA - Perubahan Fisika:</strong></p>
+                        <p>1. <strong>Penyangraian:</strong> Biji jagung dipanaskan dalam periuk tanah liat (terbentuk perpindahan kalor konduksi).</p>
+                        <p>2. <strong>Penumbukan (Dititi):</strong> Biji jagung panas ditumbuk cepat dengan batu datar khas. Bentuknya menjadi pipih renyah.</p>
+                        <p>3. <strong>Sifat Fisika:</strong> Karbohidrat jagung tidak mengalami reaksi kimia destruktif, hanya kadar airnya berkurang (evaporasi) sehingga tahan lama disimpam.</p>
+                    </div>
+                `
+            },
+            kolo: {
+                title: "🎋 Kolo / Nasi Bambu (Reaksi Pembakaran & Gelatinisasi)",
+                content: `
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        <strong>Kolo</strong> disajikan pada upacara adat dan perayaan syukuran di Flores Timur.
+                    </p>
+                    <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 text-xs text-emerald-900 space-y-1">
+                        <p><strong>Fakta IPA - Perubahan Kimia & Wujud:</strong></p>
+                        <p>1. Beras, santan, dan bumbu dimasukkan dalam ruas bambu muda beralas daun pisang.</p>
+                        <p>2. Bambu dibakar di atas bara api kayu. Terjadi pembakaran (reaksi kimia dengan O2) yang menghasilkan energi panas tinggi.</p>
+                        <p>3. Panas menyebabkan pati beras menyerap air santan (Gelatinisasi pati) menjadi nasi yang harum dan gurih (Terbentuk Zat Baru!).</p>
+                    </div>
+                `
+            },
+            lontar: {
+                title: "🌴 Gula Lontar & Sopi (Evaporasi & Penyulingan)",
+                content: `
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Pohon Lontar (Pohonasam) tumbuh subur di iklim tropis Flores Timur.
+                    </p>
+                    <div class="bg-cyan-50 p-3 rounded-xl border border-cyan-200 text-xs text-cyan-900 space-y-1">
+                        <p><strong>Fakta IPA - Perubahan Wujud Zat:</strong></p>
+                        <p>1. <strong>Gula Lontar:</strong> Nira ditim / direbus hingga uap air keluar (Evaporasi). Saat didinginkan, nira kental memadat membentuk kristal (Kristalisasi).</p>
+                        <p>2. <strong>Penyulingan Sopi:</strong> Pemanasan nira menghasilkan uap etanol/air yang disalurkan lewat bambu pendingin. Uap tersebut mengembun (Kondensasi) menjadi tetesan cair.</p>
+                    </div>
+                `
+            },
+            ikankuah: {
+                title: "🐟 Ikan Kuah Asam (Reaksi Asam-Basa & Denaturasi)",
+                content: `
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Kuliner khas pesisir Flores Timur yang kaya akan cita rasa segar dan gurih alami.
+                    </p>
+                    <div class="bg-rose-50 p-3 rounded-xl border border-rose-200 text-xs text-rose-900 space-y-1">
+                        <p><strong>Fakta IPA - Sifat Asam & Reaksi Kimia:</strong></p>
+                        <p>1. Belimbing wuluh dan perasan jeruk nipis mengandung asam sitrat (pH < 7).</p>
+                        <p>2. Asam merusak ikatan kimia tersier protein ikan (Denaturasi), mematikan bakteri, serta menghilangkan bau amis.</p>
+                        <p>3. Daging ikan mengenyal dan berubah warna secara permanen (Sifat Kimia Zat).</p>
+                    </div>
+                `
+            }
+        };
+
+        function openCulinaryModal(key) {
+            playBeep(650, 'sine', 0.1);
+            const data = culinaryData[key];
+            if (!data) return;
+
+            document.getElementById('modal-content').innerHTML = `
+                <h3 class="font-heading text-xl font-bold text-slate-800">${data.title}</h3>
+                ${data.content}
+            `;
+            document.getElementById('culinary-modal').classList.remove('hidden');
+            addScore(5);
+        }
+
+        function closeCulinaryModal() {
+            document.getElementById('culinary-modal').classList.add('hidden');
+        }
+
+        function addScore(points) {
+            gameState.totalScore += points;
+            document.getElementById('total-score').innerText = gameState.totalScore;
+        }
+
+        function earnBadge(badgeName) {
+            if (!gameState.badgesEarned.has(badgeName)) {
+                gameState.badgesEarned.add(badgeName);
+                document.getElementById('badge-count').innerText = `${gameState.badgesEarned.size}/4`;
+                playBeep(1000, 'triangle', 0.3);
+            }
+        }
+
+        window.onload = function() {
+            initParticleCanvases();
+            runLabSimulation();
+            loadQuestion();
+        };
+    </script>
+</body>
+</html>
