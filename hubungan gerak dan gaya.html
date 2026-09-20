@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papan Interaktif Hubungan Gerak dan Gaya - IPA SMP Kelas 7 (Lewohedo)</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+        }
+        .physics-bg-pattern {
+            background-color: #030712;
+            background-image: radial-gradient(#1e3a8a 1.5px, transparent 1.5px), radial-gradient(#0284c7 1.5px, #030712 1.5px);
+            background-size: 36px 36px;
+            background-position: 0 0, 18px 18px;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+        }
+        .glow-sky {
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+        }
+        .glow-amber {
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.35);
+        }
+        .glow-indigo {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.35);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(3, 7, 18, 0.9);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body class="min-h-screen physics-bg-pattern flex flex-col justify-between custom-scrollbar selection:bg-sky-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-sky-800/60 px-4 py-3 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-400 via-indigo-500 to-amber-400 p-0.5 shadow-lg flex-shrink-0 glow-sky">
+                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+                        <span class="text-2xl animate-bounce">⚡</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold tracking-wider text-sky-300 uppercase bg-sky-500/20 px-2.5 py-0.5 rounded-full border border-sky-400/40">
+                            Fisika IPA SMP
+                        </span>
+                        <span class="text-[10px] font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-400/30">
+                            Kurikulum Merdeka Kelas VII
+                        </span>
+                    </div>
+                    <h1 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mt-0.5">
+                        Papan Interaktif Hubungan Gerak & Gaya
+                    </h1>
+                    <p class="text-xs text-sky-200/90 font-medium">
+                        SMPN Satap Wulublolong • Desa Lewohedo, Kec. Solor Timur, Kab. Flores Timur, NTT
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <div class="hidden lg:flex flex-col text-right text-xs">
+                    <span class="text-sky-300 font-semibold">Tahun Ajaran 2026/2027</span>
+                    <span class="text-sky-200/70 text-[11px]">Lab Digital Fisika Sains Solor</span>
+                </div>
+                <button id="btn-sound" onclick="toggleSound()" class="px-3.5 py-2 rounded-xl bg-slate-950/80 hover:bg-sky-900 text-sky-200 text-xs font-semibold border border-sky-700/80 flex items-center gap-2 transition shadow-md">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-sky-400 text-sm"></i>
+                    <span id="sound-text">Efek Suara: Aktif</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+        <!-- Navigation Tabs Bar -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-sky-800/80 pb-3">
+            <button onclick="switchTab('konsep')" id="tab-btn-konsep" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-sky-600 text-white shadow-lg shadow-sky-950/50">
+                <i class="fa-solid fa-hand-fist text-amber-300"></i> 1. Konsep & Jenis Gaya
+            </button>
+            <button onclick="switchTab('newton')" id="tab-btn-newton" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-sky-200 hover:bg-sky-950">
+                <i class="fa-solid fa-gauge-high text-cyan-300"></i> 2. Hukum Newton (I, II, III)
+            </button>
+            <button onclick="switchTab('resultan')" id="tab-btn-resultan" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-sky-200 hover:bg-sky-950">
+                <i class="fa-solid fa-arrows-left-right text-emerald-300"></i> 3. Resultan Gaya & Berat
+            </button>
+            <button onclick="switchTab('glosarium')" id="tab-btn-glosarium" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-sky-200 hover:bg-sky-950">
+                <i class="fa-solid fa-book text-indigo-300"></i> 4. Glosarium Fisika
+            </button>
+            <button onclick="switchTab('evaluasi')" id="tab-btn-evaluasi" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-sky-200 hover:bg-sky-950">
+                <i class="fa-solid fa-trophy text-amber-300"></i> 5. Kuis & Sertifikat
+            </button>
+        </div>
+
+        <!-- Module 1: Konsep & Jenis Gaya -->
+        <div id="section-konsep" class="tab-content block space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-sky-400 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 opacity-10 text-9xl select-none">⛵</div>
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 1: Konsep Dasar Gaya & Jenis-Jenis Gaya</h2>
+                <p class="text-sky-100 text-sm max-w-4xl leading-relaxed">
+                    **Gaya** adalah tarikan atau dorongan yang diberikan pada suatu benda. Gaya dapat menyebabkan benda diam menjadi bergerak, benda bergerak berubah kecepatan/arah, atau mengubah bentuk benda.
+                </p>
+            </div>
+
+            <!-- Gaya Sentuh vs Tak Sentuh Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Gaya Sentuh -->
+                <div class="glass-card p-5 rounded-2xl border border-sky-500/40 space-y-3">
+                    <div class="flex items-center gap-3 border-b border-sky-800 pb-2">
+                        <span class="p-2.5 rounded-xl bg-sky-500/20 text-sky-300 text-xl"><i class="fa-solid fa-hand text-sky-400"></i></span>
+                        <div>
+                            <h3 class="text-base font-bold text-white">1. Gaya Sentuh (Contact Force)</h3>
+                            <p class="text-xs text-sky-200">Gaya yang bekerja melalui sentuhan langsung fisik antara sumber gaya dan benda.</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-xs text-sky-100">
+                        <li class="bg-slate-950/80 p-2.5 rounded-xl border border-sky-900">
+                            <strong class="text-amber-300 block">💪 Gaya Otot:</strong> Dorongan/tarikan otot manusia (misal: Nelayan Lewohedo mendorong perahu kayu ke laut).
+                        </li>
+                        <li class="bg-slate-950/80 p-2.5 rounded-xl border border-sky-900">
+                            <strong class="text-amber-300 block">🛞 Gaya Gesek:</strong> Gaya penghambat akibat gesekan dua permukaan (misal: Ban motor di jalan berbatu Wulublolong).
+                        </li>
+                        <li class="bg-slate-950/80 p-2.5 rounded-xl border border-sky-900">
+                            <strong class="text-amber-300 block">🏹 Gaya Pegas:</strong> Gaya lentur dari benda elastis (misal: Karet ketapel anak-anak Desa Lewohedo).
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Gaya Tak Sentuh -->
+                <div class="glass-card p-5 rounded-2xl border border-indigo-500/40 space-y-3">
+                    <div class="flex items-center gap-3 border-b border-indigo-800 pb-2">
+                        <span class="p-2.5 rounded-xl bg-indigo-500/20 text-indigo-300 text-xl"><i class="fa-solid fa-magnet text-indigo-400"></i></span>
+                        <div>
+                            <h3 class="text-base font-bold text-white">2. Gaya Tak Sentuh (Non-Contact Force)</h3>
+                            <p class="text-xs text-indigo-200">Gaya yang bekerja tanpa interaksi sentuhan fisik secara langsung melalui medan gaya.</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-xs text-sky-100">
+                        <li class="bg-slate-950/80 p-2.5 rounded-xl border border-indigo-900">
+                            <strong class="text-amber-300 block">🌍 Gaya Gravitasi:</strong> Tarikan pusat bumi (misal: Buah kelapa/mangga jatuh dari pohon di kebun Lewohedo).
+                        </li>
+                        <li class="bg-slate-950/80 p-2.5 rounded-xl border border-indigo-900">
+                            <strong class="text-amber-300 block">🧲 Gaya Magnet:</strong> Tarikan/tolakan kutub magnet (misal: Kompas perahu nelayan Solor).
+                        </li>
+                        <li class="bg-slate-950/80 p-2.5 rounded-xl border border-indigo-900">
+                            <strong class="text-amber-300 block">⚡ Gaya Listrik Statis:</strong> Tarikan muatan listrik (misal: Penggaris plastik menarik potongan kertas).
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Interactive Sorting Game -->
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-sky-800 pb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-gamepad text-amber-400"></i> Game Interaktif: Klasifikasi Gaya Aktivitas Lewohedo
+                        </h3>
+                        <p class="text-xs text-sky-200">
+                            Klasifikasikan kegiatan harian warga Lewohedo ke dalam kategori **Gaya Sentuh** atau **Gaya Tak Sentuh**!
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span id="sort-score-display" class="bg-slate-950 px-3 py-1.5 rounded-xl border border-sky-700 text-xs font-bold text-amber-300">
+                            Skor: 0 / 8
+                        </span>
+                        <button onclick="resetSortGame()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-sky-200 font-bold text-xs rounded-xl border border-sky-700 transition">
+                            <i class="fa-solid fa-rotate-right"></i> Reset Game
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Items Pool -->
+                <div>
+                    <label class="text-xs font-bold text-sky-300 mb-2 block">Daftar Aktivitas Lingkungan Wulublolong & Lewohedo:</label>
+                    <div id="sort-pool" class="flex flex-wrap gap-3 p-4 bg-slate-950 rounded-xl border border-sky-800 min-h-[90px]">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Drop Zones / Target Buckets -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Gaya Sentuh Zone -->
+                    <div class="bg-sky-950/60 p-5 rounded-xl border-2 border-dashed border-sky-500/80 min-h-[160px] space-y-3">
+                        <div class="flex items-center gap-2 text-sky-300 font-bold text-sm">
+                            <i class="fa-solid fa-hand-holding-hand text-lg"></i> KELOMPOK GAYA SENTUH
+                        </div>
+                        <div id="zone-sentuh" class="flex flex-wrap gap-2">
+                            <!-- Items inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Gaya Tak Sentuh Zone -->
+                    <div class="bg-indigo-950/60 p-5 rounded-xl border-2 border-dashed border-indigo-500/80 min-h-[160px] space-y-3">
+                        <div class="flex items-center gap-2 text-indigo-300 font-bold text-sm">
+                            <i class="fa-solid fa-atom text-lg"></i> KELOMPOK GAYA TAK SENTUH
+                        </div>
+                        <div id="zone-taksentuh" class="flex flex-wrap gap-2">
+                            <!-- Items inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sort-feedback" class="p-4 rounded-xl text-xs sm:text-sm font-semibold hidden"></div>
+            </div>
+        </div>
+
+        <!-- Module 2: Hukum Newton -->
+        <div id="section-newton" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-amber-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 2: Hukum Newton tentang Gerak (I, II, & III)</h2>
+                <p class="text-sky-100 text-sm max-w-4xl leading-relaxed">
+                    Sir Isaac Newton merumuskan 3 hukum utama gerak yang menjelaskan hubungan antara gaya yang bekerja pada benda dan gerakan yang dihasilkannya.
+                </p>
+            </div>
+
+            <!-- Laws Navigation Buttons -->
+            <div class="flex flex-wrap gap-2">
+                <button onclick="selectNewtonTab(1)" id="btn-law-1" class="law-btn px-4 py-2 rounded-xl font-bold text-xs bg-amber-500 text-slate-950 shadow-md">
+                    Hukum I Newton (Inersia / Kelembaman)
+                </button>
+                <button onclick="selectNewtonTab(2)" id="btn-law-2" class="law-btn px-4 py-2 rounded-xl font-bold text-xs bg-slate-900 text-sky-200 hover:bg-sky-950">
+                    Hukum II Newton ($F = m \cdot a$)
+                </button>
+                <button onclick="selectNewtonTab(3)" id="btn-law-3" class="law-btn px-4 py-2 rounded-xl font-bold text-xs bg-slate-900 text-sky-200 hover:bg-sky-950">
+                    Hukum III Newton (Aksi = -Reaksi)
+                </button>
+            </div>
+
+            <!-- Interactive Newton Simulator Display Area -->
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <!-- Law 1 View -->
+                <div id="view-law-1" class="space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-sky-800 pb-3">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-car-burst text-amber-400"></i> Hukum I Newton: "Benda cenderung mempertahankan keadaannya (Inersia)"
+                            </h3>
+                            <p class="text-xs text-sky-200">Jika $\Sigma F = 0$, benda diam tetap diam, benda bergerak tetap bergerak dengan kecepatan tetap.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="space-y-4 bg-slate-950 p-5 rounded-xl border border-sky-900 text-xs">
+                            <span class="text-amber-300 font-bold block text-sm">Eksperimen Kelembaman Angkutan Solor:</span>
+                            <p class="text-sky-100 leading-relaxed">
+                                Ketika mobil pikap sayur desa Lewohedo mendadak direm, badan penumpang akan terdorong ke depan karena mempertahankan sifat inersia.
+                            </p>
+                            <div class="space-y-2">
+                                <button onclick="triggerInertia('brake')" class="w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-circle-stop"></i> Rem Mendadak!
+                                </button>
+                                <button onclick="triggerInertia('gas')" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-gauge-high"></i> Tancap Gas Mendadak!
+                                </button>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-2 h-[260px] bg-slate-950 rounded-xl overflow-hidden border border-sky-800 relative">
+                            <canvas id="canvasLaw1" class="w-full h-full block"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Law 2 View -->
+                <div id="view-law-2" class="hidden space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-sky-800 pb-3">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-rocket text-cyan-400"></i> Hukum II Newton: "Percepatan sebanding Gaya & berbanding terbalik Massa"
+                            </h3>
+                            <p class="text-xs text-sky-200">Rumus: $F = m \cdot a$ &nbsp;|&nbsp; $a = \frac{F}{m}$ (F dalam Newton, m dalam kg, a dalam $m/s^2$)</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="space-y-4 bg-slate-950 p-5 rounded-xl border border-sky-900 text-xs">
+                            <div>
+                                <label class="text-sky-300 font-bold block mb-1">Dorongan Gaya ($F$): <span id="val-force" class="text-amber-300 font-mono">50 N</span></label>
+                                <input type="range" id="slider-force" min="10" max="150" value="50" oninput="updateLaw2Sim()" class="w-full accent-sky-400">
+                            </div>
+
+                            <div>
+                                <label class="text-sky-300 font-bold block mb-1">Massa Gerobak Batu ($m$): <span id="val-mass" class="text-amber-300 font-mono">10 kg</span></label>
+                                <input type="range" id="slider-mass" min="2" max="50" value="10" oninput="updateLaw2Sim()" class="w-full accent-amber-400">
+                            </div>
+
+                            <div class="p-3 bg-sky-950/80 rounded-xl border border-sky-600 space-y-1">
+                                <span class="text-sky-300 font-bold block">Hasil Percepatan ($a$):</span>
+                                <span id="result-accel" class="text-xl font-extrabold text-amber-300 font-mono">5.00 m/s²</span>
+                            </div>
+
+                            <button onclick="runLaw2Animation()" class="w-full py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-play"></i> Jalankan Simulasi Dorong
+                            </button>
+                        </div>
+
+                        <div class="lg:col-span-2 h-[260px] bg-slate-950 rounded-xl overflow-hidden border border-sky-800 relative">
+                            <canvas id="canvasLaw2" class="w-full h-full block"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Law 3 View -->
+                <div id="view-law-3" class="hidden space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-sky-800 pb-3">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-water text-indigo-400"></i> Hukum III Newton: "Gaya Aksi - Reaksi"
+                            </h3>
+                            <p class="text-xs text-sky-200">Setiap ada gaya aksi, akan timbul gaya reaksi yang sama besar namun berlawanan arah ($F_{aksi} = -F_{reaksi}$).</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="space-y-4 bg-slate-950 p-5 rounded-xl border border-sky-900 text-xs">
+                            <span class="text-amber-300 font-bold block text-sm">Contoh Pendayung Perahu Pantai Lewohedo:</span>
+                            <p class="text-sky-100 leading-relaxed">
+                                Saat nelayan mendayung air ke **Belakang (Aksi)**, air memberikan gaya yang mendorong perahu ke **Depan (Reaksi)**.
+                            </p>
+
+                            <button onclick="triggerRowingAction()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-person-rowing"></i> Mendayung Perahu Solor!
+                            </button>
+                        </div>
+
+                        <div class="lg:col-span-2 h-[260px] bg-slate-950 rounded-xl overflow-hidden border border-sky-800 relative">
+                            <canvas id="canvasLaw3" class="w-full h-full block"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 3: Resultan Gaya & Kalkulator Berat -->
+        <div id="section-resultan" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-emerald-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 3: Resultan Gaya & Membedakan Massa vs Berat</h2>
+                <p class="text-sky-100 text-sm max-w-4xl leading-relaxed">
+                    **Resultan Gaya ($\Sigma F$)** adalah total gabungan dari beberapa gaya yang bekerja pada suatu benda. **Massa** berharga tetap, sedangkan **Berat ($W = m \cdot g$)** berubah tergantung gravitasi planet!
+                </p>
+            </div>
+
+            <!-- Interactive Tug-of-War Resultant Force Simulator -->
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="border-b border-sky-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-people-pulling text-amber-400"></i> Simulator Tarik Tambang Wulublolong (Resultan Vektor Gaya)
+                        </h3>
+                        <p class="text-xs text-sky-200">
+                            Atur gaya Tim Kiri ($F_1$) dan Tim Kanan ($F_2$) untuk menghitung $\Sigma F = F_1 - F_2$!
+                        </p>
+                    </div>
+                    <span id="resultant-badge" class="bg-slate-950 px-3 py-1.5 rounded-xl border border-emerald-500 text-xs font-mono font-bold text-emerald-300">
+                        ΣF = 0 N (Seimbang)
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="space-y-4 bg-slate-950 p-5 rounded-xl border border-sky-900 text-xs">
+                        <div>
+                            <label class="text-rose-400 font-bold block mb-1">Gaya Tim Kiri ($F_1$): <span id="val-f1" class="font-mono text-white">100 N</span></label>
+                            <input type="range" id="slider-f1" min="0" max="300" value="100" oninput="updateResultantSim()" class="w-full accent-rose-500">
+                        </div>
+
+                        <div>
+                            <label class="text-sky-400 font-bold block mb-1">Gaya Tim Kanan ($F_2$): <span id="val-f2" class="font-mono text-white">100 N</span></label>
+                            <input type="range" id="slider-f2" min="0" max="300" value="100" oninput="updateResultantSim()" class="w-full accent-sky-400">
+                        </div>
+
+                        <div id="resultant-calc-box" class="p-3 bg-emerald-950/80 rounded-xl border border-emerald-500 space-y-1">
+                            <span class="text-emerald-300 font-bold block">Status Gerak Benda:</span>
+                            <p id="resultant-desc" class="text-white text-xs font-semibold">Benda DIAM karena resultan gaya seimbang ($\Sigma F = 0$).</p>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 h-[260px] bg-slate-950 rounded-xl overflow-hidden border border-sky-800 relative">
+                        <canvas id="canvasResultant" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gravity & Weight Calculator -->
+            <div class="glass-card p-6 rounded-2xl border border-sky-500/30 space-y-4">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-calculator text-amber-300"></i> Kalkulator Perbedaan Massa vs Berat ($W = m \cdot g$)
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                    <div>
+                        <label class="text-sky-300 font-bold block mb-1">Masukkan Massa Siswa ($m$ in kg):</label>
+                        <input type="number" id="input-mass" value="45" oninput="calculateWeight()" class="w-full bg-slate-950 border border-sky-700 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-amber-400 font-mono">
+                    </div>
+                    <div>
+                        <label class="text-sky-300 font-bold block mb-1">Pilih Lokasi Gravitasi ($g$):</label>
+                        <select id="select-gravity" onchange="calculateWeight()" class="w-full bg-slate-950 border border-sky-700 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                            <option value="9.8">🌍 Bumi (Lewohedo, $g = 9.8\ m/s^2$)</option>
+                            <option value="1.6">🌕 Bulan ($g = 1.6\ m/s^2$)</option>
+                            <option value="3.7">🔴 Mars ($g = 3.7\ m/s^2$)</option>
+                            <option value="24.8">🪐 Yupiter ($g = 24.8\ m/s^2$)</option>
+                        </select>
+                    </div>
+                    <div class="bg-slate-950 p-3 rounded-xl border border-amber-500/50 flex flex-col justify-center">
+                        <span class="text-sky-300 font-bold">Hasil Berat ($W = m \cdot g$):</span>
+                        <span id="output-weight" class="text-xl font-extrabold text-amber-300 font-mono mt-0.5">441.0 Newton</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 4: Glosarium Fisika -->
+        <div id="section-glosarium" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2 border-b border-sky-800 pb-2">
+                    <i class="fa-solid fa-book-bookmark text-indigo-300"></i> Glosarium Fisika IPA SMP (Gerak & Gaya)
+                </h3>
+
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-sky-400"></i>
+                    <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Cari istilah fisika (misal: Inersia, Vektor, Gaya Gesek, Percepatan, Gravitasi)..." class="w-full bg-slate-950 border border-sky-700 text-white rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-sky-400 shadow-inner">
+                </div>
+
+                <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 5: Evaluasi & Sertifikat -->
+        <div id="section-evaluasi" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-sky-800 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-1">Kuis Evaluasi Hubungan Gerak & Gaya</h2>
+                        <p class="text-sky-100 text-sm">Uji pemahaman Anda dan dapatkan Sertifikat Kelulusan Digital Fisika IPA SMPN Satap Wulublolong!</p>
+                    </div>
+                    <div class="bg-slate-950 px-5 py-2.5 rounded-2xl border border-sky-800 text-center flex-shrink-0">
+                        <span class="text-xs text-sky-400 block font-bold">Skor Kamu</span>
+                        <span id="quiz-score" class="text-3xl font-black text-amber-300">0</span>
+                    </div>
+                </div>
+
+                <div id="quiz-container" class="space-y-6">
+                    <div class="flex justify-between items-center text-xs text-sky-300 font-bold">
+                        <span id="quiz-progress-text">Soal 1 dari 10</span>
+                        <span id="quiz-category" class="text-cyan-300 bg-cyan-500/20 px-3 py-1 rounded-full border border-cyan-400/30">
+                            Konsep Gaya
+                        </span>
+                    </div>
+
+                    <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-sky-800">
+                        <div id="quiz-progress-bar" class="bg-sky-400 h-full w-1/10 transition-all duration-300"></div>
+                    </div>
+
+                    <h3 id="quiz-question" class="text-base sm:text-lg font-bold text-white leading-relaxed">
+                        Memuat pertanyaan...
+                    </h3>
+
+                    <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Options populated via JS -->
+                    </div>
+
+                    <div id="quiz-feedback" class="hidden p-4 rounded-xl text-xs sm:text-sm font-semibold"></div>
+
+                    <button id="btn-next-quiz" onclick="nextQuestion()" class="hidden px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 ml-auto shadow-lg">
+                        Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Certificate Section (Hidden initially) -->
+                <div id="certificate-box" class="hidden space-y-6 text-center">
+                    <div class="text-5xl animate-bounce">🏆</div>
+                    <h3 class="text-2xl font-bold text-white">Selamat! Anda Berhasil Menyelesaikan Kuis Fisika Gerak & Gaya!</h3>
+                    <p class="text-xs sm:text-sm text-sky-200 max-w-xl mx-auto">
+                        Ketik nama lengkap Anda di bawah ini untuk mencetak Sertifikat Kelulusan Digital IPA SMPN Satap Wulublolong Desa Lewohedo.
+                    </p>
+
+                    <div class="max-w-md mx-auto flex gap-2">
+                        <input type="text" id="student-name-input" placeholder="Masukkan Nama Lengkap Siswa..." class="flex-1 bg-slate-950 border border-sky-700 text-white rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-amber-400">
+                        <button onclick="generateCertificate()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition shadow-md">
+                            <i class="fa-solid fa-certificate mr-1"></i> Buat Sertifikat
+                        </button>
+                    </div>
+
+                    <div class="relative max-w-2xl mx-auto rounded-2xl overflow-hidden border-2 border-amber-400 shadow-2xl bg-slate-950 p-2">
+                        <canvas id="canvasCert" class="w-full h-auto block rounded-xl"></canvas>
+                    </div>
+
+                    <div class="flex justify-center gap-4">
+                        <button onclick="downloadCertificate()" class="px-6 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh Sertifikat (PNG)
+                        </button>
+                        <button onclick="resetQuiz()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-sky-200 font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> Ulangi Kuis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-panel border-t border-sky-800 py-4 px-4 text-center text-xs text-sky-300 mt-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© 2026 SMPN Satap Wulublolong • Desa Lewohedo, Kec. Solor Timur, Kab. Flores Timur, NTT</p>
+            <p class="text-sky-400 font-medium">Media Pembelajaran Digital Fisika IPA SMP Kelas VII - Kurikulum Merdeka</p>
+        </div>
+    </footer>
+
+    <script>
+        let soundEnabled = true;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playTone(freq, type = 'sine', duration = 0.15) {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio playback muted");
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            const text = document.getElementById('sound-text');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-sky-400 text-sm";
+                text.innerText = "Efek Suara: Aktif";
+                playTone(523.25);
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-slate-500 text-sm";
+                text.innerText = "Efek Suara: Mute";
+            }
+        }
+
+        function switchTab(tabId) {
+            playTone(440);
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-sky-200 hover:bg-sky-950";
+            });
+
+            const activeContent = document.getElementById(`section-${tabId}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-sky-600 text-white shadow-lg shadow-sky-950/50";
+            }
+
+            setTimeout(() => {
+                if (tabId === 'konsep') initSortGame();
+                if (tabId === 'newton') selectNewtonTab(1);
+                if (tabId === 'resultan') initResultantSim();
+                if (tabId === 'glosarium') populateGlossary();
+            }, 50);
+        }
+
+        const sortItemsData = [
+            { id: 1, name: "⛵ Mendorong perahu kayu ke pantai Lewohedo", type: "sentuh" },
+            { id: 2, name: "🥥 Buah kelapa jatuh dari pohon ke tanah Lewohedo", type: "taksentuh" },
+            { id: 3, name: "🛞 Memasang rem sepeda di jalan berbatu Wulublolong", type: "sentuh" },
+            { id: 4, name: "🧲 Jarum kompas mengarah ke utara magnet bumi", type: "taksentuh" },
+            { id: 5, name: "🏹 Menarik karet ketapel untuk berburu mangga", type: "sentuh" },
+            { id: 6, name: "⚡ Penggaris plastik menarik serpihan kertas", type: "taksentuh" },
+            { id: 7, name: "🪵 Menarik gerobak hasil panen jagung Lewohedo", type: "sentuh" },
+            { id: 8, name: "🌍 Bulan mengorbit mengelilingi planet bumi", type: "taksentuh" }
+        ];
+
+        let userSortState = {};
+
+        function initSortGame() {
+            const pool = document.getElementById('sort-pool');
+            const zoneSentuh = document.getElementById('zone-sentuh');
+            const zoneTakSentuh = document.getElementById('zone-taksentuh');
+            if (!pool) return;
+
+            pool.innerHTML = '';
+            zoneSentuh.innerHTML = '';
+            zoneTakSentuh.innerHTML = '';
+            userSortState = {};
+
+            sortItemsData.forEach(item => {
+                const btn = document.createElement('button');
+                btn.id = `sort-item-${item.id}`;
+                btn.className = "px-3 py-2 rounded-xl bg-slate-900 border border-sky-600 text-white font-medium text-xs hover:border-amber-400 transition shadow flex items-center gap-2";
+                btn.innerHTML = `${item.name}`;
+                btn.onclick = () => openSortAction(item);
+                pool.appendChild(btn);
+            });
+
+            updateSortScore();
+        }
+
+        function openSortAction(item) {
+            playTone(500);
+            if (userSortState[item.id]) return;
+
+            const targetZone = confirm(`Apakah "${item.name}" merupakan contoh GAYA SENTUH?\n\nKlik OK untuk GAYA SENTUH, Batal untuk GAYA TAK SENTUH.`) ? 'sentuh' : 'taksentuh';
+
+            userSortState[item.id] = targetZone;
+            const btn = document.getElementById(`sort-item-${item.id}`);
+
+            if (targetZone === item.type) {
+                playTone(700);
+                btn.className = "px-3 py-1.5 rounded-lg bg-sky-900 border border-sky-400 text-sky-200 font-medium text-xs flex items-center gap-1";
+                btn.innerHTML = `<i class="fa-solid fa-check text-sky-400"></i> ${item.name}`;
+                if (item.type === 'sentuh') document.getElementById('zone-sentuh').appendChild(btn);
+                else document.getElementById('zone-taksentuh').appendChild(btn);
+            } else {
+                playTone(200);
+                alert(`❌ Kurang tepat! "${item.name}" termasuk kategori ${item.type === 'sentuh' ? 'GAYA SENTUH' : 'GAYA TAK SENTUH'}.`);
+                delete userSortState[item.id];
+            }
+
+            updateSortScore();
+        }
+
+        function updateSortScore() {
+            let correct = 0;
+            Object.keys(userSortState).forEach(id => {
+                const item = sortItemsData.find(x => x.id === parseInt(id));
+                if (item && userSortState[id] === item.type) correct++;
+            });
+
+            document.getElementById('sort-score-display').innerText = `Skor: ${correct} / ${sortItemsData.length}`;
+
+            const fb = document.getElementById('sort-feedback');
+            if (correct === sortItemsData.length) {
+                fb.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold bg-sky-900/80 border border-sky-400 text-sky-200 block";
+                fb.innerHTML = `🎉 <strong>Hebat!</strong> Anda berhasil mengklasifikasikan seluruh jenis gaya aktivitas Lewohedo dengan sempurna!`;
+            } else {
+                fb.classList.add('hidden');
+            }
+        }
+
+        function resetSortGame() {
+            initSortGame();
+        }
+
+        let activeLaw = 1;
+
+        function selectNewtonTab(lawNum) {
+            playTone(550);
+            activeLaw = lawNum;
+            document.querySelectorAll('.law-btn').forEach(b => {
+                b.className = "law-btn px-4 py-2 rounded-xl font-bold text-xs bg-slate-900 text-sky-200 hover:bg-sky-950";
+            });
+
+            document.getElementById(`btn-law-${lawNum}`).className = "law-btn px-4 py-2 rounded-xl font-bold text-xs bg-amber-500 text-slate-950 shadow-md";
+
+            document.getElementById('view-law-1').classList.add('hidden');
+            document.getElementById('view-law-2').classList.add('hidden');
+            document.getElementById('view-law-3').classList.add('hidden');
+
+            document.getElementById(`view-law-${lawNum}`).classList.remove('hidden');
+
+            setTimeout(() => {
+                if (lawNum === 1) renderLaw1Canvas('normal');
+                if (lawNum === 2) updateLaw2Sim();
+                if (lawNum === 3) renderLaw3Canvas('idle');
+            }, 50);
+        }
+
+        // Law 1 Canvas
+        let inertiaState = 'normal';
+        function triggerInertia(type) {
+            playTone(600);
+            inertiaState = type;
+            renderLaw1Canvas(type);
+            setTimeout(() => {
+                inertiaState = 'normal';
+                renderLaw1Canvas('normal');
+            }, 1800);
+        }
+
+        function renderLaw1Canvas(mode) {
+            const canvas = document.getElementById('canvasLaw1');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 260;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Ground Road Wulublolong
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, h - 50, w, 50);
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(0, h - 50, w, 50);
+
+            // Road markings
+            ctx.strokeStyle = '#fbbf24';
+            ctx.setLineDash([15, 15]);
+            ctx.beginPath();
+            ctx.moveTo(0, h - 25);
+            ctx.lineTo(w, h - 25);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Pick-up Truck position
+            let truckX = w / 2 - 60;
+            let passengerTilt = 0;
+
+            if (mode === 'brake') passengerTilt = 25; // Tilt forward
+            if (mode === 'gas') passengerTilt = -25; // Tilt backward
+
+            // Truck Body
+            ctx.fillStyle = '#0284c7';
+            ctx.fillRect(truckX, h - 90, 120, 40);
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillRect(truckX + 80, h - 115, 40, 25);
+
+            // Wheels
+            ctx.fillStyle = '#020617';
+            ctx.beginPath();
+            ctx.arc(truckX + 25, h - 48, 14, 0, Math.PI * 2);
+            ctx.arc(truckX + 95, h - 48, 14, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Passenger Stickman in back bed
+            ctx.save();
+            ctx.translate(truckX + 40, h - 90);
+            ctx.rotate((passengerTilt * Math.PI) / 180);
+
+            // Head
+            ctx.fillStyle = '#fef08a';
+            ctx.beginPath();
+            ctx.arc(0, -30, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Body
+            ctx.strokeStyle = '#fef08a';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(0, -20);
+            ctx.lineTo(0, 0);
+            ctx.stroke();
+
+            ctx.restore();
+
+            // Overlay Text
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 12px Plus Jakarta Sans';
+            if (mode === 'brake') {
+                ctx.fillStyle = '#f43f5e';
+                ctx.fillText('⚡ REM MENDADAK! Penumpang terdorong KE DEPAN (Mempertahankan Gerak)', 20, 30);
+            } else if (mode === 'gas') {
+                ctx.fillStyle = '#10b981';
+                ctx.fillText('⚡ TANCAP GAS! Penumpang terdorong KE BELAKANG (Mempertahankan Diam)', 20, 30);
+            } else {
+                ctx.fillText('Mobil Pikap Desa Lewohedo • Klik tombol aksi untuk menguji Inersia!', 20, 30);
+            }
+        }
+
+        // Law 2 Canvas
+        let animLaw2Id = null;
+        function updateLaw2Sim() {
+            const F = parseFloat(document.getElementById('slider-force').value);
+            const m = parseFloat(document.getElementById('slider-mass').value);
+            const a = (F / m).toFixed(2);
+
+            document.getElementById('val-force').innerText = `${F} N`;
+            document.getElementById('val-mass').innerText = `${m} kg`;
+            document.getElementById('result-accel').innerText = `${a} m/s²`;
+
+            renderLaw2Canvas(0);
+        }
+
+        function runLaw2Animation() {
+            playTone(650);
+            if (animLaw2Id) cancelAnimationFrame(animLaw2Id);
+            let posX = 30;
+            const F = parseFloat(document.getElementById('slider-force').value);
+            const m = parseFloat(document.getElementById('slider-mass').value);
+            const a = F / m;
+
+            let vel = 0;
+            function step() {
+                vel += a * 0.08;
+                posX += vel;
+                renderLaw2Canvas(posX);
+                if (posX < 380) {
+                    animLaw2Id = requestAnimationFrame(step);
+                }
+            }
+            step();
+        }
+
+        function renderLaw2Canvas(posX) {
+            const canvas = document.getElementById('canvasLaw2');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 260;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Ground
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, h - 40, w, 40);
+
+            // Cart (Gerobak Batu Lewohedo)
+            const cartW = 80;
+            const cartH = 40;
+            const x = Math.min(posX, w - cartW - 20);
+
+            ctx.fillStyle = '#b45309';
+            ctx.fillRect(x, h - 80, cartW, cartH);
+
+            // Stones inside cart
+            ctx.fillStyle = '#64748b';
+            ctx.beginPath();
+            ctx.arc(x + 20, h - 85, 12, 0, Math.PI * 2);
+            ctx.arc(x + 40, h - 90, 15, 0, Math.PI * 2);
+            ctx.arc(x + 60, h - 85, 11, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Cart Wheels
+            ctx.fillStyle = '#020617';
+            ctx.beginPath();
+            ctx.arc(x + 18, h - 38, 12, 0, Math.PI * 2);
+            ctx.arc(x + 62, h - 38, 12, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Force Arrow Vector
+            const F = parseFloat(document.getElementById('slider-force').value);
+            const arrowLen = Math.min(F, 120);
+
+            ctx.strokeStyle = '#f59e0b';
+            ctx.fillStyle = '#f59e0b';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(x + cartW, h - 60);
+            ctx.lineTo(x + cartW + arrowLen, h - 60);
+            ctx.stroke();
+
+            // Arrow head
+            ctx.beginPath();
+            ctx.moveTo(x + cartW + arrowLen, h - 66);
+            ctx.lineTo(x + cartW + arrowLen + 10, h - 60);
+            ctx.lineTo(x + cartW + arrowLen, h - 54);
+            ctx.fill();
+
+            ctx.font = 'bold 12px Plus Jakarta Sans';
+            ctx.fillText(`F = ${F} N`, x + cartW + 10, h - 70);
+        }
+
+        // Law 3 Canvas
+        function triggerRowingAction() {
+            playTone(700);
+            renderLaw3Canvas('rowing');
+            setTimeout(() => {
+                renderLaw3Canvas('idle');
+            }, 1800);
+        }
+
+        function renderLaw3Canvas(mode) {
+            const canvas = document.getElementById('canvasLaw3');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 260;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Water Sea Solor
+            ctx.fillStyle = '#0369a1';
+            ctx.fillRect(0, h - 80, w, 80);
+
+            // Boat
+            let boatX = w / 2 - 60;
+            if (mode === 'rowing') boatX += 30;
+
+            ctx.fillStyle = '#78350f';
+            ctx.beginPath();
+            ctx.moveTo(boatX, h - 70);
+            ctx.lineTo(boatX + 120, h - 70);
+            ctx.lineTo(boatX + 100, h - 45);
+            ctx.lineTo(boatX + 20, h - 45);
+            ctx.closePath();
+            ctx.fill();
+
+            // Rower Stickman
+            ctx.fillStyle = '#fef08a';
+            ctx.beginPath();
+            ctx.arc(boatX + 50, h - 95, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Oar / Dayung Vector
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(boatX + 50, h - 85);
+            ctx.lineTo(boatX + 20, h - 50);
+            ctx.stroke();
+
+            // Vectors display
+            if (mode === 'rowing') {
+                // Action Vector (Push water backward)
+                ctx.strokeStyle = '#ef4444';
+                ctx.fillStyle = '#ef4444';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(boatX + 20, h - 50);
+                ctx.lineTo(boatX - 30, h - 50);
+                ctx.stroke();
+
+                ctx.font = 'bold 11px Plus Jakarta Sans';
+                ctx.fillText('AKSI: Dayung Dorong Air ke Belakang', boatX - 110, h - 30);
+
+                // Reaction Vector (Boat moves forward)
+                ctx.strokeStyle = '#10b981';
+                ctx.fillStyle = '#10b981';
+                ctx.beginPath();
+                ctx.moveTo(boatX + 120, h - 60);
+                ctx.lineTo(boatX + 170, h - 60);
+                ctx.stroke();
+
+                ctx.fillText('REAKSI: Perahu Maju ke Depan', boatX + 120, h - 80);
+            } else {
+                ctx.fillStyle = '#38bdf8';
+                ctx.font = 'bold 12px Plus Jakarta Sans';
+                ctx.fillText('Klik "Mendayung Perahu" untuk melihat vektor Gaya Aksi & Reaksi!', 20, 30);
+            }
+        }
+
+        function initResultantSim() {
+            updateResultantSim();
+            calculateWeight();
+        }
+
+        function updateResultantSim() {
+            const F1 = parseFloat(document.getElementById('slider-f1').value);
+            const F2 = parseFloat(document.getElementById('slider-f2').value);
+
+            document.getElementById('val-f1').innerText = `${F1} N`;
+            document.getElementById('val-f2').innerText = `${F2} N`;
+
+            const netF = F2 - F1; // Right minus Left
+            const badge = document.getElementById('resultant-badge');
+            const desc = document.getElementById('resultant-desc');
+
+            if (netF === 0) {
+                badge.className = "bg-slate-950 px-3 py-1.5 rounded-xl border border-emerald-500 text-xs font-mono font-bold text-emerald-300";
+                badge.innerText = "ΣF = 0 N (Seimbang / Diam)";
+                desc.innerText = "Benda DIAM atau bergerak lurus beraturan karena resultan gaya seimbang (ΣF = 0).";
+            } else if (netF > 0) {
+                badge.className = "bg-slate-950 px-3 py-1.5 rounded-xl border border-sky-500 text-xs font-mono font-bold text-sky-300";
+                badge.innerText = `ΣF = +${netF} N (Bergerak ke Kanan)`;
+                desc.innerText = `Benda mengalami PERCEPATAN KE KANAN sebesar resultan ΣF = +${netF} N.`;
+            } else {
+                badge.className = "bg-slate-950 px-3 py-1.5 rounded-xl border border-rose-500 text-xs font-mono font-bold text-rose-300";
+                badge.innerText = `ΣF = ${netF} N (Bergerak ke Kiri)`;
+                desc.innerText = `Benda mengalami PERCEPATAN KE KIRI sebesar resultan ΣF = ${netF} N.`;
+            }
+
+            renderResultantCanvas(F1, F2, netF);
+        }
+
+        function renderResultantCanvas(F1, F2, netF) {
+            const canvas = document.getElementById('canvasResultant');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 260;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Ground
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, h - 40, w, 40);
+
+            // Box in center
+            let boxX = w / 2 - 40;
+            if (netF > 0) boxX += Math.min(netF / 3, 60);
+            if (netF < 0) boxX += Math.max(netF / 3, -60);
+
+            ctx.fillStyle = '#0284c7';
+            ctx.fillRect(boxX, h - 100, 80, 60);
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(boxX, h - 100, 80, 60);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('Benda', boxX + 40, h - 65);
+
+            // Vector F1 (Left Pull)
+            ctx.strokeStyle = '#f43f5e';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(boxX, h - 70);
+            ctx.lineTo(boxX - F1 / 3, h - 70);
+            ctx.stroke();
+
+            ctx.fillStyle = '#f43f5e';
+            ctx.fillText(`F1 = ${F1} N`, boxX - F1 / 3 - 20, h - 75);
+
+            // Vector F2 (Right Pull)
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(boxX + 80, h - 70);
+            ctx.lineTo(boxX + 80 + F2 / 3, h - 70);
+            ctx.stroke();
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillText(`F2 = ${F2} N`, boxX + 80 + F2 / 3 + 20, h - 75);
+        }
+
+        function calculateWeight() {
+            const m = parseFloat(document.getElementById('input-mass').value) || 0;
+            const g = parseFloat(document.getElementById('select-gravity').value) || 0;
+            const weight = (m * g).toFixed(1);
+
+            document.getElementById('output-weight').innerText = `${weight} Newton`;
+        }
+
+        const glossaryData = [
+            { term: "Gaya (F)", desc: "Tarikan atau dorongan pada benda yang diukur dalam satuan Newton (N)." },
+            { term: "Inersia / Kelembaman", desc: "Kecenderungan alami setiap benda untuk mempertahankan keadaan diam atau geraknya." },
+            { term: "Percepatan (a)", desc: "Perubahan kecepatan benda tiap satuan waktu ($m/s^2$)." },
+            { term: "Resultan Gaya (ΣF)", desc: "Penjumlahan seluruh vektor gaya yang bekerja pada suatu benda." },
+            { term: "Gaya Gesek Static", desc: "Gaya gesek yang bekerja saat benda masih diam tepat sebelum bergerak." },
+            { term: "Gaya Gesek Kinetis", desc: "Gaya gesek yang bekerja saat permukaan benda sedang meluncur/bergerak." },
+            { term: "Gaya Gravitasi (g)", desc: "Gaya tarik-menarik antar massa, di bumi rata-rata berharga $9.8\ m/s^2$." },
+            { term: "Massa (m)", desc: "Jumlah materi dalam benda yang nilainya selalu konstan di mana pun (kg)." }
+        ];
+
+        function populateGlossary() {
+            const container = document.getElementById('glossary-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            glossaryData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "glass-card p-4 rounded-xl border border-sky-800 space-y-1.5 gloss-item";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <strong class="text-amber-300 font-bold text-sm">${item.term}</strong>
+                        <span class="text-[10px] bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded border border-sky-500/30">Fisika SMP VII</span>
+                    </div>
+                    <p class="text-xs text-sky-100 leading-relaxed">${item.desc}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterGlossary() {
+            const q = document.getElementById('glossary-search').value.toLowerCase();
+            document.querySelectorAll('.gloss-item').forEach(el => {
+                const text = el.innerText.toLowerCase();
+                if (text.includes(q)) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+        }
+
+        const quizQuestions = [
+            {
+                question: "Saat nelayan Desa Lewohedo mendorong perahu kayu dari darat ke Selat Solor, jenis gaya yang diberikan oleh otot manusia dinamakan...",
+                category: "Jenis Gaya",
+                options: [
+                    "Gaya Sentuh (Gaya Otot)",
+                    "Gaya Tak Sentuh (Gaya Gravitasi)",
+                    "Gaya Listrik Statis",
+                    "Gaya Magnetik"
+                ],
+                correct: 0,
+                explanation: "Gaya otot timbul akibat sentuhan fisik langsung antara tubuh manusia dan objek."
+            },
+            {
+                question: "Buah kelapa yang matang jatuh dari pohonnya di kebun Wulublolong bergerak makin cepat ke bawah karena pengaruh...",
+                category: "Gaya Gravitasi",
+                options: [
+                    "Gaya Gravitasi Bumi",
+                    "Gaya Gesek Udara",
+                    "Gaya Magnetik Bumi",
+                    "Gaya Pegas"
+                ],
+                correct: 0,
+                explanation: "Gaya gravitasi menarik semua benda bermassa menuju ke pusat bumi."
+            },
+            {
+                question: "Ketika pikap sayur Lewohedo mendadak direm, penumpang terdorong ke depan. Peristiwa ini sesuai dengan...",
+                category: "Hukum I Newton",
+                options: [
+                    "Hukum I Newton (Inersia / Kelembaman)",
+                    "Hukum II Newton (F = m · a)",
+                    "Hukum III Newton (Aksi - Reaksi)",
+                    "Hukum Kekekalan Energi"
+                ],
+                correct: 0,
+                explanation: "Hukum I Newton menyatakan benda cenderung mempertahankan keadaan gerak/diamnya."
+            },
+            {
+                question: "Seseorang mendorong gerobak jagung bermassa 20 kg dengan gaya 100 N. Berapakah percepatan gerobak tersebut? ($a = F/m$)",
+                category: "Hukum II Newton",
+                options: ["5 m/s²", "2000 m/s²", "0.2 m/s²", "80 m/s²"],
+                correct: 0,
+                explanation: "a = F / m = 100 N / 20 kg = 5 m/s²."
+            },
+            {
+                question: "Jika dua orang siswa Wulublolong mendorong meja dari arah berlawanan, siswa A mendorong ke kanan 80 N dan siswa B ke kiri 50 N, resultan gayanya adalah...",
+                category: "Resultan Gaya",
+                options: [
+                    "30 N ke kanan",
+                    "130 N ke kiri",
+                    "30 N ke kiri",
+                    "0 N (Seimbang)"
+                ],
+                correct: 0,
+                explanation: "Resultan ΣF = 80 N (Kanan) - 50 N (Kiri) = 30 N ke arah kanan."
+            },
+            {
+                question: "Saat mendayung perahu di pantai Lewohedo, dayung menolak air ke belakang (Aksi) dan air mendorong perahu ke depan (Reaksi). Ini contoh penerapan...",
+                category: "Hukum III Newton",
+                options: [
+                    "Hukum III Newton (Gaya Aksi - Reaksi)",
+                    "Hukum I Newton",
+                    "Hukum Gravitasi Universal",
+                    "Gaya Gesek Statis"
+                ],
+                correct: 0,
+                explanation: "Gaya aksi menimbulkan gaya reaksi yang sama besar namun berlawanan arah."
+            },
+            {
+                question: "Seorang siswa memiliki massa 40 kg di Desa Lewohedo ($g = 9.8\ m/s^2$). Berapakah berat siswa tersebut? ($W = m \cdot g$)",
+                category: "Massa & Berat",
+                options: ["392 Newton", "40 Newton", "4000 Newton", "4.08 Newton"],
+                correct: 0,
+                explanation: "Berat W = m · g = 40 kg × 9.8 m/s² = 392 N."
+            },
+            {
+                question: "Manakah pernyataan yang BENAR mengenai perbedaan Massa dan Berat?",
+                category: "Konsep Fisika",
+                options: [
+                    "Massa nilainya tetap di mana saja, sedangkan Berat berubah tergantung gravitasi",
+                    "Massa diukur dalam Newton, Berat diukur dalam kilogram",
+                    "Massa berubah tergantung tempat, Berat selalu konstan",
+                    "Massa dan Berat adalah besaran yang sama persis"
+                ],
+                correct: 0,
+                explanation: "Massa (kg) adalah jumlah materi konstan, sedangkan Berat (N) bergantung pada gaya gravitasi lokasi."
+            },
+            {
+                question: "Fungsi alur ulir pada ban sepeda/motor di jalanan licin Wulublolong adalah untuk...",
+                category: "Gaya Gesek",
+                options: [
+                    "Memperbesar gaya gesek agar tidak slip/tergelincir",
+                    "Memperkecil gaya gesek agar roda makin licin",
+                    "Eliminasi gaya gravitasi",
+                    "Menambah kecepatan tanpa gaya"
+                ],
+                correct: 0,
+                explanation: "Alur ban sengaja dibuat kasar untuk memperbesar gaya gesek sehingga memberikan cengkeraman pada jalan."
+            },
+            {
+                question: "Alat untuk mengukur besarnya gaya secara langsung dinamakan...",
+                category: "Alat Ukur",
+                options: [
+                    "Dinamometer (Neraca Pegas)",
+                    "Barometer",
+                    "Thermometer",
+                    "Stopwatch"
+                ],
+                correct: 0,
+                explanation: "Dinamometer (neraca pegas) adalah instrumen pengukur gaya dengan satuan Newton."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            const q = quizQuestions[currentQuizIndex];
+
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuizIndex + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quiz-category').innerText = q.category;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQuizIndex + 1) / quizQuestions.length) * 100}%`;
+            document.getElementById('quiz-question').innerText = `${currentQuizIndex + 1}. ${q.question}`;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 rounded-xl bg-slate-950 border border-sky-800 hover:border-amber-400 text-sky-100 text-xs sm:text-sm font-medium transition flex items-center justify-between";
+                btn.innerHTML = `<span>${String.fromCharCode(65 + idx)}. ${opt}</span> <i class="fa-regular fa-circle text-sky-600"></i>`;
+                btn.onclick = () => selectOption(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+        }
+
+        function selectOption(selectedIndex, btnEl) {
+            if (answered) return;
+            answered = true;
+
+            const q = quizQuestions[currentQuizIndex];
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const allBtns = document.getElementById('quiz-options').children;
+
+            if (selectedIndex === q.correct) {
+                score += 10;
+                playTone(650);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-sky-900 border-2 border-sky-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-check text-sky-300 text-lg"></i>`;
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-sky-900/70 border border-sky-500 text-sky-200";
+                feedbackEl.innerHTML = `🎉 <strong>Tepat sekali!</strong> ${q.explanation}`;
+            } else {
+                playTone(220);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-rose-950 border-2 border-rose-500 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-xmark text-rose-400 text-lg"></i>`;
+
+                const correctBtn = allBtns[q.correct];
+                correctBtn.className = "w-full text-left p-3.5 rounded-xl bg-sky-900 border-2 border-sky-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-rose-950/70 border border-rose-500 text-rose-200";
+                feedbackEl.innerHTML = `❌ <strong>Kurang Tepat.</strong> ${q.explanation}`;
+            }
+
+            document.getElementById('quiz-score').innerText = score;
+            feedbackEl.classList.remove('hidden');
+            document.getElementById('btn-next-quiz').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            playTone(480);
+            currentQuizIndex++;
+            if (currentQuizIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('certificate-box').classList.remove('hidden');
+                generateCertificate();
+            }
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            document.getElementById('quiz-score').innerText = score;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('certificate-box').classList.add('hidden');
+            loadQuestion();
+        }
+
+        function generateCertificate() {
+            const name = document.getElementById('student-name-input').value || "Siswa SMP Kelas VII";
+            const canvas = document.getElementById('canvasCert');
+            if (!canvas) return;
+            canvas.width = 800;
+            canvas.height = 500;
+
+            const ctx = canvas.getContext('2d');
+            
+            // Background Physics Theme
+            const grad = ctx.createLinearGradient(0, 0, 800, 500);
+            grad.addColorStop(0, '#030712');
+            grad.addColorStop(0.5, '#0f172a');
+            grad.addColorStop(1, '#1e1b4b');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 800, 500);
+
+            // Gold and Sky Border
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(15, 15, 770, 470);
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(25, 25, 750, 450);
+
+            // Watermark icon
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.05)';
+            ctx.font = '160px Plus Jakarta Sans';
+            ctx.fillText('⚡', 320, 310);
+
+            // Header Title
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = 'bold 24px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('SERTIFIKAT KELULUSAN PEMBELAJARAN IPA FISIKA', 400, 80);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = '14px Plus Jakarta Sans';
+            ctx.fillText('SMPN SATAP WULUBLOLONG • DESA LEWOHEDO, FLORES TIMUR', 400, 110);
+
+            ctx.fillStyle = '#f0f9ff';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Diberikan Kepada Siswa/i:', 400, 160);
+
+            // Student Name
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 28px Plus Jakarta Sans';
+            ctx.fillText(name, 400, 210);
+
+            // Module Title
+            ctx.fillStyle = '#e0f2fe';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Telah Menyelesaikan Modul Interaktif & Evaluasi Fisika IPA:', 400, 260);
+            ctx.font = 'bold 16px Plus Jakarta Sans';
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillText('HUBUNGAN GERAK DAN GAYA (KELAS VII)', 400, 290);
+
+            // Score Badge
+            ctx.fillStyle = '#0284c7';
+            ctx.fillRect(300, 320, 200, 45);
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(300, 320, 200, 45);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px Plus Jakarta Sans';
+            ctx.fillText(`NILAI EVALUASI: ${score} / 100`, 400, 348);
+
+            // Date & Location
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '12px Plus Jakarta Sans';
+            ctx.fillText('Desa Lewohedo, Kec. Solor Timur, Kabupaten Flores Timur, NTT', 400, 410);
+            ctx.fillText('Media Lab Digital Fisika Kurikulum Merdeka SMP VII', 400, 430);
+        }
+
+        function downloadCertificate() {
+            playTone(600);
+            const canvas = document.getElementById('canvasCert');
+            const link = document.createElement('a');
+            link.download = `Sertifikat_Gerak_dan_Gaya_SMPN_Wulublolong_${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        window.onload = function() {
+            initSortGame();
+            selectNewtonTab(1);
+            initResultantSim();
+            populateGlossary();
+            loadQuestion();
+
+            window.addEventListener('resize', () => {
+                if (activeLaw === 1) renderLaw1Canvas(inertiaState);
+                if (activeLaw === 2) updateLaw2Sim();
+                if (activeLaw === 3) renderLaw3Canvas('idle');
+                updateResultantSim();
+            });
+        };
+    </script>
+</body>
+</html>
