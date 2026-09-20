@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papan Interaktif Suhu, Kalor & Pemuaian - IPA SMP Kelas 7</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for physics formulas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            color: #f0f9ff;
+        }
+        .blue-bg-pattern {
+            background-color: #030712;
+            background-image: radial-gradient(#0284c7 1.5px, transparent 1.5px), radial-gradient(#2563eb 1.5px, #030712 1.5px);
+            background-size: 36px 36px;
+            background-position: 0 0, 18px 18px;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+        }
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(3, 7, 18, 0.9);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body class="min-h-screen blue-bg-pattern flex flex-col justify-between custom-scrollbar selection:bg-sky-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-sky-800/60 px-4 py-3 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-400 via-blue-600 to-cyan-300 p-0.5 shadow-lg flex-shrink-0 glow-blue">
+                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+                        <span class="text-2xl animate-pulse">🌡️</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold tracking-wider text-sky-300 uppercase bg-sky-500/20 px-2.5 py-0.5 rounded-full border border-sky-400/40">
+                            Fisika Terpadu SMP
+                        </span>
+                        <span class="text-[10px] font-bold text-cyan-300 bg-cyan-500/20 px-2 py-0.5 rounded-full border border-cyan-400/30">
+                            Kurikulum Merdeka Kelas VII
+                        </span>
+                    </div>
+                    <h1 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mt-0.5">
+                        Papan Interaktif Suhu, Kalor & Pemuaian
+                    </h1>
+                    <p class="text-xs text-sky-200/90 font-medium">
+                        SMPN SATAP WuluBlolong • Solor Barat, Kab. Flores Timur, NTT
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <div class="hidden lg:flex flex-col text-right text-xs">
+                    <span class="text-sky-300 font-semibold">Tahun Ajaran 2026/2027</span>
+                    <span class="text-sky-200/70 text-[11px]">Media Lab Digital Sains Fisika</span>
+                </div>
+                <button id="btn-sound" onclick="toggleSound()" class="px-3.5 py-2 rounded-xl bg-slate-950/80 hover:bg-sky-900 text-sky-200 text-xs font-semibold border border-sky-700/80 flex items-center gap-2 transition shadow-md">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-sky-400 text-sm"></i>
+                    <span id="sound-text">Efek Suara: Aktif</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+        <!-- Navigation Tabs Bar -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-sky-800/80 pb-3">
+            <button onclick="switchTab('suhu')" id="tab-btn-suhu" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-sky-600 text-white shadow-lg shadow-sky-950/50">
+                <i class="fa-solid fa-temperature-half text-cyan-300"></i> 1. Suhu & Konversi Termometer
+            </button>
+            <button onclick="switchTab('kalor')" id="tab-btn-kalor" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-sky-200 hover:bg-sky-950">
+                <i class="fa-solid fa-fire-burner text-amber-300"></i> 2. Lab Kalor & Kurva Pemanasan
+            </button>
+            <button onclick="switchTab('pemuaian')" id="tab-btn-pemuaian" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-sky-200 hover:bg-sky-950">
+                <i class="fa-solid fa-up-right-and-down-left-from-center text-emerald-300"></i> 3. Lab Pemuaian & Bimetal
+            </button>
+            <button onclick="switchTab('perpindahan')" id="tab-btn-perpindahan" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-sky-200 hover:bg-sky-950">
+                <i class="fa-solid fa-arrows-spin text-cyan-300"></i> 4. Perpindahan Kalor
+            </button>
+            <button onclick="switchTab('glosarium')" id="tab-btn-glosarium" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-sky-200 hover:bg-sky-950">
+                <i class="fa-solid fa-book-bookmark text-yellow-300"></i> 5. Glosarium Fisika
+            </button>
+            <button onclick="switchTab('evaluasi')" id="tab-btn-evaluasi" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-sky-200 hover:bg-sky-950">
+                <i class="fa-solid fa-trophy text-amber-300"></i> 6. Kuis & Sertifikat
+            </button>
+        </div>
+
+        <div id="section-suhu" class="tab-content block space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-sky-400 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 opacity-10 text-9xl select-none">🌡️</div>
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 1: Konsep Suhu & Konversi Skala Termometer</h2>
+                <p class="text-sky-100 text-sm max-w-4xl leading-relaxed">
+                    Suhu adalah derajat panas atau dinginnya suatu benda. Alat untuk mengukur suhu secara akurat adalah **Termometer**. Ada 4 skala suhu yang umum digunakan: **Celcius (°C)**, **Reamur (°R)**, **Fahrenheit (°F)**, dan **Kelvin (K)**.
+                </p>
+            </div>
+
+            <!-- Thermometer Comparison Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-card p-4 rounded-2xl border border-sky-500/30 text-center space-y-2">
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest block">Skala Celcius</span>
+                    <div class="text-3xl font-black text-white">°C</div>
+                    <div class="p-2 bg-slate-950/80 rounded-xl text-xs space-y-1 font-mono">
+                        <div class="text-rose-400">Titik Didih: 100°C</div>
+                        <div class="text-cyan-300">Titik Beku: 0°C</div>
+                        <div class="text-slate-400">Rentang: 100 Skala</div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 rounded-2xl border border-blue-500/30 text-center space-y-2">
+                    <span class="text-xs font-bold text-blue-400 uppercase tracking-widest block">Skala Reamur</span>
+                    <div class="text-3xl font-black text-white">°R</div>
+                    <div class="p-2 bg-slate-950/80 rounded-xl text-xs space-y-1 font-mono">
+                        <div class="text-rose-400">Titik Didih: 80°R</div>
+                        <div class="text-cyan-300">Titik Beku: 0°R</div>
+                        <div class="text-slate-400">Rentang: 80 Skala</div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 rounded-2xl border border-indigo-500/30 text-center space-y-2">
+                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest block">Skala Fahrenheit</span>
+                    <div class="text-3xl font-black text-white">°F</div>
+                    <div class="p-2 bg-slate-950/80 rounded-xl text-xs space-y-1 font-mono">
+                        <div class="text-rose-400">Titik Didih: 212°F</div>
+                        <div class="text-cyan-300">Titik Beku: 32°F</div>
+                        <div class="text-slate-400">Rentang: 180 Skala</div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 rounded-2xl border border-emerald-500/30 text-center space-y-2">
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block">Skala Kelvin (SI)</span>
+                    <div class="text-3xl font-black text-white">K</div>
+                    <div class="p-2 bg-slate-950/80 rounded-xl text-xs space-y-1 font-mono">
+                        <div class="text-rose-400">Titik Didih: 373 K</div>
+                        <div class="text-cyan-300">Titik Beku: 273 K</div>
+                        <div class="text-slate-400">Rentang: 100 Skala</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="border-b border-sky-800/80 pb-3">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-sky-400"></i> Simulator Interaktif Konversi Suhu
+                    </h3>
+                    <p class="text-xs text-sky-200">
+                        Geser slider suhu dalam Celcius untuk melihat konversi serentak ke Reamur, Fahrenheit, dan Kelvin beserta perbandingan visual raksa termometer!
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                    <div class="space-y-4 bg-slate-950/90 p-5 rounded-xl border border-sky-800 text-xs">
+                        <div>
+                            <div class="flex justify-between font-bold mb-2">
+                                <span class="text-sky-300 text-sm">Input Suhu (°C):</span>
+                                <span id="temp-c-val" class="text-amber-300 font-mono text-base">30 °C</span>
+                            </div>
+                            <input type="range" id="temp-c-slider" min="-20" max="120" value="30" step="1" oninput="updateTemperatureConverter()" class="w-full accent-sky-400 cursor-pointer h-2 bg-slate-800 rounded-lg">
+                        </div>
+
+                        <div class="space-y-2 font-mono text-xs pt-2 border-t border-sky-900">
+                            <div class="flex justify-between items-center bg-slate-900 p-2.5 rounded-lg border border-sky-800/60">
+                                <span class="text-sky-300 font-semibold">Skala Reamur (°R):</span>
+                                <span id="res-r" class="text-cyan-300 font-bold text-sm">24.0 °R</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-slate-900 p-2.5 rounded-lg border border-sky-800/60">
+                                <span class="text-sky-300 font-semibold">Skala Fahrenheit (°F):</span>
+                                <span id="res-f" class="text-amber-300 font-bold text-sm">86.0 °F</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-slate-900 p-2.5 rounded-lg border border-sky-800/60">
+                                <span class="text-sky-300 font-semibold">Skala Kelvin (K):</span>
+                                <span id="res-k" class="text-emerald-300 font-bold text-sm">303.0 K</span>
+                            </div>
+                        </div>
+
+                        <!-- Formula Ratio Info Box -->
+                        <div class="p-3 bg-sky-950/60 rounded-xl border border-sky-700/80 text-[11px] space-y-1 text-sky-200">
+                            <p class="font-bold text-amber-300">📐 Perbandingan Skala:</p>
+                            <p>$$C : R : (F - 32) : (K - 273) = 5 : 4 : 9 : 5$$</p>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Thermometer Graphic -->
+                    <div class="lg:col-span-2 h-[280px] bg-slate-950 rounded-xl overflow-hidden border border-sky-800 p-2 relative">
+                        <canvas id="canvasThermometer" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-kalor" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-amber-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 2: Lab Kalor, Kalor Jenis & Perubahan Wujud Zat</h2>
+                <p class="text-sky-100 text-sm max-w-4xl leading-relaxed">
+                    Kalor ($Q$) adalah energi panas yang berpindah dari benda bersuhu tinggi ke benda bersuhu lebih rendah. Kalor dapat **menaikkan suhu benda** ($Q = m \cdot c \cdot \Delta T$) atau **mengubah wujud zat** ($Q = m \cdot L$).
+                </p>
+            </div>
+
+            <!-- Heat Formulas Summary Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="glass-card p-5 rounded-2xl border border-amber-500/30 space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center font-bold text-xl">
+                            📈
+                        </div>
+                        <h3 class="text-base font-bold text-white">1. Kalor Perubahan Suhu</h3>
+                    </div>
+                    <p class="text-xs text-sky-100">$$Q = m \cdot c \cdot \Delta T$$</p>
+                    <ul class="text-xs text-sky-200/90 space-y-1 font-mono">
+                        <li>• $Q$ = Kalor yang diserap / dilepas (Joule atau Kalori)</li>
+                        <li>• $m$ = Massa benda (kg)</li>
+                        <li>• $c$ = Kalor jenis benda ($\text{J/kg}^\circ\text{C}$)</li>
+                        <li>• $\Delta T$ = Perubahan suhu ($T_2 - T_1$)</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl border border-cyan-500/30 space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center font-bold text-xl">
+                            🧊
+                        </div>
+                        <h3 class="text-base font-bold text-white">2. Kalor Laten (Perubahan Wujud)</h3>
+                    </div>
+                    <p class="text-xs text-sky-100">$$Q_{\text{lebur}} = m \cdot L \quad \text{dan} \quad Q_{\text{uap}} = m \cdot U$$</p>
+                    <ul class="text-xs text-sky-200/90 space-y-1 font-mono">
+                        <li>• Saat terjadi perubahan wujud (melebur/mendidih), **suhu zat SELALU TETAP**!</li>
+                        <li>• $L$ = Kalor lebur es ($336.000\text{ J/kg}$)</li>
+                        <li>• $U$ = Kalor uap air ($2.260.000\text{ J/kg}$)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-sky-800/80 pb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-fire text-amber-400"></i> Virtual Lab Kurva Pemanasan Es (-10°C → 110°C)
+                        </h3>
+                        <p class="text-xs text-sky-200">
+                            Atur massa es dan amati grafik pemanasan 5 tahap beserta total kalor yang dibutuhkan!
+                        </p>
+                    </div>
+
+                    <button onclick="animateHeatingCurve()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+                        <i class="fa-solid fa-play"></i> Simulasi Pemanasan
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="space-y-4 bg-slate-950/80 p-4 rounded-xl border border-sky-900 text-xs">
+                        <div>
+                            <label class="text-sky-200 font-bold block mb-1">Massa Es ($m$):</label>
+                            <input type="number" id="input-massa-es" value="2" min="0.5" max="10" step="0.5" oninput="calculateHeatingCurve()" class="w-full bg-slate-950 border border-sky-800 text-white rounded-lg p-2 font-mono focus:outline-none focus:border-amber-400">
+                            <span class="text-[10px] text-sky-400">Dalam Kilogram (kg)</span>
+                        </div>
+
+                        <div class="p-3 bg-slate-900 rounded-lg border border-sky-800 space-y-2 font-mono text-[11px]">
+                            <div class="flex justify-between text-sky-300">
+                                <span>$Q_1$ (Menaikkan Es):</span>
+                                <span id="q1-res" class="text-amber-300 font-bold">42.0 kJ</span>
+                            </div>
+                            <div class="flex justify-between text-sky-300">
+                                <span>$Q_2$ (Meleburkan Es):</span>
+                                <span id="q2-res" class="text-cyan-300 font-bold">672.0 kJ</span>
+                            </div>
+                            <div class="flex justify-between text-sky-300">
+                                <span>$Q_3$ (Menaikkan Air):</span>
+                                <span id="q3-res" class="text-amber-300 font-bold">840.0 kJ</span>
+                            </div>
+                            <div class="flex justify-between text-sky-300">
+                                <span>$Q_4$ (Menguapkan Air):</span>
+                                <span id="q4-res" class="text-cyan-300 font-bold">4,520.0 kJ</span>
+                            </div>
+                            <div class="flex justify-between text-sky-300 border-t border-sky-800 pt-1">
+                                <span>$Q_{\text{total}}$:</span>
+                                <span id="qtotal-res" class="text-emerald-300 font-bold text-xs">6,074.0 kJ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 h-[280px] bg-slate-950 rounded-xl overflow-hidden border border-sky-800 p-2 relative">
+                        <canvas id="canvasHeatingCurve" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-pemuaian" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-emerald-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 3: Pemuaian Zat (Padat, Cair, Gas) & Keping Bimetal</h2>
+                <p class="text-sky-100 text-sm max-w-4xl leading-relaxed">
+                    Pemuaian adalah pertambahan ukuran (panjang, luas, atau volume) suatu zat akibat kenaikan suhu. Logam yang berbeda memiliki Koefisien Muai Panjang ($\alpha$) yang berbeda-beda!
+                </p>
+            </div>
+
+            <!-- Formulas for Linear, Area, Volume Expansion -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="glass-card p-4 rounded-xl border border-sky-500/30 text-center space-y-2">
+                    <span class="text-xs font-bold text-sky-300 uppercase">Pemuaian Panjang</span>
+                    <p class="text-xs text-amber-300 font-mono">$$\Delta L = L_0 \cdot \alpha \cdot \Delta T$$</p>
+                    <p class="text-[11px] text-sky-200">Panjang Akhir: $L_t = L_0 (1 + \alpha \Delta T)$</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-cyan-500/30 text-center space-y-2">
+                    <span class="text-xs font-bold text-cyan-300 uppercase">Pemuaian Luas</span>
+                    <p class="text-xs text-amber-300 font-mono">$$\Delta A = A_0 \cdot \beta \cdot \Delta T$$</p>
+                    <p class="text-[11px] text-sky-200">Dengan koefisien muai luas $\beta = 2\alpha$</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-emerald-500/30 text-center space-y-2">
+                    <span class="text-xs font-bold text-emerald-300 uppercase">Pemuaian Volume</span>
+                    <p class="text-xs text-amber-300 font-mono">$$\Delta V = V_0 \cdot \gamma \cdot \Delta T$$</p>
+                    <p class="text-[11px] text-sky-200">Dengan koefisien muai volume $\gamma = 3\alpha$</p>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="border-b border-sky-800/80 pb-3">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-up-right-and-down-left-from-center text-emerald-300"></i> Virtual Simulator Keping Bimetal & Celah Rel Kereta
+                    </h3>
+                    <p class="text-xs text-sky-200">
+                        Amati pelengkungan keping bimetal (dua logam gabungan dengan $\alpha$ berbeda) saat dipanaskan/didinginkan!
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="space-y-4 bg-slate-950/80 p-4 rounded-xl border border-sky-900 text-xs">
+                        <div>
+                            <label class="text-sky-200 font-bold block mb-1">Logam Atas (Logam A):</label>
+                            <select id="select-metal-a" onchange="updateBimetalSim()" class="w-full bg-slate-900 border border-sky-700 text-white rounded p-2 text-xs focus:outline-none focus:border-amber-400">
+                                <option value="0.000024">Aluminium (α = 0.000024 /°C)</option>
+                                <option value="0.000019">Kuningan (α = 0.000019 /°C)</option>
+                                <option value="0.000017">Tembaga (α = 0.000017 /°C)</option>
+                                <option value="0.000012">Besi/Baja (α = 0.000012 /°C)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="text-sky-200 font-bold block mb-1">Logam Bawah (Logam B):</label>
+                            <select id="select-metal-b" onchange="updateBimetalSim()" class="w-full bg-slate-900 border border-sky-700 text-white rounded p-2 text-xs focus:outline-none focus:border-amber-400">
+                                <option value="0.000012" selected>Besi/Baja (α = 0.000012 /°C)</option>
+                                <option value="0.000017">Tembaga (α = 0.000017 /°C)</option>
+                                <option value="0.000019">Kuningan (α = 0.000019 /°C)</option>
+                                <option value="0.000024">Aluminium (α = 0.000024 /°C)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-bold mb-1">
+                                <span class="text-sky-200">Suhu Bimetal ($T$):</span>
+                                <span id="bimetal-temp-val" class="text-amber-300 font-mono">25 °C</span>
+                            </div>
+                            <input type="range" id="bimetal-temp-slider" min="-30" max="250" value="25" step="5" oninput="updateBimetalSim()" class="w-full accent-emerald-400 cursor-pointer">
+                        </div>
+
+                        <div id="bimetal-status-box" class="p-3 bg-slate-900 rounded-lg border border-sky-800 text-[11px] leading-relaxed text-sky-200">
+                            💡 Keping bimetal lurus pada suhu normal (25°C).
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 h-[280px] bg-slate-950 rounded-xl overflow-hidden border border-sky-800 p-2 relative">
+                        <canvas id="canvasBimetal" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-perpindahan" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-cyan-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 4: 3 Cara Perpindahan Kalor</h2>
+                <p class="text-sky-100 text-sm max-w-4xl leading-relaxed">
+                    Kalor berpindah dari benda bersuhu lebih tinggi ke benda bersuhu lebih rendah melalui 3 cara: **Konduksi**, **Konveksi**, dan **Radiasi**.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Conduction -->
+                <div class="glass-card p-5 rounded-2xl border border-sky-500/40 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-sky-500/20 text-sky-300 flex items-center justify-center font-bold text-2xl">
+                        🥄
+                    </div>
+                    <h3 class="text-base font-bold text-white">1. Konduksi</h3>
+                    <p class="text-xs text-sky-100 leading-relaxed">
+                        Perpindahan kalor melalui zat perantara **TANPA disertai perpindahan partikel-partikel** zat tersebut. Terjadi terutama pada zat padat (logam).
+                    </p>
+                    <div class="p-2.5 bg-slate-950 rounded-lg text-amber-300 font-sans text-xs border border-sky-800">
+                        💡 <strong>Contoh:</strong> Ujung sendok logam terasa panas saat mengaduk teh panas di Solor.
+                    </div>
+                </div>
+
+                <!-- Convection -->
+                <div class="glass-card p-5 rounded-2xl border border-cyan-500/40 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center font-bold text-2xl">
+                        💨
+                    </div>
+                    <h3 class="text-base font-bold text-white">2. Konveksi</h3>
+                    <p class="text-xs text-sky-100 leading-relaxed">
+                        Perpindahan kalor melalui zat perantara **DENGAN DISERTAI perpindahan partikel-partikel** zat tersebut akibat perbedaan massa jenis. Terjadi pada fluida (cair & gas).
+                    </p>
+                    <div class="p-2.5 bg-slate-950 rounded-lg text-cyan-300 font-sans text-xs border border-sky-800">
+                        💡 <strong>Contoh:</strong> Angin laut & angin darat nelayan Solor, serta gerakan air mendidih.
+                    </div>
+                </div>
+
+                <!-- Radiation -->
+                <div class="glass-card p-5 rounded-2xl border border-amber-500/40 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center font-bold text-2xl">
+                        ☀️
+                    </div>
+                    <h3 class="text-base font-bold text-white">3. Radiasi</h3>
+                    <p class="text-xs text-sky-100 leading-relaxed">
+                        Perpindahan kalor **TANPA memerlukan zat perantara (medium)** sama sekali, yaitu melalui gelombang elektromagnetik.
+                    </p>
+                    <div class="p-2.5 bg-slate-950 rounded-lg text-amber-300 font-sans text-xs border border-sky-800">
+                        💡 <strong>Contoh:</strong> Panas terik matahari sampai ke pulau Solor menembus ruang hampa.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heat Transfer Animated Visualizer -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2 border-b border-sky-800 pb-3">
+                    <i class="fa-solid fa-fire-flame-curved text-amber-400"></i> Visualisasi Aliran Perpindahan Kalor
+                </h3>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="space-y-3 bg-slate-950 p-4 rounded-xl border border-sky-900 text-xs">
+                        <label class="text-sky-200 font-bold block">Pilih Fenomena Perpindahan Kalor:</label>
+                        <select id="select-transfer-demo" onchange="drawTransferCanvas()" class="w-full bg-slate-900 border border-sky-700 text-white rounded p-2 text-xs focus:outline-none focus:border-amber-400">
+                            <option value="konduksi">Konduksi: Batang Logam Dipanaskan</option>
+                            <option value="konvective">Konveksi: Air Mendidih dalam Panci</option>
+                            <option value="radiasi">Radiasi: Panas Matahari ke Laut Solor</option>
+                        </select>
+
+                        <div id="transfer-desc-box" class="p-3 bg-slate-900 rounded-lg border border-sky-800 text-xs text-sky-200 leading-relaxed mt-4">
+                            Pilih fenomena di atas untuk melihat simulasi grafisnya.
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 h-[260px] bg-slate-950 rounded-xl overflow-hidden border border-sky-800 p-2">
+                        <canvas id="canvasTransfer" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-glosarium" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2 border-b border-sky-800 pb-2">
+                    <i class="fa-solid fa-book-bookmark text-yellow-300"></i> Glosarium Istilah Suhu, Kalor & Pemuaian
+                </h3>
+
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-sky-400"></i>
+                    <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Cari istilah (misal: Kalor Jenis, Bimetal, Anomali, Konveksi, Kelvin)..." class="w-full bg-slate-950 border border-sky-700 text-white rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-amber-400 shadow-inner">
+                </div>
+
+                <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+
+        <div id="section-evaluasi" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-sky-800 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-1">Kuis Evaluasi Suhu, Kalor & Pemuaian</h2>
+                        <p class="text-sky-100 text-sm">Jawab 10 soal evaluasi interaktif dan dapatkan Sertifikat Kelulusan Digital IPA Kelas VII!</p>
+                    </div>
+                    <div class="bg-slate-950 px-5 py-2.5 rounded-2xl border border-sky-800 text-center flex-shrink-0">
+                        <span class="text-xs text-sky-400 block font-bold">Skor Kamu</span>
+                        <span id="quiz-score" class="text-3xl font-black text-amber-300">0</span>
+                    </div>
+                </div>
+
+                <div id="quiz-container" class="space-y-6">
+                    <div class="flex justify-between items-center text-xs text-sky-300 font-bold">
+                        <span id="quiz-progress-text">Soal 1 dari 10</span>
+                        <span id="quiz-category" class="text-cyan-300 bg-cyan-500/20 px-3 py-1 rounded-full border border-cyan-400/30">
+                            Konsep Suhu
+                        </span>
+                    </div>
+
+                    <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-sky-800">
+                        <div id="quiz-progress-bar" class="bg-sky-400 h-full w-1/10 transition-all duration-300"></div>
+                    </div>
+
+                    <h3 id="quiz-question" class="text-base sm:text-lg font-bold text-white leading-relaxed">
+                        Memuat pertanyaan...
+                    </h3>
+
+                    <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Options populated via JS -->
+                    </div>
+
+                    <div id="quiz-feedback" class="hidden p-4 rounded-xl text-xs sm:text-sm font-semibold"></div>
+
+                    <button id="btn-next-quiz" onclick="nextQuestion()" class="hidden px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 ml-auto shadow-lg">
+                        Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Certificate Section (Hidden initially) -->
+                <div id="certificate-box" class="hidden space-y-6 text-center">
+                    <div class="text-5xl animate-bounce">🏆</div>
+                    <h3 class="text-2xl font-bold text-white">Selamat! Anda Berhasil Menyelesaikan Evaluasi!</h3>
+                    <p class="text-xs sm:text-sm text-sky-200 max-w-xl mx-auto">
+                        Ketik nama lengkap Anda untuk mencetak Sertifikat Kelulusan Digital Pembelajaran Suhu, Kalor & Pemuaian IPA SMP.
+                    </p>
+
+                    <div class="max-w-md mx-auto flex gap-2">
+                        <input type="text" id="student-name-input" placeholder="Masukkan Nama Lengkap Siswa..." class="flex-1 bg-slate-950 border border-sky-700 text-white rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-amber-400">
+                        <button onclick="generateCertificate()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition shadow-md">
+                            <i class="fa-solid fa-certificate mr-1"></i> Buat Sertifikat
+                        </button>
+                    </div>
+
+                    <div class="relative max-w-2xl mx-auto rounded-2xl overflow-hidden border-2 border-amber-400 shadow-2xl bg-slate-950 p-2">
+                        <canvas id="canvasCert" class="w-full h-auto block rounded-xl"></canvas>
+                    </div>
+
+                    <div class="flex justify-center gap-4">
+                        <button onclick="downloadCertificate()" class="px-6 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh Gambar Sertifikat
+                        </button>
+                        <button onclick="resetQuiz()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-sky-200 font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> Ulangi Kuis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-panel border-t border-sky-800/80 py-4 px-4 text-center text-xs text-sky-300 mt-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© 2026 SMPN SATAP WULUBLOLONG • Solor Barat, Kabupaten Flores Timur, NTT</p>
+            <p class="text-sky-400 font-medium">Media Pembelajaran Digital Fisika IPA SMP Kelas VII - Kurikulum Merdeka</p>
+        </div>
+    </footer>
+
+    <script>
+        let soundEnabled = true;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playTone(freq, type = 'sine', duration = 0.15) {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio playback muted");
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            const text = document.getElementById('sound-text');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-sky-400 text-sm";
+                text.innerText = "Efek Suara: Aktif";
+                playTone(523.25);
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-slate-500 text-sm";
+                text.innerText = "Efek Suara: Mute";
+            }
+        }
+
+        function switchTab(tabId) {
+            playTone(440);
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-sky-200 hover:bg-sky-950";
+            });
+
+            const activeContent = document.getElementById(`section-${tabId}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-sky-600 text-white shadow-lg shadow-sky-950/50";
+            }
+
+            setTimeout(() => {
+                if (tabId === 'suhu') updateTemperatureConverter();
+                if (tabId === 'kalor') calculateHeatingCurve();
+                if (tabId === 'pemuaian') updateBimetalSim();
+                if (tabId === 'perpindahan') drawTransferCanvas();
+                if (tabId === 'glosarium') populateGlossary();
+                if (window.KaTeX && typeof renderMathInElement === 'function') {
+                    renderMathInElement(document.body);
+                }
+            }, 60);
+        }
+
+        function updateTemperatureConverter() {
+            const valC = parseFloat(document.getElementById('temp-c-slider').value);
+            document.getElementById('temp-c-val').innerText = `${valC} °C`;
+
+            const valR = (4 / 5) * valC;
+            const valF = (9 / 5) * valC + 32;
+            const valK = valC + 273.15;
+
+            document.getElementById('res-r').innerText = `${valR.toFixed(1)} °R`;
+            document.getElementById('res-f').innerText = `${valF.toFixed(1)} °F`;
+            document.getElementById('res-k').innerText = `${valK.toFixed(1)} K`;
+
+            drawThermometerCanvas(valC);
+        }
+
+        function drawThermometerCanvas(c) {
+            const canvas = document.getElementById('canvasThermometer');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 280;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw 4 Thermometers side by side: C, R, F, K
+            const scales = [
+                { name: 'Celcius (°C)', min: -20, max: 120, cur: c, color: '#38bdf8' },
+                { name: 'Reamur (°R)', min: -16, max: 96, cur: (4/5)*c, color: '#22d3ee' },
+                { name: 'Fahrenheit (°F)', min: -4, max: 248, cur: (9/5)*c + 32, color: '#fbbf24' },
+                { name: 'Kelvin (K)', min: 253, max: 393, cur: c + 273.15, color: '#34d399' }
+            ];
+
+            const colW = w / scales.length;
+
+            scales.forEach((s, idx) => {
+                const centerX = idx * colW + colW / 2;
+                const glassBottom = h - 50;
+                const glassTop = 40;
+                const maxBarH = glassBottom - glassTop;
+
+                // Outer glass tube
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(centerX - 12, glassTop, 24, maxBarH);
+                ctx.strokeStyle = '#64748b';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(centerX - 12, glassTop, 24, maxBarH);
+
+                // Mercury Bulb
+                ctx.beginPath();
+                ctx.arc(centerX, glassBottom + 12, 18, 0, Math.PI * 2);
+                ctx.fillStyle = s.color;
+                ctx.fill();
+                ctx.stroke();
+
+                // Mercury Level Fill
+                const ratio = Math.max(0, Math.min(1, (s.cur - s.min) / (s.max - s.min)));
+                const fillH = ratio * maxBarH;
+
+                ctx.fillStyle = s.color;
+                ctx.fillRect(centerX - 8, glassBottom - fillH, 16, fillH);
+
+                // Label Text
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 11px Plus Jakarta Sans';
+                ctx.textAlign = 'center';
+                ctx.fillText(s.name, centerX, 25);
+
+                ctx.fillStyle = s.color;
+                ctx.font = 'bold 12px Plus Jakarta Sans';
+                ctx.fillText(`${s.cur.toFixed(1)}`, centerX, h - 10);
+            });
+        }
+
+        function calculateHeatingCurve() {
+            const m = parseFloat(document.getElementById('input-massa-es').value) || 1;
+
+            // Constants
+            const c_es = 2100; // J/kg C
+            const L_es = 336000; // J/kg
+            const c_air = 4200; // J/kg C
+            const U_air = 2260000; // J/kg
+            const c_uap = 2000; // J/kg C
+
+            const Q1 = m * c_es * 10; // -10 -> 0
+            const Q2 = m * L_es; // 0 -> 0 (melt)
+            const Q3 = m * c_air * 100; // 0 -> 100
+            const Q4 = m * U_air; // 100 -> 100 (vaporize)
+            const Q5 = m * c_uap * 10; // 100 -> 110
+
+            const Qtotal = Q1 + Q2 + Q3 + Q4 + Q5;
+
+            document.getElementById('q1-res').innerText = `${(Q1/1000).toLocaleString('id-ID')} kJ`;
+            document.getElementById('q2-res').innerText = `${(Q2/1000).toLocaleString('id-ID')} kJ`;
+            document.getElementById('q3-res').innerText = `${(Q3/1000).toLocaleString('id-ID')} kJ`;
+            document.getElementById('q4-res').innerText = `${(Q4/1000).toLocaleString('id-ID')} kJ`;
+            document.getElementById('qtotal-res').innerText = `${(Qtotal/1000).toLocaleString('id-ID')} kJ`;
+
+            drawHeatingCurveCanvas();
+        }
+
+        function drawHeatingCurveCanvas(animProgress = 1.0) {
+            const canvas = document.getElementById('canvasHeatingCurve');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 280;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Axes
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(50, 20);
+            ctx.lineTo(50, h - 35);
+            ctx.lineTo(w - 20, h - 35);
+            ctx.stroke();
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '10px Plus Jakarta Sans';
+            ctx.fillText('Suhu (°C)', 10, 15);
+            ctx.fillText('Kalor Diserap (Q)', w - 90, h - 15);
+
+            // Points coordinates
+            const points = [
+                { x: 50, y: h - 50, label: '-10°C (Es)' },
+                { x: 110, y: h - 80, label: '0°C' },
+                { x: 210, y: h - 80, label: 'Melebur' },
+                { x: 290, y: h - 180, label: '100°C' },
+                { x: 410, y: h - 180, label: 'Mendidih' },
+                { x: 460, y: h - 220, label: '110°C (Uap)' }
+            ];
+
+            // Draw curve line
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+
+            for (let i = 1; i < points.length; i++) {
+                if ((i / points.length) <= animProgress) {
+                    ctx.lineTo(points[i].x, points[i].y);
+                }
+            }
+            ctx.stroke();
+
+            // Draw dots & text
+            points.forEach((p, idx) => {
+                ctx.fillStyle = '#38bdf8';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#f1f5f9';
+                ctx.font = 'bold 10px Plus Jakarta Sans';
+                ctx.fillText(p.label, p.x - 15, p.y - 10);
+            });
+        }
+
+        function animateHeatingCurve() {
+            playTone(700);
+            let progress = 0;
+            const timer = setInterval(() => {
+                progress += 0.05;
+                drawHeatingCurveCanvas(progress);
+                if (progress >= 1.0) clearInterval(timer);
+            }, 30);
+        }
+
+        function updateBimetalSim() {
+            const alphaA = parseFloat(document.getElementById('select-metal-a').value);
+            const alphaB = parseFloat(document.getElementById('select-metal-b').value);
+            const temp = parseInt(document.getElementById('bimetal-temp-slider').value);
+
+            document.getElementById('bimetal-temp-val').innerText = `${temp} °C`;
+
+            const statusBox = document.getElementById('bimetal-status-box');
+            const diff = alphaA - alphaB;
+            const dT = temp - 25;
+
+            if (dT === 0) {
+                statusBox.innerHTML = `💡 <strong>Suhu Normal (25°C):</strong> Kedua logam sama panjang, keping bimetal berada dalam keadaan LURUS.`;
+            } else if (dT > 0) {
+                if (diff > 0) {
+                    statusBox.innerHTML = `🔥 <strong>Saat Dipanaskan:</strong> Logam A memuai lebih cepat ($\alpha_A > \alpha_B$), keping melengkung ke arah <strong>LOGAM B (BAWAH)</strong>!`;
+                } else if (diff < 0) {
+                    statusBox.innerHTML = `🔥 <strong>Saat Dipanaskan:</strong> Logam B memuai lebih cepat ($\alpha_B > \alpha_A$), keping melengkung ke arah <strong>LOGAM A (ATAS)</strong>!`;
+                } else {
+                    statusBox.innerHTML = `🔥 <strong>Saat Dipanaskan:</strong> Kedua logam memiliki $\alpha$ sama, keping tetap lurus.`;
+                }
+            } else {
+                if (diff > 0) {
+                    statusBox.innerHTML = `❄️ <strong>Saat Didinginkan:</strong> Logam A menyusut lebih cepat, keping melengkung ke arah <strong>LOGAM A (ATAS)</strong>!`;
+                } else {
+                    statusBox.innerHTML = `❄️ <strong>Saat Didinginkan:</strong> Logam B menyusut lebih cepat, keping melengkung ke arah <strong>LOGAM B (BAWAH)</strong>!`;
+                }
+            }
+
+            drawBimetalCanvas(alphaA, alphaB, temp);
+        }
+
+        function drawBimetalCanvas(aA, aB, temp) {
+            const canvas = document.getElementById('canvasBimetal');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 280;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const dT = temp - 25;
+            const bendFactor = (aA - aB) * dT * 25000;
+
+            // Draw fixed stand on left
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(20, h/2 - 50, 20, 100);
+
+            ctx.save();
+            ctx.translate(40, h/2);
+
+            // Metal A (Top)
+            ctx.fillStyle = '#38bdf8'; // Sky blue
+            ctx.beginPath();
+            ctx.moveTo(0, -12);
+            for (let x = 0; x <= 280; x += 10) {
+                let y = -12 + Math.pow(x / 280, 2) * bendFactor;
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(280, 0 + bendFactor);
+            ctx.lineTo(0, 0);
+            ctx.fill();
+
+            // Metal B (Bottom)
+            ctx.fillStyle = '#f59e0b'; // Amber yellow
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            for (let x = 0; x <= 280; x += 10) {
+                let y = Math.pow(x / 280, 2) * bendFactor;
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(280, 12 + bendFactor);
+            ctx.lineTo(0, 12);
+            ctx.fill();
+
+            ctx.restore();
+
+            // Legend labels
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 11px Plus Jakarta Sans';
+            ctx.fillText('■ Logam A (Atas)', w - 140, 30);
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillText('■ Logam B (Bawah)', w - 140, 50);
+        }
+
+        function drawTransferCanvas() {
+            const canvas = document.getElementById('canvasTransfer');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 260;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            const mode = document.getElementById('select-transfer-demo').value;
+            const desc = document.getElementById('transfer-desc-box');
+
+            ctx.clearRect(0, 0, w, h);
+
+            if (mode === 'konduksi') {
+                desc.innerHTML = `<strong>Konduksi (Hantaran):</strong> Partikel logam bergetar lebih cepat saat dipanaskan di satu ujung dan meneruskan energi kinetiknya ke partikel sebelah tanpa berpindah tempat!`;
+
+                // Draw Metal Rod
+                ctx.fillStyle = '#475569';
+                ctx.fillRect(80, h/2 - 20, 340, 40);
+
+                // Draw fire at left
+                ctx.fillStyle = '#f43f5e';
+                ctx.beginPath();
+                ctx.arc(60, h/2, 25, 0, Math.PI*2);
+                ctx.fill();
+
+                // Draw heat gradient particles
+                for (let i = 0; i < 12; i++) {
+                    const x = 95 + i * 28;
+                    const heatRatio = 1 - (i / 12);
+                    ctx.fillStyle = `rgb(${Math.floor(255 * heatRatio)}, 120, ${Math.floor(255 * (1 - heatRatio))})`;
+                    ctx.beginPath();
+                    ctx.arc(x, h/2, 8, 0, Math.PI*2);
+                    ctx.fill();
+                }
+            } else if (mode === 'konvective') {
+                desc.innerHTML = `<strong>Konveksi (Aliran):</strong> Air di dasar panci memuai saat dipanaskan, massa jenisnya berkurang sehingga naik ke atas. Air dingin di atas yang lebih berat turun menggantikan.`;
+
+                // Draw beaker
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(w/2 - 80, 40, 160, 160);
+
+                // Convection arrows loop
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(w/2 - 30, 120, 30, 0, Math.PI*2);
+                ctx.arc(w/2 + 30, 120, 30, 0, Math.PI*2);
+                ctx.stroke();
+
+                ctx.fillStyle = '#fbbf24';
+                ctx.font = 'bold 12px Plus Jakarta Sans';
+                ctx.fillText('▲ Air Panas Naik', w/2 - 60, 180);
+                ctx.fillText('▼ Air Dingin Turun', w/2 + 10, 80);
+            } else {
+                desc.innerHTML = `<strong>Radiasi (Pancaran):</strong> Panas matahari merambat melalui gelombang elektromagnetik melintasi ruang hampa hingga menghangatkan daratan & laut Selat Solor.`;
+
+                // Sun
+                ctx.fillStyle = '#fbbf24';
+                ctx.beginPath();
+                ctx.arc(80, 80, 35, 0, Math.PI*2);
+                ctx.fill();
+
+                // Ocean Waves
+                ctx.fillStyle = '#0284c7';
+                ctx.fillRect(0, h - 60, w, 60);
+
+                // Radiation Rays
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 2;
+                for (let i = 0; i < 5; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(115 + i*20, 100);
+                    ctx.lineTo(200 + i*50, h - 60);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        const glossaryData = [
+            { term: "Suhu", desc: "Derajat panas atau dinginnya suatu benda yang diukur menggunakan termometer.", context: "Suhu udara harian di Solor Barat." },
+            { term: "Kalor", desc: "Bentuk energi panas yang mengalir dari benda bersuhu tinggi ke benda bersuhu lebih rendah.", context: "Kalor dari api dapur Wulublolong." },
+            { term: "Kalor Jenis (c)", desc: "Banyaknya kalor yang diperlukan oleh 1 kg zat untuk menaikkan suhunya sebesar 1°C.", context: "Kalor jenis air laut Solor." },
+            { term: "Pemuaian", desc: "Pertambahan panjang, luas, atau volume zat akibat menerima energi kalor.", context: "Celah rel kereta & kabel listrik." },
+            { term: "Keping Bimetal", desc: "Dua keping logam berbeda koefisien muai panjang yang dikeling menjadi satu.", context: "Saklar otomatis / termostat." },
+            { term: "Anomali Air", desc: "Sifat keanehan air yang menyusut saat dipanaskan dari 0°C sampai 4°C.", context: "Kehidupan biota laut di suhu dingin." }
+        ];
+
+        function populateGlossary() {
+            const container = document.getElementById('glossary-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            glossaryData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "glass-card p-4 rounded-xl border border-sky-800 space-y-1.5 gloss-item";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <strong class="text-amber-300 font-bold text-sm">${item.term}</strong>
+                        <span class="text-[10px] bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded border border-sky-500/30">IPA Kelas VII</span>
+                    </div>
+                    <p class="text-xs text-sky-100 leading-relaxed">${item.desc}</p>
+                    <div class="text-[11px] text-sky-300 pt-1 border-t border-sky-900/60">
+                        <i class="fa-solid fa-lightbulb mr-1 text-amber-400"></i> Konteks: ${item.context}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterGlossary() {
+            const q = document.getElementById('glossary-search').value.toLowerCase();
+            document.querySelectorAll('.gloss-item').forEach(el => {
+                const text = el.innerText.toLowerCase();
+                if (text.includes(q)) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+        }
+
+        const quizQuestions = [
+            {
+                question: "Suhu suatu benda diukur menunjukkan 40°C. Jika diukur menggunakan termometer skala Reamur, nilainya adalah...",
+                category: "Konversi Suhu",
+                options: ["32 °R", "50 °R", "72 °R", "313 °R"],
+                correct: 0,
+                explanation: "R = (4/5) × C = (4/5) × 40 = 32°R."
+            },
+            {
+                question: "Skala suhu yang dijadikan sebagai Satuan Internasional (SI) tanpa derajat nol mutlak adalah...",
+                category: "Konsep Suhu",
+                options: ["Kelvin (K)", "Celcius (°C)", "Fahrenheit (°F)", "Reamur (°R)"],
+                correct: 0,
+                explanation: "Kelvin adalah satuan SI untuk suhu termodinamika dengan titik nol mutlak."
+            },
+            {
+                question: "Banyaknya kalor yang dibutuhkan untuk menaikkan suhu 2 kg air sebesar 10°C (kalor jenis air = 4.200 J/kg°C) adalah...",
+                category: "Kalor",
+                options: ["84.000 Joule", "42.000 Joule", "8.400 Joule", "420 Joule"],
+                correct: 0,
+                explanation: "Q = m × c × ΔT = 2 kg × 4.200 × 10 = 84.000 Joule."
+            },
+            {
+                question: "Saat es melebur menjadi air pada suhu 0°C, energi kalor yang terus diberikan berfungsi untuk...",
+                category: "Perubahan Wujud",
+                options: [
+                    "Mengubah wujud es tanpa menaikkan suhunya",
+                    "Menaikkan suhu es menjadi 100°C secara mendadak",
+                    "Menurunkan massa total air",
+                    "Membuat suhu air minus 10°C"
+                ],
+                correct: 0,
+                explanation: "Saat perubahan wujud (kalor laten), kalor digunakan untuk memutus ikatan molekul sehingga suhu zat TETAP."
+            },
+            {
+                question: "Pemasangan kawat listrik di pinggir jalan Solor dibuat agak kendur pada siang hari bertujuan agar...",
+                category: "Pemuaian",
+                options: [
+                    "Tidak putus saat menyusut pada malam hari yang dingin",
+                    "Mencegah kawat memuai saat malam hari",
+                    "Menghemat biaya pemeliharaan",
+                    "Agar listrik mengalir lebih cepat"
+                ],
+                correct: 0,
+                explanation: "Pada malam hari suhu dingin membuat kawat menyusut; jika terlalu kencang dipasang siang hari, kawat bisa putus."
+            },
+            {
+                question: "Keping bimetal yang terdiri dari logam Aluminium (α besar) dan Besi (α kecil) jika dipanaskan akan melengkung ke arah...",
+                category: "Bimetal",
+                options: [
+                    "Logam Besi (logam yang koefisien muainya lebih kecil)",
+                    "Logam Aluminium (logam yang koefisien muainya lebih besar)",
+                    "Tetap lurus tanpa melengkung",
+                    "Membentuk lingkaran sempurna"
+                ],
+                correct: 0,
+                explanation: "Bimetal saat dipanaskan selalu melengkung ke arah logam yang koefisien muai panjangnya (α) LEBIH KECIL."
+            },
+            {
+                question: "Sendok logam yang ditaruh di dalam mangkuk sup panas Wulublolong ujungnya ikut menjadi panas. Perpindahan kalor ini secara...",
+                category: "Perpindahan Kalor",
+                options: ["Konduksi", "Konveksi", "Radiasi", "Evaporasi"],
+                correct: 0,
+                explanation: "Konduksi terjadi pada zat padat (logam) tanpa disertai perpindahan partikelnya."
+            },
+            {
+                question: "Terjadinya angin laut pada siang hari di pantai Solor merupakan contoh perpindahan kalor secara...",
+                category: "Perpindahan Kalor",
+                options: ["Konveksi udara", "Konduksi molekul", "Radiasi vakum", "Kondensasi"],
+                correct: 0,
+                explanation: "Angin adalah aliran udara (fluida) akibat perbedaan massa jenis karena pemanasan (Konveksi)."
+            },
+            {
+                question: "Panas matahari dapat sampai ke bumi meskipun melewati ruang hampa udara di luar angkasa karena perpindahan kalor secara...",
+                category: "Perpindahan Kalor",
+                options: ["Radiasi", "Konduksi", "Konveksi", "Sublimasi"],
+                correct: 0,
+                explanation: "Radiasi tidak memerlukan zat perantara (medium) sama sekali."
+            },
+            {
+                question: "Keanehan sifat air yang memiliki volume terkecil dan massa jenis terbesar pada suhu 4°C disebut...",
+                category: "Pemuaian Zat Cair",
+                options: ["Anomali Air", "Anomali Suhu", "Kalor Lebur", "Titik Tripel"],
+                correct: 0,
+                explanation: "Anomali air adalah keanehan ekspansi air antara suhu 0°C sampai 4°C."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            const q = quizQuestions[currentQuizIndex];
+
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuizIndex + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quiz-category').innerText = q.category;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQuizIndex + 1) / quizQuestions.length) * 100}%`;
+            document.getElementById('quiz-question').innerText = `${currentQuizIndex + 1}. ${q.question}`;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 rounded-xl bg-slate-950 border border-sky-800 hover:border-amber-400 text-sky-100 text-xs sm:text-sm font-medium transition flex items-center justify-between";
+                btn.innerHTML = `<span>${String.fromCharCode(65 + idx)}. ${opt}</span> <i class="fa-regular fa-circle text-sky-600"></i>`;
+                btn.onclick = () => selectOption(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+        }
+
+        function selectOption(selectedIndex, btnEl) {
+            if (answered) return;
+            answered = true;
+
+            const q = quizQuestions[currentQuizIndex];
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const allBtns = document.getElementById('quiz-options').children;
+
+            if (selectedIndex === q.correct) {
+                score += 10;
+                playTone(650);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-sky-900 border-2 border-sky-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-check text-sky-300 text-lg"></i>`;
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-sky-900/70 border border-sky-500 text-sky-200";
+                feedbackEl.innerHTML = `🎉 <strong>Benar Sekali!</strong> ${q.explanation}`;
+            } else {
+                playTone(220);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-rose-950 border-2 border-rose-500 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-xmark text-rose-400 text-lg"></i>`;
+
+                const correctBtn = allBtns[q.correct];
+                correctBtn.className = "w-full text-left p-3.5 rounded-xl bg-sky-900 border-2 border-sky-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-rose-950/70 border border-rose-500 text-rose-200";
+                feedbackEl.innerHTML = `❌ <strong>Jawaban Kurang Tepat.</strong> ${q.explanation}`;
+            }
+
+            document.getElementById('quiz-score').innerText = score;
+            feedbackEl.classList.remove('hidden');
+            document.getElementById('btn-next-quiz').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            playTone(480);
+            currentQuizIndex++;
+            if (currentQuizIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('certificate-box').classList.remove('hidden');
+                generateCertificate();
+            }
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            document.getElementById('quiz-score').innerText = score;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('certificate-box').classList.add('hidden');
+            loadQuestion();
+        }
+
+        function generateCertificate() {
+            const name = document.getElementById('student-name-input').value || "Siswa SMP Kelas VII";
+            const canvas = document.getElementById('canvasCert');
+            if (!canvas) return;
+            canvas.width = 800;
+            canvas.height = 500;
+
+            const ctx = canvas.getContext('2d');
+            
+            // Background Deep Blue Gradient
+            const grad = ctx.createLinearGradient(0, 0, 800, 500);
+            grad.addColorStop(0, '#030712');
+            grad.addColorStop(0.5, '#0f172a');
+            grad.addColorStop(1, '#0284c7');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 800, 500);
+
+            // Gold and Sky Blue Border
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(15, 15, 770, 470);
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(25, 25, 750, 450);
+
+            // Watermark icon
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.06)';
+            ctx.font = '160px Plus Jakarta Sans';
+            ctx.fillText('🌡️', 320, 310);
+
+            // Title Header
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = 'bold 24px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('SERTIFIKAT KELULUSAN PEMBELAJARAN IPA', 400, 80);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = '14px Plus Jakarta Sans';
+            ctx.fillText('SMPN SATAP WULUBLOLONG • SOLOR BARAT', 400, 110);
+
+            ctx.fillStyle = '#f0f9ff';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Diberikan Kepada Siswa/i:', 400, 160);
+
+            // Student Name
+            ctx.fillStyle = '#22d3ee';
+            ctx.font = 'bold 28px Plus Jakarta Sans';
+            ctx.fillText(name, 400, 210);
+
+            // Description
+            ctx.fillStyle = '#e0f2fe';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Telah Menyelesaikan Modul Interaktif & Evaluasi Fisika IPA:', 400, 260);
+            ctx.font = 'bold 16px Plus Jakarta Sans';
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillText('MATERI SUHU, KALOR, DAN PEMUAIAN (KELAS VII)', 400, 290);
+
+            // Score Badge
+            ctx.fillStyle = '#0284c7';
+            ctx.fillRect(300, 320, 200, 45);
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(300, 320, 200, 45);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px Plus Jakarta Sans';
+            ctx.fillText(`NILAI EVALUASI: ${score} / 100`, 400, 348);
+
+            // Date & Location
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '12px Plus Jakarta Sans';
+            ctx.fillText('Wulublolong, Solor Barat, Flores Timur', 400, 410);
+            ctx.fillText('Media Pembelajaran Digital Kurikulum Merdeka IPA VII', 400, 430);
+        }
+
+        function downloadCertificate() {
+            playTone(600);
+            const canvas = document.getElementById('canvasCert');
+            const link = document.createElement('a');
+            link.download = `Sertifikat_Suhu_Kalor_SMP_${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        window.onload = function() {
+            populateGlossary();
+            loadQuestion();
+            updateTemperatureConverter();
+            calculateHeatingCurve();
+            updateBimetalSim();
+            drawTransferCanvas();
+
+            window.addEventListener('resize', () => {
+                const activeSuhu = document.getElementById('section-suhu');
+                if (activeSuhu && !activeSuhu.classList.contains('hidden')) updateTemperatureConverter();
+
+                const activeKalor = document.getElementById('section-kalor');
+                if (activeKalor && !activeKalor.classList.contains('hidden')) calculateHeatingCurve();
+
+                const activePemuaian = document.getElementById('section-pemuaian');
+                if (activePemuaian && !activePemuaian.classList.contains('hidden')) updateBimetalSim();
+
+                const activePerpindahan = document.getElementById('section-perpindahan');
+                if (activePerpindahan && !activePerpindahan.classList.contains('hidden')) drawTransferCanvas();
+            });
+        };
+    </script>
+</body>
+</html>
