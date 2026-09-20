@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papan Interaktif Tekanan IPA - SMPN SATAP Wulublolong</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .solor-pattern {
+            background-color: #0f172a;
+            background-image:  radial-gradient(#1e293b 2px, transparent 2px), radial-gradient(#1e293b 2px, #0f172a 2px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen solor-pattern flex flex-col justify-between custom-scrollbar">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-700/50 px-4 py-3 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-cyan-400 p-0.5 shadow-md flex-shrink-0">
+                    <div class="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center">
+                        <span class="text-2xl">⚓</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-xs font-semibold tracking-wider text-sky-400 uppercase bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">Kontekstual Solor Barat & Flores Timur</span>
+                    <h1 class="text-lg sm:text-xl font-bold text-white tracking-tight">Papan Interaktif Tekanan & Aplikasinya</h1>
+                    <p class="text-xs text-slate-400">IPA Kelas IX • SMPN SATAP Wulublolong</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button id="btn-sound" onclick="toggleSound()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 flex items-center gap-2 transition">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-sky-400"></i>
+                    <span id="sound-text">Efek Suara Aktif</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-slate-800 pb-3">
+            <button onclick="switchTab('padat')" id="tab-btn-padat" class="nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-sky-600 text-white shadow-lg shadow-sky-900/30">
+                <i class="fa-solid fa-compress"></i> Tekanan Zat Padat
+            </button>
+            <button onclick="switchTab('fluida')" id="tab-btn-fluida" class="nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-water text-cyan-400"></i> Hidrostatis & Archimedes
+            </button>
+            <button onclick="switchTab('pascal-gas')" id="tab-btn-pascal-gas" class="nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-gauge-high text-amber-400"></i> Hukum Pascal & Gas
+            </button>
+            <button onclick="switchTab('biologi')" id="tab-btn-biologi" class="nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-heart-pulse text-rose-400"></i> Tekanan pada Sistem Biologi
+            </button>
+            <button onclick="switchTab('kuis')" id="tab-btn-kuis" class="nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-trophy text-emerald-400"></i> Kuis Tekanan Wulublolong
+            </button>
+        </div>
+
+        <div id="section-padat" class="tab-content block space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-sky-500 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 opacity-10 text-9xl select-none">🔪</div>
+                <h2 class="text-2xl font-bold text-white mb-2">Konsep Tekanan Zat Padat</h2>
+                <p class="text-slate-300 text-sm max-w-3xl leading-relaxed">
+                    Tekanan ($P$) adalah besarnya gaya ($F$) yang bekerja pada tiap satuan luas bidang tekan ($A$). 
+                    Formula dasar: <span class="text-sky-300 font-mono font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-700">P = F / A</span> 
+                    (Satuan SI: Pascal atau N/m²).
+                </p>
+            </div>
+
+            <!-- Interactive Solid Pressure Calculator & Visualizer -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Controls -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-sky-400"></i> Lab Simulasi Tekanan Padat
+                    </h3>
+
+                    <!-- Context Selector -->
+                    <div>
+                        <label class="text-xs text-slate-400 font-semibold block mb-1">Studi Kasus Kontekstual Solor</label>
+                        <select id="padat-case" onchange="updatePadatSim()" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-sky-500">
+                            <option value="parang">1. Ketajaman Parang Kebun Wulublolong</option>
+                            <option value="sepatu">2. Berjalan di Kebun Berlumpur (Sepatu Boot vs Sandal)</option>
+                            <option value="pikul">3. Memikul Kayu Bakar / Hasil Kebun</option>
+                        </select>
+                    </div>
+
+                    <!-- Force Slider -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span class="text-slate-300">Gaya Dorong / Beban (F)</span>
+                            <span id="val-padat-f" class="text-sky-400">100 N</span>
+                        </div>
+                        <input type="range" id="sim-padat-f" min="10" max="500" value="100" oninput="updatePadatSim()" class="w-full accent-sky-500 cursor-pointer">
+                    </div>
+
+                    <!-- Area Slider -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span class="text-slate-300">Luas Permukaan Tekan (A)</span>
+                            <span id="val-padat-a" class="text-amber-400">0.01 m²</span>
+                        </div>
+                        <input type="range" id="sim-padat-a" min="1" max="100" value="10" oninput="updatePadatSim()" class="w-full accent-amber-500 cursor-pointer">
+                    </div>
+
+                    <!-- Calculated Result Card -->
+                    <div class="p-4 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+                        <span class="text-xs text-slate-400 block font-semibold">Hasil Perhitungan Tekanan ($P$):</span>
+                        <div class="text-2xl font-black text-sky-400 font-mono" id="res-padat-p">10,000 N/m²</div>
+                        <p class="text-xs text-slate-300 leading-relaxed" id="desc-padat-exp">
+                            Semakin kecil luas bidang tekan ($A$), semakin besar tekanan ($P$) yang dihasilkan!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Canvas Visualizer -->
+                <div class="lg:col-span-2 glass-panel p-5 rounded-2xl flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Visualisasi Kedalaman Tekanan ke Permukaan</span>
+                        <span id="badge-padat-status" class="text-xs bg-sky-500/20 text-sky-300 border border-sky-500/30 px-2.5 py-1 rounded-full font-semibold">
+                            Tekanan Sedang
+                        </span>
+                    </div>
+
+                    <div class="relative w-full h-[260px] bg-slate-950 rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center">
+                        <canvas id="canvasPadat" class="w-full h-full block"></canvas>
+                    </div>
+
+                    <div class="mt-3 p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 text-xs text-slate-300 flex items-center gap-3">
+                        <i class="fa-solid fa-lightbulb text-amber-400 text-lg flex-shrink-0"></i>
+                        <span>
+                            <strong>Penerapan Nyata di Wulublolong:</strong> Parang dipasang tumpul menghasilkan $A$ besar sehingga memotong kayu butuh gaya sangat besar. Mengasah parang membuat mata pisau sangat tipis ($A$ kecil), sehingga tekanan ($P$) tinggi walau dengan gaya kecil.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-fluida" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-cyan-500">
+                <h2 class="text-2xl font-bold text-white mb-2">Tekanan Hidrostatis & Hukum Archimedes</h2>
+                <p class="text-slate-300 text-sm max-w-3xl leading-relaxed">
+                    Tekanan hidrostatis adalah tekanan zat cair diam yang disebabkan oleh berat zat cair itu sendiri: 
+                    <span class="text-cyan-300 font-mono font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-700">P_h = ρ . g . h</span>. 
+                    Sedangkan Hukum Archimedes menyatakan bahwa benda yang dicelupkan ke fluida mengalami gaya ke atas sebesar berat fluida yang dipindahkan: 
+                    <span class="text-cyan-300 font-mono font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-700">F_a = ρ . g . V</span>.
+                </p>
+            </div>
+
+            <!-- Interactive Sea Diving & Buoyancy Simulator -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Controls -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-water text-cyan-400"></i> Simulator Menyelam Laut Solor
+                    </h3>
+
+                    <!-- Fluid Type -->
+                    <div>
+                        <label class="text-xs text-slate-400 font-semibold block mb-1">Jenis Air</label>
+                        <select id="fluida-type" onchange="updateFluidaSim()" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-cyan-500">
+                            <option value="1025">Air Laut Solor Barat (ρ = 1025 kg/m³)</option>
+                            <option value="1000">Air Tawar Sumur (ρ = 1000 kg/m³)</option>
+                            <option value="1050">Air Laut Sangat Asin (ρ = 1050 kg/m³)</option>
+                        </select>
+                    </div>
+
+                    <!-- Depth Slider -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span class="text-slate-300">Kedalaman Menyelam (h)</span>
+                            <span id="val-fluida-h" class="text-cyan-400">5 meter</span>
+                        </div>
+                        <input type="range" id="sim-fluida-h" min="0" max="20" value="5" step="0.5" oninput="updateFluidaSim()" class="w-full accent-cyan-500 cursor-pointer">
+                    </div>
+
+                    <!-- Object Mass for Archimedes -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span class="text-slate-300">Massa Benda / Sampan Nelayan</span>
+                            <span id="val-fluida-m" class="text-amber-400">120 kg</span>
+                        </div>
+                        <input type="range" id="sim-fluida-m" min="10" max="500" value="120" oninput="updateFluidaSim()" class="w-full accent-amber-500 cursor-pointer">
+                    </div>
+
+                    <!-- Calculated Results -->
+                    <div class="p-4 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-slate-400 font-semibold">Tekanan Hidrostatis ($P_h$):</span>
+                            <span class="text-lg font-bold text-cyan-400 font-mono" id="res-fluida-ph">50,225 Pa</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-slate-400 font-semibold">Tekanan Total (+Atmosfer):</span>
+                            <span class="text-sm font-bold text-slate-200 font-mono" id="res-fluida-ptot">151,525 Pa</span>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
+                            <span class="text-xs text-slate-400 font-semibold">Status Apung Benda:</span>
+                            <span id="badge-archimedes-state" class="text-xs px-2 py-0.5 rounded font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                TERAPUNG
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Underwater Canvas Visualizer -->
+                <div class="lg:col-span-2 glass-panel p-5 rounded-2xl flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Eksplorasi Bawah Laut Pantai Wulublolong</span>
+                        <span class="text-xs text-cyan-300 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800">g = 9.8 m/s²</span>
+                    </div>
+
+                    <div class="relative w-full h-[280px] bg-gradient-to-b from-sky-400 via-blue-900 to-slate-950 rounded-xl overflow-hidden border border-slate-800">
+                        <canvas id="canvasFluida" class="w-full h-full block"></canvas>
+                    </div>
+
+                    <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                            <strong class="text-cyan-400 block mb-0.5">Terapung:</strong>
+                            <span class="text-slate-300 text-[11px]">Massa jenis benda < ρ air. Contoh: Perahu kayu & kelapa tua.</span>
+                        </div>
+                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                            <strong class="text-amber-400 block mb-0.5">Melayang:</strong>
+                            <span class="text-slate-300 text-[11px]">Massa jenis benda = ρ air. Contoh: Penyu menahan nafas di air.</span>
+                        </div>
+                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                            <strong class="text-rose-400 block mb-0.5">Tenggelam:</strong>
+                            <span class="text-slate-300 text-[11px]">Massa jenis benda > ρ air. Contoh: Batu karang & jangkar besi.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-pascal-gas" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-amber-500">
+                <h2 class="text-2xl font-bold text-white mb-2">Hukum Pascal & Tekanan Gas/Atmosfer</h2>
+                <p class="text-slate-300 text-sm max-w-3xl leading-relaxed">
+                    <strong>Hukum Pascal:</strong> Tekanan yang diberikan pada zat cair dalam ruang tertutup diteruskan ke segala arah dengan sama besar (<span class="text-amber-300 font-mono font-bold">F1 / A1 = F2 / A2</span>). 
+                    <br>
+                    <strong>Tekanan Gas:</strong> Gas dalam ruang tertutup menekan ke segala arah dan volume gas berbanding terbalik dengan tekanannya (Hukum Boyle: <span class="text-amber-300 font-mono font-bold">P . V = konstan</span>).
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Pascal Dongkrak Simulator -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-truck-pickup text-amber-400"></i> Simulator Dongkrak Hidrolik Bengkel Solor
+                    </h3>
+
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-300">Gaya Input Piston Kecil (F1)</span>
+                                <span id="val-pascal-f1" class="text-amber-400">50 N</span>
+                            </div>
+                            <input type="range" id="sim-pascal-f1" min="10" max="200" value="50" oninput="updatePascalSim()" class="w-full accent-amber-500 cursor-pointer">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-300">Rasio Luas Piston Besar (A2 / A1)</span>
+                                <span id="val-pascal-ratio" class="text-cyan-400">10x Lipat</span>
+                            </div>
+                            <input type="range" id="sim-pascal-ratio" min="2" max="25" value="10" oninput="updatePascalSim()" class="w-full accent-cyan-500 cursor-pointer">
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-slate-900/90 rounded-xl border border-slate-800 flex justify-between items-center">
+                        <div>
+                            <span class="text-xs text-slate-400 block font-semibold">Gaya Angkat Piston Besar (F2):</span>
+                            <span class="text-2xl font-black text-amber-400 font-mono" id="res-pascal-f2">500 N</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-slate-400 block font-semibold">Keuntungan Mekanis:</span>
+                            <span class="text-lg font-bold text-emerald-400 font-mono" id="res-pascal-km">10x</span>
+                        </div>
+                    </div>
+
+                    <div class="relative w-full h-[180px] bg-slate-950 rounded-xl border border-slate-800 p-2 overflow-hidden">
+                        <canvas id="canvasPascal" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gas & Distillation Context -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-white flex items-center gap-2 mb-3">
+                            <i class="fa-solid fa-fire-burner text-rose-400"></i> Tekanan Gas & Pengukusan Nira Lontar (Tuak/Sopi)
+                        </h3>
+
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            Dalam pengerjaan tradisional penyulingan nira lontar (tuak) menjadi sopi di pulau Solor, uap alkohol cair dipanaskan dalam wadah tertutup. Uap gas yang mengembang menciptakan <strong>tekanan gas tinggi</strong> yang mendorong uap melewati pipa bambu penyulingan (kondensasi).
+                        </p>
+
+                        <!-- Gas Compression Interactive Demo -->
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-slate-300">Volume Gas Dalam Tabung (V)</span>
+                                <span id="val-gas-v" class="text-rose-400 font-mono">10 Liter</span>
+                            </div>
+                            <input type="range" id="sim-gas-v" min="2" max="20" value="10" oninput="updateGasSim()" class="w-full accent-rose-500 cursor-pointer">
+
+                            <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 flex justify-between items-center">
+                                <span class="text-xs text-slate-400">Tekanan Gas Terukur ($P = k/V$):</span>
+                                <span class="text-lg font-bold text-rose-400 font-mono" id="res-gas-p">1.0 atm</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-300 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-amber-400 text-base"></i>
+                        <span><strong>Prinsip Boyle:</strong> Bila volume diperkecil dengan menekan piston, kerapatan molekul gas meningkat sehingga tekanan gas melonjak tajam.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-biologi" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-rose-500">
+                <h2 class="text-2xl font-bold text-white mb-2">Tekanan pada Sistem Biologi Makhluk Hidup</h2>
+                <p class="text-slate-300 text-sm max-w-3xl leading-relaxed">
+                    Prinsip tekanan fisika diterapkan oleh tubuh makhluk hidup: pengangkutan air dan nutrisi dari akar ke pucuk pohon kelapa/lontar Wulublolong serta sirkulasi tekanan darah jantung manusia.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Plant Transpiration / Xylem -->
+                <div class="glass-panel p-6 rounded-2xl space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xl">🌴</div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">1. Transpor Air Tumbuhan Solor</h3>
+                            <span class="text-xs text-emerald-400 font-medium">Kapilaritas & Tekanan Akar</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 text-xs text-slate-300">
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <strong class="text-emerald-400 block mb-1">Tekanan Akar:</strong>
+                            Air tanah masuk ke sel akar secara osmosis, mendorong air naik ke pembuluh xilem batang.
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <strong class="text-emerald-400 block mb-1">Kapilaritas Batang:</strong>
+                            Pembuluh xilem sangat halus seperti pipa kapiler. Adhesi & kohesi molekul air menarik air naik hingga puluhan meter pada pohon kelapa/lontar Wulublolong.
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <strong class="text-emerald-400 block mb-1">Daya Isap Daun:</strong>
+                            Penguapan air (transpirasi) di daun menciptakan tekanan negatif yang menyedot air dari bawah.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Human Blood Pressure -->
+                <div class="glass-panel p-6 rounded-2xl space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-xl">❤️</div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">2. Tekanan Darah Manusia</h3>
+                            <span class="text-xs text-rose-400 font-medium">Hukum Pascal dalam Pembuluh Darah</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 text-xs text-slate-300">
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <strong class="text-rose-400 block mb-1">Sistol (Tekanan Puncak):</strong>
+                            Tekanan saat bilik jantung berkontraksi memompa darah ke seluruh tubuh (Normal: ~120 mmHg).
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <strong class="text-rose-400 block mb-1">Diastol (Tekanan Istirahat):</strong>
+                            Tekanan saat bilik jantung relaksasi dan mengembang mengisi darah (Normal: ~80 mmHg).
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <strong class="text-rose-400 block mb-1">Pengukuran Tensimeter:</strong>
+                            Prinsip Pascal bekerja saat manset ditekan, mengukur tekanan dalam pembuluh arteri brachialis.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-kuis" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-emerald-500 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white mb-1">Kuis Jelajah Tekanan Wulublolong</h2>
+                    <p class="text-slate-300 text-sm">Uji pemahamanmu mengenai konsep tekanan zat padat, fluida, gas, dan biologi!</p>
+                </div>
+                <div class="bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-center">
+                    <span class="text-xs text-slate-400 block">Skor Kamu</span>
+                    <span id="quiz-score" class="text-2xl font-extrabold text-amber-400">0</span>
+                </div>
+            </div>
+
+            <div id="quiz-container" class="glass-panel p-6 rounded-2xl">
+                <div class="flex justify-between items-center mb-4 text-xs text-slate-400 font-semibold">
+                    <span id="quiz-progress-text">Soal 1 dari 5</span>
+                    <span id="quiz-category" class="text-sky-400">Tekanan Zat Padat</span>
+                </div>
+
+                <div class="w-full bg-slate-800 h-2 rounded-full mb-6 overflow-hidden">
+                    <div id="quiz-progress-bar" class="bg-sky-500 h-full w-1/5 transition-all duration-300"></div>
+                </div>
+
+                <h3 id="quiz-question" class="text-lg font-bold text-white mb-6 leading-snug">
+                    Memuat pertanyaan...
+                </h3>
+
+                <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                    <!-- Options loaded via JS -->
+                </div>
+
+                <div id="quiz-feedback" class="hidden p-4 rounded-xl text-sm font-semibold mb-4"></div>
+
+                <button id="btn-next-quiz" onclick="nextQuestion()" class="hidden px-6 py-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl font-bold text-sm transition flex items-center gap-2 ml-auto">
+                    Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-panel border-t border-slate-800 py-4 px-4 text-center text-xs text-slate-400 mt-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© 2026 SMPN SATAP WULUBLOLONG • Solor Barat, Kab. Flores Timur, NTT</p>
+            <p class="text-slate-500">Media Pembelajaran Interaktif IPA Kurikulum Merdeka</p>
+        </div>
+    </footer>
+
+    <script>
+        let soundEnabled = true;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playTone(freq, type = 'sine', duration = 0.15) {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio not allowed or supported");
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            const text = document.getElementById('sound-text');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-sky-400";
+                text.innerText = "Efek Suara Aktif";
+                playTone(523.25);
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-slate-500";
+                text.innerText = "Efek Suara Mute";
+            }
+        }
+
+        function switchTab(tabId) {
+            playTone(440);
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.className = "nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-slate-800 text-slate-300 hover:bg-slate-700";
+            });
+
+            const activeContent = document.getElementById(`section-${tabId}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-sky-600 text-white shadow-lg shadow-sky-900/30";
+            }
+
+            // Redraw simulations when tabs become active
+            setTimeout(() => {
+                if (tabId === 'padat') updatePadatSim();
+                if (tabId === 'fluida') updateFluidaSim();
+                if (tabId === 'pascal-gas') {
+                    updatePascalSim();
+                    updateGasSim();
+                }
+            }, 50);
+        }
+
+        function updatePadatSim() {
+            const f = parseFloat(document.getElementById('sim-padat-f').value);
+            const aVal = parseFloat(document.getElementById('sim-padat-a').value);
+            const a = aVal / 1000; // Convert slider scale to m²
+
+            const p = f / a;
+
+            document.getElementById('val-padat-f').innerText = `${f} N`;
+            document.getElementById('val-padat-a').innerText = `${a.toFixed(3)} m²`;
+            document.getElementById('res-padat-p').innerText = `${Math.round(p).toLocaleString('id-ID')} N/m²`;
+
+            const badge = document.getElementById('badge-padat-status');
+            if (p > 50000) {
+                badge.innerText = "Tekanan Sangat Tinggi (Sangat Tajam / Dalam)";
+                badge.className = "text-xs bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2.5 py-1 rounded-full font-semibold";
+            } else if (p > 15000) {
+                badge.innerText = "Tekanan Sedang";
+                badge.className = "text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-full font-semibold";
+            } else {
+                badge.innerText = "Tekanan Rendah (Tumpul / Luas)";
+                badge.className = "text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded-full font-semibold";
+            }
+
+            drawPadatCanvas(f, a, p);
+        }
+
+        function drawPadatCanvas(f, a, p) {
+            const canvas = document.getElementById('canvasPadat');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 260;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            const groundY = h * 0.7;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Soil / Surface
+            ctx.fillStyle = '#331800';
+            ctx.fillRect(0, groundY, w, h - groundY);
+            ctx.fillStyle = '#522900';
+            ctx.fillRect(0, groundY, w, 8);
+
+            // Block / Blade parameters
+            const caseType = document.getElementById('padat-case').value;
+            const blockWidth = Math.max(20, Math.min(180, a * 4000));
+            const indentDepth = Math.min(45, (p / 80000) * 45);
+
+            const blockX = (w - blockWidth) / 2;
+            const blockY = groundY - 80 + indentDepth;
+
+            // Indentation in soil
+            ctx.fillStyle = '#1f0e00';
+            ctx.beginPath();
+            ctx.rect(blockX, groundY, blockWidth, indentDepth);
+            ctx.fill();
+
+            // Object drawing
+            ctx.fillStyle = caseType === 'parang' ? '#cbd5e1' : '#f59e0b';
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 2;
+            ctx.fillRect(blockX, blockY, blockWidth, 80);
+            ctx.strokeRect(blockX, blockY, blockWidth, 80);
+
+            // Force Arrow
+            ctx.strokeStyle = '#ef4444';
+            ctx.fillStyle = '#ef4444';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(w / 2, blockY - 40);
+            ctx.lineTo(w / 2, blockY - 5);
+            ctx.stroke();
+            // Arrowhead
+            ctx.beginPath();
+            ctx.moveTo(w / 2 - 8, blockY - 12);
+            ctx.lineTo(w / 2, blockY);
+            ctx.lineTo(w / 2 + 8, blockY - 12);
+            ctx.fill();
+
+            // Label
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`F = ${f} N`, w / 2, blockY - 45);
+            ctx.fillText(`Luas Bidang A = ${a.toFixed(3)} m²`, w / 2, blockY + 45);
+        }
+
+        function updateFluidaSim() {
+            const rho = parseFloat(document.getElementById('fluida-type').value);
+            const hDepth = parseFloat(document.getElementById('sim-fluida-h').value);
+            const mass = parseFloat(document.getElementById('sim-fluida-m').value);
+            const g = 9.8;
+
+            const ph = rho * g * hDepth;
+            const pAtm = 101300; // 1 atm in Pa
+            const pTotal = ph + pAtm;
+
+            document.getElementById('val-fluida-h').innerText = `${hDepth} meter`;
+            document.getElementById('val-fluida-m').innerText = `${mass} kg`;
+            document.getElementById('res-fluida-ph').innerText = `${Math.round(ph).toLocaleString('id-ID')} Pa`;
+            document.getElementById('res-fluida-ptot').innerText = `${Math.round(pTotal).toLocaleString('id-ID')} Pa`;
+
+            // Archimedes Status (assuming object fixed volume = 0.15 m³)
+            const objVol = 0.15;
+            const rhoObj = mass / objVol;
+
+            const stateBadge = document.getElementById('badge-archimedes-state');
+            if (rhoObj < rho - 50) {
+                stateBadge.innerText = "TERAPUNG";
+                stateBadge.className = "text-xs px-2 py-0.5 rounded font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+            } else if (Math.abs(rhoObj - rho) <= 50) {
+                stateBadge.innerText = "MELAYANG";
+                stateBadge.className = "text-xs px-2 py-0.5 rounded font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30";
+            } else {
+                stateBadge.innerText = "TENGGELAM";
+                stateBadge.className = "text-xs px-2 py-0.5 rounded font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30";
+            }
+
+            drawFluidaCanvas(rho, hDepth, rhoObj);
+        }
+
+        function drawFluidaCanvas(rho, hDepth, rhoObj) {
+            const canvas = document.getElementById('canvasFluida');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 280;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            const waterSurface = 40;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Water Gradient
+            const waterGrad = ctx.createLinearGradient(0, waterSurface, 0, h);
+            waterGrad.addColorStop(0, '#0284c7');
+            waterGrad.addColorStop(1, '#030712');
+            ctx.fillStyle = waterGrad;
+            ctx.fillRect(0, waterSurface, w, h - waterSurface);
+
+            // Water Surface Line
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, waterSurface);
+            ctx.lineTo(w, waterSurface);
+            ctx.stroke();
+
+            // Diver Position based on hDepth (0m to 20m)
+            const diverY = waterSurface + (hDepth / 20) * (h - waterSurface - 50);
+
+            // Draw Diver / Turtle Emoji
+            ctx.font = '28px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('🐢', w * 0.35, diverY);
+
+            // Pressure vectors acting on diver
+            ctx.strokeStyle = '#38bdf8';
+            ctx.fillStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(w * 0.35 - 25, diverY - 10);
+            ctx.lineTo(w * 0.35 - 10, diverY - 10);
+            ctx.moveTo(w * 0.35 + 25, diverY - 10);
+            ctx.lineTo(w * 0.35 + 10, diverY - 10);
+            ctx.stroke();
+
+            // Depth measurement line
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(w * 0.75, waterSurface);
+            ctx.lineTo(w * 0.75, diverY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(`Kedalaman h = ${hDepth} m`, w * 0.77, (waterSurface + diverY) / 2);
+        }
+
+        function updatePascalSim() {
+            const f1 = parseFloat(document.getElementById('sim-pascal-f1').value);
+            const ratio = parseFloat(document.getElementById('sim-pascal-ratio').value);
+
+            const f2 = f1 * ratio;
+
+            document.getElementById('val-pascal-f1').innerText = `${f1} N`;
+            document.getElementById('val-pascal-ratio').innerText = `${ratio}x Lipat`;
+            document.getElementById('res-pascal-f2').innerText = `${Math.round(f2)} N`;
+            document.getElementById('res-pascal-km').innerText = `${ratio}x`;
+
+            drawPascalCanvas(f1, f2, ratio);
+        }
+
+        function drawPascalCanvas(f1, f2, ratio) {
+            const canvas = document.getElementById('canvasPascal');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 400;
+            canvas.height = canvas.offsetHeight || 180;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Hydraulic U-tube
+            ctx.fillStyle = '#0284c7'; // Liquid
+            ctx.fillRect(30, 80, 80, 70); // Small Piston tube
+            ctx.fillRect(30, 130, w - 60, 20); // Connecting tube
+            ctx.fillRect(w - 150, 60, 120, 90); // Large Piston tube
+
+            // Small Piston
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillRect(30, 70, 80, 15);
+            // Large Piston
+            ctx.fillRect(w - 150, 50, 120, 20);
+
+            // Labels
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 11px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`F1 = ${f1} N`, 70, 45);
+            ctx.fillText(`F2 = ${Math.round(f2)} N`, w - 90, 30);
+            ctx.fillText(`🚗 (Mobil Terangkat)`, w - 90, 45);
+        }
+
+        function updateGasSim() {
+            const v = parseFloat(document.getElementById('sim-gas-v').value);
+            const p = 10 / v; // P * V = 10
+
+            document.getElementById('val-gas-v').innerText = `${v} Liter`;
+            document.getElementById('res-gas-p').innerText = `${p.toFixed(2)} atm`;
+        }
+
+        const quizQuestions = [
+            {
+                question: "Seorang petani di Wulublolong mengasah parang kebunnya hingga tajam. Mengapa parang tajam lebih mudah memotong kayu dibandingkan parang tumpul?",
+                category: "Tekanan Zat Padat",
+                options: [
+                    "Parang tajam memiliki luas bidang tekan (A) lebih kecil sehingga tekanan (P) menjadi lebih besar",
+                    "Parang tajam memiliki gaya (F) yang otomatis lebih besar",
+                    "Parang tumpul memiliki tekanan (P) yang terlalu tinggi",
+                    "Luas permukaan parang tajam membuat gaya gesek hilang"
+                ],
+                correct: 0,
+                explanation: "Tekanan berbanding terbalik dengan luas bidang tekan (P = F/A). Mengasah parang memperkecil luas A, sehingga tekanan P bertambah besar."
+            },
+            {
+                question: "Nelayan Solor Barat menyelam ke dasar laut untuk memanah ikan. Semakin dalam nelayan tersebut menyelam, maka tekanan hidrostatis yang dirasakan telinganya akan...",
+                category: "Tekanan Hidrostatis",
+                options: [
+                    "Semakin kecil karena air di bawah lebih dingin",
+                    "Semakin besar karena kedalaman (h) bertambah",
+                    "Tetap sama di setiap kedalaman",
+                    "Hilang karena adanya gaya Archimedes"
+                ],
+                correct: 1,
+                explanation: "Tekanan hidrostatis dirumuskan Ph = ρ . g . h. Semakin besar kedalaman (h), semakin besar tekanan air di dasar."
+            },
+            {
+                question: "Perahu kayu motor masyarakat Solor dapat terapung di atas permukaan air laut karena...",
+                category: "Hukum Archimedes",
+                options: [
+                    "Gaya ke atas Archimedes (Fa) lebih kecil dari berat perahu",
+                    "Massa jenis rata-rata perahu kayu lebih kecil dari massa jenis air laut",
+                    "Perahu tidak memiliki massa dan berat sama sekali",
+                    "Tekanan udara di dalam perahu menekan air ke bawah"
+                ],
+                correct: 1,
+                explanation: "Benda terapung jika massa jenis rata-ratanya lebih kecil daripada massa jenis fluida (ρ_benda < ρ_air)."
+            },
+            {
+                question: "Penyulingan nira lontar (tuak) menjadi sopi memanfaatkan tekanan gas dalam wadah tertutup. Jika volume wadah gas diperkecil pada suhu tetap, maka tekanan gas akan...",
+                category: "Hukum Boyle (Tekanan Gas)",
+                options: [
+                    "Meningkat sesuai Hukum Boyle (P berbanding terbalik dengan V)",
+                    "Menurun hingga nol",
+                    "Tetap tidak berubah",
+                    "Menjadi sama dengan tekanan hidrostatis"
+                ],
+                correct: 0,
+                explanation: "Menurut Hukum Boyle (P . V = konstan), jika volume (V) diperkecil, maka tekanan gas (P) akan meningkat."
+            },
+            {
+                question: "Bagaimana air tanah dapat naik dari akar hingga mencapai pucuk pohon kelapa yang sangat tinggi di perkebunan Wulublolong?",
+                category: "Aplikasi Biologi",
+                options: [
+                    "Akibat daya kapilaritas pembuluh xilem, tekanan akar, dan daya isap daun",
+                    "Hanya karena dorongan gaya gravitasi bumi",
+                    "Karena pohon kelapa menyerap air dari udara malam",
+                    "Akibat tekanan darah dan pompa jantung pohon"
+                ],
+                correct: 0,
+                explanation: "Air naik pada tumbuhan tinggi melalui kombinasi tekanan akar, daya kapilaritas batang (xilem), dan daya isap daun (transpirasi)."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            const q = quizQuestions[currentQuizIndex];
+
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuizIndex + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quiz-category').innerText = q.category;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQuizIndex + 1) / quizQuestions.length) * 100}%`;
+            document.getElementById('quiz-question').innerText = q.question;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-sky-500 text-slate-200 text-sm font-medium transition flex items-center justify-between";
+                btn.innerHTML = `<span>${String.fromCharCode(65 + idx)}. ${opt}</span> <i class="fa-regular fa-circle text-slate-600"></i>`;
+                btn.onclick = () => selectOption(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+        }
+
+        function selectOption(selectedIndex, btnEl) {
+            if (answered) return;
+            answered = true;
+
+            const q = quizQuestions[currentQuizIndex];
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const allBtns = document.getElementById('quiz-options').children;
+
+            if (selectedIndex === q.correct) {
+                score += 20;
+                playTone(600);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-emerald-950/80 border-2 border-emerald-500 text-white text-sm font-semibold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>`;
+                feedbackEl.className = "p-4 rounded-xl text-sm font-semibold mb-4 bg-emerald-900/50 border border-emerald-500/50 text-emerald-300";
+                feedbackEl.innerHTML = `🎉 <strong>Benar sekali!</strong> ${q.explanation}`;
+            } else {
+                playTone(200);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-rose-950/80 border-2 border-rose-500 text-white text-sm font-semibold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-xmark text-rose-400 text-lg"></i>`;
+
+                const correctBtn = allBtns[q.correct];
+                correctBtn.className = "w-full text-left p-3.5 rounded-xl bg-emerald-950/80 border-2 border-emerald-500 text-white text-sm font-semibold flex items-center justify-between";
+
+                feedbackEl.className = "p-4 rounded-xl text-sm font-semibold mb-4 bg-rose-900/50 border border-rose-500/50 text-rose-300";
+                feedbackEl.innerHTML = `❌ <strong>Jawaban Kurang Tepat.</strong> ${q.explanation}`;
+            }
+
+            document.getElementById('quiz-score').innerText = score;
+            feedbackEl.classList.remove('hidden');
+            document.getElementById('btn-next-quiz').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            playTone(480);
+            currentQuizIndex++;
+            if (currentQuizIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                const container = document.getElementById('quiz-container');
+                container.innerHTML = `
+                    <div class="text-center py-8 space-y-4">
+                        <div class="text-5xl">🏆</div>
+                        <h3 class="text-2xl font-bold text-white">Selamat! Kuis Tekanan Selesai!</h3>
+                        <p class="text-slate-300 text-sm">Kamu telah menguasai konsep Tekanan IPA di Wulublolong.</p>
+                        <div class="inline-block bg-slate-900 px-6 py-3 rounded-2xl border border-slate-800">
+                            <span class="text-xs text-slate-400 block">Total Skor Akhir</span>
+                            <span class="text-4xl font-black text-amber-400">${score} / 100</span>
+                        </div>
+                        <div>
+                            <button onclick="resetQuiz()" class="px-6 py-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl font-bold text-sm transition">
+                                <i class="fa-solid fa-rotate-right mr-1"></i> Ulangi Kuis
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            document.getElementById('quiz-score').innerText = score;
+            location.reload();
+        }
+
+        window.onload = function() {
+            loadQuestion();
+            updatePadatSim();
+
+            window.addEventListener('resize', () => {
+                const activeTabPadat = document.getElementById('section-padat');
+                if (activeTabPadat && !activeTabPadat.classList.contains('hidden')) {
+                    updatePadatSim();
+                }
+                const activeTabFluida = document.getElementById('section-fluida');
+                if (activeTabFluida && !activeTabFluida.classList.contains('hidden')) {
+                    updateFluidaSim();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
