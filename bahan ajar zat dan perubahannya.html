@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papan Interaktif Zat & Perubahannya IPA - SMPN SATAP Wulublolong</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0d1b2a;
+            color: #f1f5f9;
+        }
+        .solor-bg-pattern {
+            background-color: #0d1b2a;
+            background-image: radial-gradient(#14b8a6 1.5px, transparent 1.5px), radial-gradient(#0284c7 1.5px, #0d1b2a 1.5px);
+            background-size: 36px 36px;
+            background-position: 0 0, 18px 18px;
+        }
+        .glass-panel {
+            background: rgba(13, 27, 42, 0.88);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(20, 184, 166, 0.25);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(13, 27, 42, 0.8);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #14b8a6;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body class="min-h-screen solor-bg-pattern flex flex-col justify-between custom-scrollbar selection:bg-teal-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-teal-800/60 px-4 py-3 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-teal-400 via-sky-500 to-amber-400 p-0.5 shadow-lg flex-shrink-0">
+                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+                        <span class="text-2xl animate-pulse">🧪</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold tracking-wider text-teal-300 uppercase bg-teal-500/20 px-2.5 py-0.5 rounded-full border border-teal-400/40">
+                            Kontekstual Solor Barat & Flores Timur
+                        </span>
+                        <span class="text-[10px] font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-400/30">
+                            Kurikulum Merdeka IPA VII / IX
+                        </span>
+                    </div>
+                    <h1 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mt-0.5">
+                        Papan Interaktif Zat & Perubahannya
+                    </h1>
+                    <p class="text-xs text-teal-200/90 font-medium">
+                        SMPN SATAP WuluBlolong • Solor Barat, Kab. Flores Timur, NTT
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <div class="hidden lg:flex flex-col text-right text-xs">
+                    <span class="text-teal-300 font-semibold">Tahun Ajaran 2026/2027</span>
+                    <span class="text-teal-200/70 text-[11px]">Media Digital Kimia-Fisika Terpadu</span>
+                </div>
+                <button id="btn-sound" onclick="toggleSound()" class="px-3.5 py-2 rounded-xl bg-slate-950/80 hover:bg-teal-900 text-teal-200 text-xs font-semibold border border-teal-700/80 flex items-center gap-2 transition shadow-md">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-teal-400 text-sm"></i>
+                    <span id="sound-text">Efek Suara: Aktif</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+        <!-- Navigation Tabs Bar -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-teal-800/80 pb-3">
+            <button onclick="switchTab('partikel')" id="tab-btn-partikel" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-teal-600 text-white shadow-lg shadow-teal-950/50">
+                <i class="fa-solid fa-cubes text-amber-300"></i> 1. Wujud Zat & Simulasi Partikel
+            </button>
+            <button onclick="switchTab('perubahan-wujud')" id="tab-btn-perubahan-wujud" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-teal-200 hover:bg-teal-950">
+                <i class="fa-solid fa-temperature-arrow-up text-rose-400"></i> 2. Perubahan Wujud Zat
+            </button>
+            <button onclick="switchTab('sifat-perubahan')" id="tab-btn-sifat-perubahan" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-teal-200 hover:bg-teal-950">
+                <i class="fa-solid fa-flask-vial text-emerald-400"></i> 3. Perubahan Fisika vs Kimia
+            </button>
+            <button onclick="switchTab('massa-jenis')" id="tab-btn-massa-jenis" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-teal-200 hover:bg-teal-950">
+                <i class="fa-solid fa-scale-balanced text-sky-300"></i> 4. Lab Massa Jenis ($\rho = m/V$)
+            </button>
+            <button onclick="switchTab('pemisahan')" id="tab-btn-pemisahan" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-teal-200 hover:bg-teal-950">
+                <i class="fa-solid fa-filter text-amber-400"></i> 5. Destilasi Sopi & Garam Solor
+            </button>
+            <button onclick="switchTab('glosarium')" id="tab-btn-glosarium" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-teal-200 hover:bg-teal-950">
+                <i class="fa-solid fa-book-bookmark text-teal-300"></i> 6. Glosarium Kontekstual
+            </button>
+            <button onclick="switchTab('kuis')" id="tab-btn-kuis" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-teal-200 hover:bg-teal-950">
+                <i class="fa-solid fa-trophy text-yellow-300"></i> 7. Kuis Evaluasi & Sertifikat
+            </button>
+        </div>
+
+        <!-- MODUL 1: WUJUD ZAT & SIMULASI KINETIK PARTIKEL -->
+        <div id="section-partikel" class="tab-content block space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-teal-400 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 opacity-10 text-9xl select-none">🧊</div>
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 1: Wujud Zat & Teori Kinetik Partikel</h2>
+                <p class="text-teal-100 text-sm max-w-4xl leading-relaxed">
+                    Segala sesuatu di sekitar kita di Wulublolong—mulai dari batu gunung, air laut Selat Solor, hingga uap hasil pengukusan Jagung Titi—merupakan **Zat (Materi)** yang memiliki massa dan menempati ruang. Menurut Teori Kinetik Partikel, zat tersusun atas partikel-partikel mikroskopis yang selalu bergerak!
+                </p>
+            </div>
+
+            <!-- Theory Cards 3 States -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Zat Padat -->
+                <div class="glass-card p-5 rounded-2xl border border-amber-500/30 space-y-3">
+                    <div class="flex items-center gap-3 border-b border-teal-800/80 pb-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center font-bold text-xl">
+                            🧱
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white">1. Zat Padat (Solid)</h3>
+                            <span class="text-xs text-amber-300 font-semibold">Batu Volkanik & Biji Jagung</span>
+                        </div>
+                    </div>
+                    <ul class="text-xs text-teal-100 space-y-2 leading-relaxed">
+                        <li><i class="fa-solid fa-check text-amber-400 mr-1.5"></i> <strong>Bentuk & Volume:</strong> Tetap, tidak mengikuti wadah.</li>
+                        <li><i class="fa-solid fa-check text-amber-400 mr-1.5"></i> <strong>Gaya Tarik:</strong> Sangat kuat antarpartikel.</li>
+                        <li><i class="fa-solid fa-check text-amber-400 mr-1.5"></i> <strong>Gerak Partikel:</strong> Hanya bergetar di tempatnya (rapat dan teratur).</li>
+                        <li><i class="fa-solid fa-location-dot text-teal-300 mr-1.5"></i> <em>Contoh Solor:</em> Batu Liparit, Kayu Lontar, Biji Jagung Titi.</li>
+                    </ul>
+                </div>
+
+                <!-- Zat Cair -->
+                <div class="glass-card p-5 rounded-2xl border border-sky-500/30 space-y-3">
+                    <div class="flex items-center gap-3 border-b border-teal-800/80 pb-3">
+                        <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-300 flex items-center justify-center font-bold text-xl">
+                            💧
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white">2. Zat Cair (Liquid)</h3>
+                            <span class="text-xs text-sky-300 font-semibold">Air Laut & Nira Lontar</span>
+                        </div>
+                    </div>
+                    <ul class="text-xs text-teal-100 space-y-2 leading-relaxed">
+                        <li><i class="fa-solid fa-check text-sky-400 mr-1.5"></i> <strong>Bentuk & Volume:</strong> Bentuk berubah ikut wadah, volume TETAP.</li>
+                        <li><i class="fa-solid fa-check text-sky-400 mr-1.5"></i> <strong>Gaya Tarik:</strong> Agak lemah, partikel berdekatan namun acak.</li>
+                        <li><i class="fa-solid fa-check text-sky-400 mr-1.5"></i> <strong>Gerak Partikel:</strong> Bebas bergeser meluncur satu sama lain.</li>
+                        <li><i class="fa-solid fa-location-dot text-teal-300 mr-1.5"></i> <em>Contoh Solor:</em> Air Laut Wulublolong, Nira Lontar, Minyak Kelapa.</li>
+                    </ul>
+                </div>
+
+                <!-- Zat Gas -->
+                <div class="glass-card p-5 rounded-2xl border border-emerald-500/30 space-y-3">
+                    <div class="flex items-center gap-3 border-b border-teal-800/80 pb-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-xl">
+                            💨
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white">3. Zat Gas (Gas)</h3>
+                            <span class="text-xs text-emerald-300 font-semibold">Uap Sopi & Angin Laut</span>
+                        </div>
+                    </div>
+                    <ul class="text-xs text-teal-100 space-y-2 leading-relaxed">
+                        <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> <strong>Bentuk & Volume:</strong> Berubah-ubah memenuhi seluruh ruang.</li>
+                        <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> <strong>Gaya Tarik:</strong> Sangat lemah / dapat diabaikan.</li>
+                        <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> <strong>Gerak Partikel:</strong> SANGAT BEBAS & cepat bertabrakan.</li>
+                        <li><i class="fa-solid fa-location-dot text-teal-300 mr-1.5"></i> <em>Contoh Solor:</em> Uap Destilasi Sopi, Angin Laut Selat Solor, Oksigen.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Interactive Canvas Simulator Partikel -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-teal-800/80 pb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-atom text-teal-300"></i> Simulator Kinetik Partikel Mikroskopis
+                        </h3>
+                        <p class="text-xs text-teal-200">
+                            Geser suhu untuk mengamati transisi wujud (Padat $\rightarrow$ Cair $\rightarrow$ Gas) dan pergerakan partikel molekul!
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button onclick="setPhase('solid')" class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition">🧱 Padat (0°C)</button>
+                        <button onclick="setPhase('liquid')" class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs transition">💧 Cair (40°C)</button>
+                        <button onclick="setPhase('gas')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition">💨 Gas (110°C)</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Sliders & Status Controls -->
+                    <div class="space-y-4 bg-slate-950/80 p-4 rounded-xl border border-teal-900">
+                        <div>
+                            <div class="flex justify-between text-xs font-bold mb-1">
+                                <span class="text-teal-200">Pengatur Suhu Sistem ($T$):</span>
+                                <span id="val-temp" class="text-amber-300 font-mono">25 °C</span>
+                            </div>
+                            <input type="range" id="slider-temp" min="-20" max="140" value="25" step="1" oninput="updateTempSim()" class="w-full accent-teal-400 cursor-pointer">
+                        </div>
+
+                        <div class="p-3 bg-slate-900 rounded-lg border border-teal-800 space-y-2 text-xs font-mono">
+                            <div class="flex justify-between text-teal-300">
+                                <span>Wujud Zat Teridentifikasi:</span>
+                                <span id="sim-state-name" class="text-sky-300 font-bold">Zat Cair (Liquid)</span>
+                            </div>
+                            <div class="flex justify-between text-teal-300">
+                                <span>Energi Kinetik ($E_k$):</span>
+                                <span id="sim-ek" class="text-amber-300 font-bold">Sedang (Bergeser)</span>
+                            </div>
+                            <div class="flex justify-between text-teal-300">
+                                <span>Gaya Tarik Intermolekul:</span>
+                                <span id="sim-force" class="text-emerald-300 font-bold">Sedang</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-teal-950/60 rounded-lg border border-teal-800 text-[11px] text-teal-200 leading-relaxed">
+                            💡 <strong>Prinsip Fisika Termal:</strong> Ketika suhu dinaikkan, energi kalor diserap partikel sehingga **Energi Kinetik ($E_k$)** meningkat, partikel bergerak lebih cepat, dan ikatan antarpartikel merenggang!
+                        </div>
+                    </div>
+
+                    <!-- Canvas Particle Visualizer -->
+                    <div class="lg:col-span-2 relative h-[280px] bg-slate-950 rounded-xl overflow-hidden border border-teal-800 p-2">
+                        <canvas id="canvasParticles" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODUL 2: PERUBAHAN WUJUD ZAT -->
+        <div id="section-perubahan-wujud" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-rose-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 2: Perubahan Wujud Zat (Segitiga Perubahan Wujud)</h2>
+                <p class="text-teal-100 text-sm max-w-4xl leading-relaxed">
+                    Perubahan wujud zat terjadi ketika zat menyerap atau melepaskan energi kalor (panas). Fenomena ini melandasi berbagai proses kehidupan warga Solor Barat, seperti pembuatan garam laut, pendinginan ikan hasil tangkapan nelayan, dan penyulingan Sopi.
+                </p>
+            </div>
+
+            <!-- Segitiga Perubahan Wujud Visual & Explanation -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Theory Cards Perubahan Wujud -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2 border-b border-teal-800 pb-2">
+                        <i class="fa-solid fa-arrows-spin text-amber-300"></i> Jenis-Jenis Perubahan Wujud
+                    </h3>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 bg-slate-950 rounded-xl border border-rose-500/40">
+                            <strong class="text-rose-400 block mb-1">🔥 MENYERAP KALOR (MEMANAS)</strong>
+                            <ul class="space-y-1 text-teal-100">
+                                <li>• <strong>Mencair:</strong> Padat $\rightarrow$ Cair (Es balok penampung ikan nelayan meleh di terik Solor).</li>
+                                <li>• <strong>Menguap:</strong> Cair $\rightarrow$ Gas (Air laut menguap di tambak garam pantai Solor).</li>
+                                <li>• <strong>Menyublim:</strong> Padat $\rightarrow$ Gas (Kapur barus / kamper pelindung pakaian adat).</li>
+                            </ul>
+                        </div>
+
+                        <div class="p-3 bg-slate-950 rounded-xl border border-sky-500/40">
+                            <strong class="text-sky-300 block mb-1">❄️ MELEPAS KALOR (PENDINGINAN)</strong>
+                            <ul class="space-y-1 text-teal-100">
+                                <li>• <strong>Membeku:</strong> Cair $\rightarrow$ Padat (Membuat es batu pengawet ikan tangkapan).</li>
+                                <li>• <strong>Mengembun:</strong> Gas $\rightarrow$ Cair (Uap alkohol Sopi mengembun di pipa pipa penyulingan).</li>
+                                <li>• <strong>Mengkristal (Deposisi):</strong> Gas $\rightarrow$ Padat (Pembentukan kristal garam putih murni).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Contextual Solor Case Studies -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2 border-b border-teal-800 pb-2">
+                        <i class="fa-solid fa-location-dot text-teal-300"></i> Studi Kasus Kontekstual di Solor Barat
+                    </h3>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-slate-950 rounded-xl border border-teal-800 flex gap-3 items-start">
+                            <span class="text-2xl">🧂</span>
+                            <div>
+                                <strong class="text-amber-300 block">1. Pembuatan Garam Laut Tradisional Wulublolong</strong>
+                                <p class="text-teal-200 mt-0.5">
+                                    Air laut dialirkan ke petak penjemuran. Sinar matahari Solor yang terik menyebabkan air **menguap** (evaporasi), meninggalkan padatan kristal garam dapur (NaCl) melalui proses **mengkristal**.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-slate-950 rounded-xl border border-teal-800 flex gap-3 items-start">
+                            <span class="text-2xl">🍯</span>
+                            <div>
+                                <strong class="text-teal-300 block">2. Penyulingan Sopi Tradisional (Nira Lontar)</strong>
+                                <p class="text-teal-200 mt-0.5">
+                                    Nira lontar dipanaskan hingga **menguap** menjadi uap alkohol. Uap ini dialirkan ke dalam pipa bambu/tembaga yang didinginkan air laut, sehingga **mengembun** kembali menjadi tetesan cairan Sopi murni.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-slate-950 rounded-xl border border-teal-800 flex gap-3 items-start">
+                            <span class="text-2xl">🐟</span>
+                            <div>
+                                <strong class="text-emerald-300 block">3. Pengawetan Ikan Nelayan Selat Solor</strong>
+                                <p class="text-teal-200 mt-0.5">
+                                    Nelayan menggunakan es balok (**membeku**). Saat ditaruh di tempat terbuka, es menyerap panas laut dan **mencair** sambil menyerap suhu panas dari tubuh ikan sehingga ikan tetap segar.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODUL 3: PERUBAHAN FISIKA VS PERUBAHAN KIMIA -->
+        <div id="section-sifat-perubahan" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-emerald-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 3: Sifat & Perubahan Fisika vs Perubahan Kimia</h2>
+                <p class="text-teal-100 text-sm max-w-4xl leading-relaxed">
+                    Bagaimana cara membedakan pembuatan Jagung Titi dengan proses pembakaran kayu bakar di dapur Wulublolong? Kuncinya ada pada apakah terbentuk **zat jenis baru** atau tidak!
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Comparison Box -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-base font-bold text-white border-b border-teal-800 pb-2">
+                        <i class="fa-solid fa-code-compare text-amber-300 mr-2"></i> Perbedaan Utama Fisika vs Kimia
+                    </h3>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-slate-950 rounded-xl border border-sky-500/30">
+                            <strong class="text-sky-300 text-sm block mb-1">🌀 PERUBAHAN FISIKA</strong>
+                            <ul class="space-y-1 text-teal-100">
+                                <li>❌ **TIDAK menghasilkan zat baru** (sifat kimia zat tetap sama).</li>
+                                <li>🔄 Bersifat *reversibel* (dapat kembali ke wujud semula).</li>
+                                <li>📐 Hanya mengalami perubahan bentuk, ukuran, atau wujud.</li>
+                                <li>🌾 <em>Contoh Solor:</em> Biji jagung dititi menjadi pipih (Jagung Titi), kayu lontar dipotong jadi tiang, es batu mencair.</li>
+                            </ul>
+                        </div>
+
+                        <div class="p-3 bg-slate-950 rounded-xl border border-emerald-500/30">
+                            <strong class="text-emerald-300 text-sm block mb-1">🧪 PERUBAHAN KIMIA (REAKSI KIMIA)</strong>
+                            <ul class="space-y-1 text-teal-100">
+                                <li>✅ **MENGHASILKAN ZAT BARU** dengan sifat kimia yang berbeda!</li>
+                                <li>🚫 Bersifat *irreversibel* (tidak dapat kembali ke zat awal).</li>
+                                <li>💥 Tanda-tanda: Perubahan warna, terbentuk gas, endapan, atau perubahan suhu.</li>
+                                <li>🔥 <em>Contoh Solor:</em> Fermentasi nira lontar jadi Sopi, pembakaran kayu bakar jadi abu, perkaratan seng perahu akibat air laut.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Sorting / Matching Game -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-base font-bold text-white border-b border-teal-800 pb-2 flex justify-between items-center">
+                        <span><i class="fa-solid fa-gamepad text-emerald-400 mr-2"></i> Uji Cepat: Klasifikasi Perubahan</span>
+                        <span class="text-xs text-amber-300 font-mono">Skor: <span id="game-score">0</span>/5</span>
+                    </h3>
+                    <p class="text-xs text-teal-200">
+                        Pilihlah jenis perubahan yang tepat untuk setiap peristiwa sehari-hari di Solor di bawah ini!
+                    </p>
+
+                    <div id="game-container" class="space-y-3 text-xs">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODUL 4: LAB MASSA JENIS (RHO = M/V) & APUNG TENGGELAM -->
+        <div id="section-massa-jenis" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-sky-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 4: Pengukuran Massa Jenis ($\rho = m / V$) & Hukum Apung</h2>
+                <p class="text-teal-100 text-sm max-w-4xl leading-relaxed">
+                    Mengapa perahu motor kayu milik nelayan Wulublolong dapat terapung di Selat Solor, sedangkan jangkar besi atau batu karang langsung tenggelam? Hal ini ditentukan oleh **Massa Jenis ($\rho$)**, yaitu kerapatan massa per satuan volume zat.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Formulasi & Control Panel -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-base font-bold text-white border-b border-teal-800 pb-2">
+                        <i class="fa-solid fa-calculator text-amber-300 mr-2"></i> Formulasi Massa Jenis
+                    </h3>
+
+                    <div class="p-3 bg-slate-950 rounded-xl border border-teal-800 text-center font-mono text-xs">
+                        <span class="text-amber-300 font-bold text-sm block mb-1">$$\rho = \frac{m}{V}$$</span>
+                        <p class="text-[11px] text-teal-200">
+                            $\rho$ = Massa Jenis ($\text{g/cm}^3$ atau $\text{kg/m}^3$) <br>
+                            $m$ = Massa Benda ($\text{gram}$ atau $\text{kg}$) <br>
+                            $V$ = Volume Benda ($\text{cm}^3$ atau $\text{m}^3$)
+                        </p>
+                    </div>
+
+                    <!-- Input Controls -->
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <div class="flex justify-between font-bold mb-1">
+                                <span class="text-teal-200">Massa Benda ($m$):</span>
+                                <span id="val-mass" class="text-amber-300 font-mono">150 gram</span>
+                            </div>
+                            <input type="range" id="input-mass" min="10" max="500" value="150" step="10" oninput="calculateDensity()" class="w-full accent-amber-400 cursor-pointer">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-bold mb-1">
+                                <span class="text-teal-200">Volume Benda ($V$):</span>
+                                <span id="val-vol" class="text-teal-300 font-mono">200 cm³</span>
+                            </div>
+                            <input type="range" id="input-vol" min="20" max="500" value="200" step="10" oninput="calculateDensity()" class="w-full accent-teal-400 cursor-pointer">
+                        </div>
+
+                        <div>
+                            <label class="text-teal-200 font-bold block mb-1">Pilih Cairan Wadah Solor:</label>
+                            <select id="select-fluid" onchange="calculateDensity()" class="w-full bg-slate-950 border border-teal-800 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-amber-400">
+                                <option value="1.025">🌊 Air Laut Selat Solor (ρ = 1.025 g/cm³)</option>
+                                <option value="1.000">💧 Air Tawar Sumur (ρ = 1.000 g/cm³)</option>
+                                <option value="0.800">🍶 Sopi Solor (Murni) (ρ = 0.800 g/cm³)</option>
+                                <option value="0.920">🥥 Minyak Kelapa Solor (ρ = 0.920 g/cm³)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canvas Density Simulation Visualizer -->
+                <div class="lg:col-span-2 glass-panel p-5 rounded-2xl flex flex-col justify-between space-y-3">
+                    <div class="flex justify-between items-center border-b border-teal-800 pb-2">
+                        <h3 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-water text-sky-300"></i> Bejana Simulasi Apung, Melayang & Tenggelam
+                        </h3>
+                        <span id="density-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                            TERAPUNG
+                        </span>
+                    </div>
+
+                    <div class="relative w-full h-[240px] bg-slate-950 rounded-xl overflow-hidden border border-teal-800">
+                        <canvas id="canvasDensity" class="w-full h-full block"></canvas>
+                    </div>
+
+                    <div id="density-analysis-text" class="p-3 bg-slate-950 rounded-xl border border-teal-800 text-xs text-teal-200 font-mono">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODUL 5: PEMISAHAN CAMPURAN (DESTILASI & EVAPORASI SOLOR) -->
+        <div id="section-pemisahan" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-amber-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 5: Pemisahan Campuran & Teknologi Tradisional Solor</h2>
+                <p class="text-teal-100 text-sm max-w-4xl leading-relaxed">
+                    Masyarakat Solor telah memanfaatkan prinsip Kimia pemisahan campuran sejak nenek moyang untuk memproduksi **Garam Dapur** dan **Sopi Solor**, serta penyaringan air bersih.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Destilasi Sopi -->
+                <div class="glass-card p-5 rounded-2xl border border-teal-500/30 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center text-xl font-bold">
+                        ⚗️
+                    </div>
+                    <h3 class="text-base font-bold text-white">1. Destilasi (Penyulingan) Sopi</h3>
+                    <p class="text-xs text-teal-100 leading-relaxed">
+                        **Prinsip:** Pemisahan campuran berdasarkan perbedaan **Titik Didih**. <br><br>
+                        Nira lontar yang terfermentasi mengandung air (titik didih $100^\circ\text{C}$) dan alkohol/etanol (titik didih $\approx 78^\circ\text{C}$). Saat dipanaskan di tungku, alkohol menguap lebih dulu, mengalir lewat pipa bambu pendingin, mengembun menjadi Sopi murni.
+                    </p>
+                </div>
+
+                <!-- Evaporasi Garam -->
+                <div class="glass-card p-5 rounded-2xl border border-amber-500/30 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-xl font-bold">
+                        ☀️
+                    </div>
+                    <h3 class="text-base font-bold text-white">2. Evaporasi & Kristalisasi Garam</h3>
+                    <p class="text-xs text-teal-100 leading-relaxed">
+                        **Prinsip:** Pemisahan zat padat terlarut dari pelarut cair dengan **Penguapan**. <br><br>
+                        Air laut Solor merupakan campuran homogen air dan garam. Ketika dijemur di bawah terik matahari Solor Barat, pelarut air menguap ke udara, meninggalkan endapan kristal garam padat ($NaCl$).
+                    </p>
+                </div>
+
+                <!-- Filtrasi Air -->
+                <div class="glass-card p-5 rounded-2xl border border-sky-500/30 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-300 flex items-center justify-center text-xl font-bold">
+                        🚰
+                    </div>
+                    <h3 class="text-base font-bold text-white">3. Filtrasi (Penyaringan) Air Sumur</h3>
+                    <p class="text-xs text-teal-100 leading-relaxed">
+                        **Prinsip:** Pemisahan campuran heterogen berdasarkan **Ukuran Partikel**. <br><br>
+                        Saringan pasir, kerikil, dan serabut kelapa digunakan di Wulublolong untuk menyaring lumpur dan kotoran keruh dari air sumur, menghasilkan air jernih layak pakai.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODUL 6: GLOSARIUM KAMUS ISTILAH KONTEKSTUAL -->
+        <div id="section-glosarium" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-teal-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 6: Glosarium Istilah Zat & Perubahannya</h2>
+                <p class="text-teal-100 text-sm max-w-4xl leading-relaxed">
+                    Cari dan pelajari istilah-istilah kunci materi Zat dan Perubahannya beserta kaitannya dengan alam dan budaya Solor Barat.
+                </p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-teal-400"></i>
+                <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Cari istilah IPA (misal: Massa Jenis, Destilasi, Kinetik, Evaporasi, Fermentasi)..." class="w-full bg-slate-950 border border-teal-700 text-white rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-amber-400 shadow-inner">
+            </div>
+
+            <!-- Glossary Grid Container -->
+            <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Items populated via JS -->
+            </div>
+        </div>
+
+        <!-- MODUL 7: KUIS EVALUASI & SERTIFIKAT DIGITAL -->
+        <div id="section-kuis" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-yellow-400 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white mb-1">Modul 7: Kuis Evaluasi Zat & Perubahannya</h2>
+                    <p class="text-teal-100 text-sm">Jawab 10 soal evaluasi interaktif dan klaim Sertifikat Kelulusan Digital dari SMPN SATAP Wulublolong!</p>
+                </div>
+                <div class="bg-slate-950 px-5 py-2.5 rounded-2xl border border-teal-800 text-center flex-shrink-0">
+                    <span class="text-xs text-teal-400 block font-bold">Skor Kamu</span>
+                    <span id="quiz-score" class="text-3xl font-black text-amber-300">0</span>
+                </div>
+            </div>
+
+            <!-- Quiz Main Box -->
+            <div id="quiz-container" class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex justify-between items-center text-xs text-teal-300 font-bold">
+                    <span id="quiz-progress-text">Soal 1 dari 10</span>
+                    <span id="quiz-category" class="text-amber-300 bg-amber-500/20 px-3 py-1 rounded-full border border-amber-400/30">
+                        Teori Partikel
+                    </span>
+                </div>
+
+                <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-teal-800">
+                    <div id="quiz-progress-bar" class="bg-amber-400 h-full w-1/10 transition-all duration-300"></div>
+                </div>
+
+                <h3 id="quiz-question" class="text-base sm:text-lg font-bold text-white leading-relaxed">
+                    Memuat pertanyaan...
+                </h3>
+
+                <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Options populated via JS -->
+                </div>
+
+                <div id="quiz-feedback" class="hidden p-4 rounded-xl text-xs sm:text-sm font-semibold"></div>
+
+                <button id="btn-next-quiz" onclick="nextQuestion()" class="hidden px-6 py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 ml-auto shadow-lg">
+                    Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Certificate Section (Hidden initially) -->
+            <div id="certificate-box" class="hidden glass-panel p-6 rounded-2xl space-y-6 text-center">
+                <div class="text-5xl animate-bounce">🏆</div>
+                <h3 class="text-2xl font-bold text-white">Selamat! Anda Berhasil Menyelesaikan Evaluasi!</h3>
+                <p class="text-xs sm:text-sm text-teal-200 max-w-xl mx-auto">
+                    Ketik nama lengkap Anda untuk mencetak Sertifikat Kelulusan Digital Pembelajaran IPA SMPN SATAP Wulublolong.
+                </p>
+
+                <div class="max-w-md mx-auto flex gap-2">
+                    <input type="text" id="student-name-input" placeholder="Masukkan Nama Lengkap Siswa..." class="flex-1 bg-slate-950 border border-teal-700 text-white rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-amber-400">
+                    <button onclick="generateCertificate()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition shadow-md">
+                        <i class="fa-solid fa-certificate mr-1"></i> Buat Sertifikat
+                    </button>
+                </div>
+
+                <div class="relative max-w-2xl mx-auto rounded-2xl overflow-hidden border-2 border-amber-400 shadow-2xl bg-slate-950 p-2">
+                    <canvas id="canvasCert" class="w-full h-auto block rounded-xl"></canvas>
+                </div>
+
+                <div class="flex justify-center gap-4">
+                    <button onclick="downloadCertificate()" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-download"></i> Unduh Gambar Sertifikat
+                    </button>
+                    <button onclick="resetQuiz()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-teal-200 font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> Ulangi Kuis
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-panel border-t border-teal-800/80 py-4 px-4 text-center text-xs text-teal-300 mt-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© 2026 SMPN SATAP WULUBLOLONG • Solor Barat, Kabupaten Flores Timur, NTT</p>
+            <p class="text-teal-400 font-medium">Pengembangan Media Pembelajaran Sains Berbasis Kearifan Lokal Solor</p>
+        </div>
+    </footer>
+
+    <script>
+        let soundEnabled = true;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playTone(freq, type = 'sine', duration = 0.15) {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio playback muted");
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            const text = document.getElementById('sound-text');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-teal-400 text-sm";
+                text.innerText = "Efek Suara: Aktif";
+                playTone(523.25);
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-slate-500 text-sm";
+                text.innerText = "Efek Suara: Mute";
+            }
+        }
+
+        function switchTab(tabId) {
+            playTone(440);
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-teal-200 hover:bg-teal-950";
+            });
+
+            const activeContent = document.getElementById(`section-${tabId}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-teal-600 text-white shadow-lg shadow-teal-950/50";
+            }
+
+            setTimeout(() => {
+                if (tabId === 'partikel') drawParticles();
+                if (tabId === 'sifat-perubahan') initSortingGame();
+                if (tabId === 'massa-jenis') calculateDensity();
+                if (tabId === 'glosarium') populateGlossary();
+                if (window.KaTeX && typeof renderMathInElement === 'function') {
+                    renderMathInElement(document.body);
+                }
+            }, 60);
+        }
+
+        let currentTemp = 25; // Celsius
+        let particleAnimationId = null;
+        let particles = [];
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 60; i++) {
+                particles.push({
+                    x: Math.random() * 300,
+                    y: Math.random() * 200,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    baseX: (i % 10) * 24 + 40,
+                    baseY: Math.floor(i / 10) * 24 + 40
+                });
+            }
+        }
+
+        function setPhase(phase) {
+            const slider = document.getElementById('slider-temp');
+            if (phase === 'solid') slider.value = 0;
+            else if (phase === 'liquid') slider.value = 40;
+            else slider.value = 110;
+            updateTempSim();
+        }
+
+        function updateTempSim() {
+            currentTemp = parseFloat(document.getElementById('slider-temp').value);
+            document.getElementById('val-temp').innerText = `${currentTemp} °C`;
+
+            const nameEl = document.getElementById('sim-state-name');
+            const ekEl = document.getElementById('sim-ek');
+            const forceEl = document.getElementById('sim-force');
+
+            if (currentTemp <= 0) {
+                nameEl.innerText = "Zat Padat (Solid)";
+                nameEl.className = "text-amber-300 font-bold";
+                ekEl.innerText = "Rendah (Hanya Bergetar)";
+                forceEl.innerText = "Sangat Kuat & Rapat";
+            } else if (currentTemp < 100) {
+                nameEl.innerText = "Zat Cair (Liquid)";
+                nameEl.className = "text-sky-300 font-bold";
+                ekEl.innerText = "Sedang (Bergeser Meluncur)";
+                forceEl.innerText = "Sedang (Agak Renggang)";
+            } else {
+                nameEl.innerText = "Zat Gas (Gas)";
+                nameEl.className = "text-emerald-300 font-bold";
+                ekEl.innerText = "Tinggi (Bergerak Bebas Cepat)";
+                forceEl.innerText = "Sangat Lemah / Bebas";
+            }
+
+            drawParticles();
+        }
+
+        function drawParticles() {
+            const canvas = document.getElementById('canvasParticles');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 280;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            if (particles.length === 0) initParticles();
+
+            // Background Container Box
+            ctx.strokeStyle = '#14b8a6';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(20, 20, w - 40, h - 40);
+
+            const speedFactor = Math.max(0.2, (currentTemp + 20) / 30);
+
+            particles.forEach((p, idx) => {
+                if (currentTemp <= 0) {
+                    // Solid lattice vibration
+                    const jitterX = (Math.random() - 0.5) * 2;
+                    const jitterY = (Math.random() - 0.5) * 2;
+                    p.x = p.baseX + jitterX;
+                    p.y = p.baseY + jitterY;
+                    ctx.fillStyle = '#f59e0b';
+                } else if (currentTemp < 100) {
+                    // Liquid flow bottom container
+                    p.x += p.vx * speedFactor;
+                    p.y += p.vy * speedFactor;
+
+                    if (p.x < 30 || p.x > w - 30) p.vx *= -1;
+                    if (p.y < h / 2 || p.y > h - 30) p.vy *= -1;
+                    ctx.fillStyle = '#38bdf8';
+                } else {
+                    // Gas fill whole space
+                    p.x += p.vx * speedFactor * 2;
+                    p.y += p.vy * speedFactor * 2;
+
+                    if (p.x < 30 || p.x > w - 30) p.vx *= -1;
+                    if (p.y < 30 || p.y > h - 30) p.vy *= -1;
+                    ctx.fillStyle = '#34d399';
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#0f172a';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            });
+        }
+
+        const gameItems = [
+            { text: "Biji Jagung dititi hingga pipih (Jagung Titi)", type: "fisika", exp: "Hanya terjadi perubahan bentuk fisik, molekul jagung tidak berubah." },
+            { text: "Fermentasi nira lontar menjadi Sopi Solor", type: "kimia", exp: "Terbentuk zat baru berupa alkohol/etanol dari proses metabolisme ragi." },
+            { text: "Pembakaran kayu bakar menjadi abu di dapur", type: "kimia", exp: "Reaksi pembakaran menghasilkan zat baru berupa abu, asap, dan gas karbon." },
+            { text: "Mencairnya es balok penyimpan ikan nelayan", type: "fisika", exp: "Hanya perubahan wujud dari padat ke cair ($H_2O$ tetap $H_2O$)." },
+            { text: "Perkaratan seng & paku perahu akibat air laut", type: "kimia", exp: "Oksidasi besi oleh oksigen dan air laut menghasilkan karat besi ($Fe_2O_3$)." }
+        ];
+
+        let userGameAnswers = {};
+
+        function initSortingGame() {
+            const container = document.getElementById('game-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            gameItems.forEach((item, idx) => {
+                const box = document.createElement('div');
+                box.className = "p-3 bg-slate-950 rounded-xl border border-teal-800 space-y-2";
+                box.innerHTML = `
+                    <div class="font-bold text-white text-xs">${idx + 1}. ${item.text}</div>
+                    <div class="flex gap-2">
+                        <button onclick="answerGame(${idx}, 'fisika')" id="gbtn-${idx}-fisika" class="px-3 py-1 bg-slate-900 border border-sky-500/50 hover:bg-sky-600 text-teal-200 rounded-lg text-xs transition">
+                            🌀 Perubahan Fisika
+                        </button>
+                        <button onclick="answerGame(${idx}, 'kimia')" id="gbtn-${idx}-kimia" class="px-3 py-1 bg-slate-900 border border-emerald-500/50 hover:bg-emerald-600 text-teal-200 rounded-lg text-xs transition">
+                            🧪 Perubahan Kimia
+                        </button>
+                    </div>
+                    <div id="game-feedback-${idx}" class="hidden text-[11px] font-semibold pt-1"></div>
+                `;
+                container.appendChild(box);
+            });
+        }
+
+        function answerGame(idx, choice) {
+            playTone(choice === gameItems[idx].type ? 600 : 250);
+            userGameAnswers[idx] = choice;
+
+            const item = gameItems[idx];
+            const feedbackEl = document.getElementById(`game-feedback-${idx}`);
+            const btnFis = document.getElementById(`gbtn-${idx}-fisika`);
+            const btnKim = document.getElementById(`gbtn-${idx}-kimia`);
+
+            if (choice === item.type) {
+                feedbackEl.className = "text-[11px] font-semibold pt-1 text-emerald-300";
+                feedbackEl.innerText = `✅ Tepat Sekali! (${item.exp})`;
+            } else {
+                feedbackEl.className = "text-[11px] font-semibold pt-1 text-rose-300";
+                feedbackEl.innerText = `❌ Kurang Tepat. Harusnya Perubahan ${item.type.toUpperCase()} (${item.exp})`;
+            }
+            feedbackEl.classList.remove('hidden');
+
+            // Calculate Score
+            let correctCount = 0;
+            Object.keys(userGameAnswers).forEach(k => {
+                if (userGameAnswers[k] === gameItems[k].type) correctCount++;
+            });
+            document.getElementById('game-score').innerText = correctCount;
+        }
+
+        function calculateDensity() {
+            const mass = parseFloat(document.getElementById('input-mass').value);
+            const vol = parseFloat(document.getElementById('input-vol').value);
+            const fluidDensity = parseFloat(document.getElementById('select-fluid').value);
+
+            document.getElementById('val-mass').innerText = `${mass} gram`;
+            document.getElementById('val-vol').innerText = `${vol} cm³`;
+
+            const objectDensity = mass / vol; // g/cm³
+
+            const badge = document.getElementById('density-badge');
+            const analysis = document.getElementById('density-analysis-text');
+
+            let stateStr = "";
+            if (objectDensity < fluidDensity) {
+                stateStr = "TERAPUNG";
+                badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30";
+                analysis.innerHTML = `🚢 <strong>TERAPUNG:</strong> Massa jenis benda ($\\rho_{benda} = ${objectDensity.toFixed(2)}\\text{ g/cm}^3$) LEBIH KECIL dari massa jenis cairan ($\\rho_{cairan} = ${fluidDensity.toFixed(3)}\\text{ g/cm}^3$). Seperti kayu lontar/sampan di laut Solor.`;
+            } else if (Math.abs(objectDensity - fluidDensity) < 0.05) {
+                stateStr = "MELAYANG";
+                badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-400/30";
+                analysis.innerHTML = `🐟 <strong>MELAYANG:</strong> Massa jenis benda SAMA DENGAN massa jenis cairan ($\\rho_{benda} \\approx \\rho_{cairan}$). Seperti telur segar di dalam air garam Solor.`;
+            } else {
+                stateStr = "TENGGELAM";
+                badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-400/30";
+                analysis.innerHTML = `⚓ <strong>TENGGELAM:</strong> Massa jenis benda ($\\rho_{benda} = ${objectDensity.toFixed(2)}\\text{ g/cm}^3$) LEBIH BESAR dari massa jenis cairan. Seperti jangkar besi atau batu karang.`;
+            }
+
+            badge.innerText = stateStr;
+
+            drawDensityCanvas(objectDensity, fluidDensity);
+        }
+
+        function drawDensityCanvas(objDensity, fluidDensity) {
+            const canvas = document.getElementById('canvasDensity');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 240;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Beaker
+            const bX = w / 2 - 80;
+            const bY = 30;
+            const bW = 160;
+            const bH = 180;
+
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(bX, bY, bW, bH);
+
+            // Fluid level
+            ctx.fillStyle = 'rgba(14, 165, 233, 0.4)';
+            ctx.fillRect(bX + 2, bY + 40, bW - 4, bH - 42);
+
+            // Fluid label
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = '11px Plus Jakarta Sans';
+            ctx.fillText(`Cairan (ρ = ${fluidDensity} g/cm³)`, bX + 10, bY + 30);
+
+            // Object Block Position based on density
+            let objY = bY + 40; // floating top
+            if (objDensity > fluidDensity) {
+                objY = bY + bH - 35; // sunk bottom
+            } else if (Math.abs(objDensity - fluidDensity) < 0.05) {
+                objY = bY + (bH / 2); // floating middle
+            } else {
+                // Partial immersion based on density ratio
+                const ratio = objDensity / fluidDensity;
+                objY = bY + 30 + (ratio * 80);
+            }
+
+            // Draw Object
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(w / 2 - 20, objY, 40, 30);
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(w / 2 - 20, objY, 40, 30);
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 10px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${objDensity.toFixed(2)}`, w / 2, objY + 18);
+        }
+
+        const glossaryData = [
+            { term: "Teori Kinetik Partikel", desc: "Teori yang menyatakan bahwa zat tersusun dari partikel-partikel mikroskopis yang selalu bergerak secara konstan.", solor: "Dasar fenomena penyebaran aroma wangi pengukusan Jagung Titi di udara Solor." },
+            { term: "Evaporasi (Penguapan)", desc: "Perubahan wujud zat dari cair menjadi gas akibat penyerapan kalor/panas.", solor: "Proses pemisahan air dari garam pada petak penjemuran garam pantai Solor Barat." },
+            { term: "Destilasi (Penyulingan)", desc: "Metode pemisahan campuran zat cair berdasarkan perbedaan titik didih komponennya.", solor: "Proses pembuatan Sopi Solor dari nira lontar menggunakan pipa bambu pendingin." },
+            { term: "Massa Jenis (ρ)", desc: "Kerapatan massa per satuan volume suatu zat, dirumuskan sebagai $\\rho = \\frac{m}{V}$.", solor: "Menentukan perahu kayu nelayan Wulublolong terapung di laut Selat Solor." },
+            { term: "Perubahan Kimia", desc: "Perubahan zat yang menghasilkan zat jenis baru dengan sifat yang berbeda dari zat asal.", solor: "Fermentasi nira lontar dan perkaratan paku perahu nelayan." },
+            { term: "Perubahan Fisika", desc: "Perubahan zat yang hanya mengubah bentuk atau wujud tanpa menghasilkan zat baru.", solor: "Penumbukan biji jagung menjadi Jagung Titi pipih." },
+            { term: "Sublimasi", desc: "Perubahan wujud dari zat padat langsung menjadi zat gas tanpa melalui wujud cair.", solor: "Penggunaan kamper pengawet sarung tenun tradisional Solor." },
+            { term: "Filtrasi (Penyaringan)", desc: "Pemisahan campuran heterogen antara padatan tak terlarut dengan cairan menggunakan penyaring.", solor: "Penyaringan air sumur Wulublolong menggunakan pasir dan serabut kelapa." }
+        ];
+
+        function populateGlossary() {
+            const container = document.getElementById('glossary-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            glossaryData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "glass-card p-4 rounded-xl border border-teal-800 space-y-1.5 gloss-item";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <strong class="text-amber-300 font-bold text-sm">${item.term}</strong>
+                        <span class="text-[10px] bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded border border-teal-500/30">Istilah Sains</span>
+                    </div>
+                    <p class="text-xs text-teal-100 leading-relaxed">${item.desc}</p>
+                    <div class="text-[11px] text-emerald-300 pt-1 border-t border-teal-900/60">
+                        <i class="fa-solid fa-location-dot mr-1 text-amber-400"></i> Konteks Solor: ${item.solor}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterGlossary() {
+            const q = document.getElementById('glossary-search').value.toLowerCase();
+            document.querySelectorAll('.gloss-item').forEach(el => {
+                const text = el.innerText.toLowerCase();
+                if (text.includes(q)) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+        }
+
+        const quizQuestions = [
+            {
+                question: "Siswa SMPN SATAP Wulublolong mengamati pembuatan Jagung Titi di mana biji jagung ditumbuk menjadi pipih. Peristiwa ini tergolong ke dalam...",
+                category: "Sifat & Perubahan Zat",
+                options: [
+                    "Perubahan Fisika (karena tidak terbentuk zat baru)",
+                    "Perubahan Kimia (karena terbentuk jenis zat baru)",
+                    "Reaksi Fermentasi Alami",
+                    "Perubahan Wujud Sublimasi"
+                ],
+                correct: 0,
+                explanation: "Penumbukan jagung titi hanya mengubah bentuk fisik jagung tanpa mengubah sifat molekul atau menghasilkan zat baru."
+            },
+            {
+                question: "Proses pembuatan Garam Tradisional di pantai Solor Barat memanfaatkan matahari untuk menguapkan air laut sehingga menyisakan kristal garam. Metode pemisahan campuran ini adalah...",
+                category: "Pemisahan Campuran",
+                options: [
+                    "Evaporasi & Kristalisasi",
+                    "Destilasi / Penyulingan",
+                    "Kromatografi Kertas",
+                    "Filtrasi / Penyaringan"
+                ],
+                correct: 0,
+                explanation: "Evaporasi menguapkan pelarut air laut, menyisakan zat terlarut padat berupa kristal garam dapur ($NaCl$)."
+            },
+            {
+                question: "Penyulingan Sopi Solor memisahkan alkohol dari air nira lontar berdasarkan perbedaan...",
+                category: "Pemisahan Campuran",
+                options: [
+                    "Titik Didih antara alkohol dan air",
+                    "Ukuran partikel penyaring",
+                    "Warna larutan nira",
+                    "Massa jenis padatan"
+                ],
+                correct: 0,
+                explanation: "Destilasi memisahkan dua cairan homogen berdasarkan perbedaan titik didih (Alkohol $\\approx 78^\\circ\\text{C}$ vs Air $100^\\circ\\text{C}$)."
+            },
+            {
+                question: "Menurut Teori Kinetik Partikel, zat padat seperti batu karang Solor memiliki bentuk dan volume yang tetap karena...",
+                category: "Teori Partikel",
+                options: [
+                    "Gaya tarik antarpartikel sangat kuat dan terikat rapat",
+                    "Partikel bergerak sangat bebas dan bebas melompat",
+                    "Partikel tidak memiliki massa sama sekali",
+                    "Suhu lingkungan selalu di atas 100°C"
+                ],
+                correct: 0,
+                explanation: "Zat padat memiliki ikatan antarpartikel yang sangat kuat, teratur, dan rapat sehingga bentuk & volumenya tetap."
+            },
+            {
+                question: "Perahu kayu nelayan Wulublolong dapat TERAPUNG di Selat Solor karena...",
+                category: "Massa Jenis",
+                options: [
+                    "Massa jenis total perahu kayu lebih kecil dari massa jenis air laut",
+                    "Massa jenis perahu lebih besar dari massa jenis air laut",
+                    "Air laut tidak memiliki massa jenis",
+                    "Gaya gravitasi di Selat Solor bernilai nol"
+                ],
+                correct: 0,
+                explanation: "Benda terapung apabila massa jenisnya lebih kecil daripada massa jenis cairan tempatnya berada."
+            },
+            {
+                question: "Sebuah batu karang di Solor memiliki massa 300 gram dan volume 100 cm³. Berapakah massa jenis batu karang tersebut?",
+                category: "Massa Jenis",
+                options: [
+                    "3.0 g/cm³",
+                    "0.33 g/cm³",
+                    "30000 g/cm³",
+                    "200 g/cm³"
+                ],
+                correct: 0,
+                explanation: "Massa jenis $\\rho = \\frac{m}{V} = \\frac{300\\text{ g}}{100\\text{ cm}^3} = 3.0\\text{ g/cm}^3$."
+            },
+            {
+                question: "Peristiwa perkaratan pada paku dan seng perahu nelayan akibat air laut merupakan contoh...",
+                category: "Perubahan Kimia",
+                options: [
+                    "Perubahan Kimia (Oksidasi besi menghasilkan karat)",
+                    "Perubahan Fisika (Besi meleleh)",
+                    "Perubahan Wujud Mengembun",
+                    "Pemisahan Campuran Filtrasi"
+                ],
+                correct: 0,
+                explanation: "Perkaratan besi merupakan reaksi kimia antara besi ($Fe$), oksigen, dan air laut yang menghasilkan zat baru karat besi ($Fe_2O_3$)."
+            },
+            {
+                question: "Uap air panas hasil pengukusan di dapur Solor berubah menjadi tetesan air pada tutup panci. Perubahan wujud ini disebut...",
+                category: "Perubahan Wujud",
+                options: [
+                    "Mengembun (Kondensasi)",
+                    "Mencair",
+                    "Menyublim",
+                    "Membeku"
+                ],
+                correct: 0,
+                explanation: "Mengembun adalah perubahan wujud dari gas menjadi cair akibat pelepasan kalor (pendinginan)."
+            },
+            {
+                question: "Nira lontar yang manis mengalami perubahan rasa menjadi masam dan beralkohol setelah dibiarkan beberapa hari. Perubahan ini dinamakan...",
+                category: "Perubahan Kimia",
+                options: [
+                    "Fermentasi (Perubahan Kimia)",
+                    "Evaporasi Fisika",
+                    "Pembekuan Kalor",
+                    "Sublimasi Kamper"
+                ],
+                correct: 0,
+                explanation: "Fermentasi mikroorganisme mengubah gula nira menjadi alkohol dan asam, menghasilkan zat baru secara kimia."
+            },
+            {
+                question: "Mengapa es batu ditaruh di dalam wadah penyimpan ikan nelayan Wulublolong?",
+                category: "Perubahan Wujud",
+                options: [
+                    "Es mencair sambil menyerap kalor dari ikan sehingga suhu ikan tetap dingin dan segar",
+                    "Es memancarkan panas ke dalam tubuh ikan",
+                    "Es mengubah zat kimia protein ikan secara permanen",
+                    "Es menambah massa jenis air laut menjadi dua kali lipat"
+                ],
+                correct: 0,
+                explanation: "Saat mencair, es menyerap energi kalor dari sekitarnya (tubuh ikan), menjaga suhu ikan tetap rendah agar tidak membusuk."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            const q = quizQuestions[currentQuizIndex];
+
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuizIndex + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quiz-category').innerText = q.category;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQuizIndex + 1) / quizQuestions.length) * 100}%`;
+            document.getElementById('quiz-question').innerText = `${currentQuizIndex + 1}. ${q.question}`;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 rounded-xl bg-slate-950 border border-teal-800 hover:border-amber-400 text-teal-100 text-xs sm:text-sm font-medium transition flex items-center justify-between";
+                btn.innerHTML = `<span>${String.fromCharCode(65 + idx)}. ${opt}</span> <i class="fa-regular fa-circle text-teal-600"></i>`;
+                btn.onclick = () => selectOption(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+        }
+
+        function selectOption(selectedIndex, btnEl) {
+            if (answered) return;
+            answered = true;
+
+            const q = quizQuestions[currentQuizIndex];
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const allBtns = document.getElementById('quiz-options').children;
+
+            if (selectedIndex === q.correct) {
+                score += 10;
+                playTone(650);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-teal-900 border-2 border-teal-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-check text-teal-300 text-lg"></i>`;
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-teal-900/70 border border-teal-500 text-teal-200";
+                feedbackEl.innerHTML = `🎉 <strong>Benar Sekali!</strong> ${q.explanation}`;
+            } else {
+                playTone(220);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-rose-950 border-2 border-rose-500 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-xmark text-rose-400 text-lg"></i>`;
+
+                const correctBtn = allBtns[q.correct];
+                correctBtn.className = "w-full text-left p-3.5 rounded-xl bg-teal-900 border-2 border-teal-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-rose-950/70 border border-rose-500 text-rose-200";
+                feedbackEl.innerHTML = `❌ <strong>Jawaban Kurang Tepat.</strong> ${q.explanation}`;
+            }
+
+            document.getElementById('quiz-score').innerText = score;
+            feedbackEl.classList.remove('hidden');
+            document.getElementById('btn-next-quiz').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            playTone(480);
+            currentQuizIndex++;
+            if (currentQuizIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('certificate-box').classList.remove('hidden');
+                generateCertificate();
+            }
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            document.getElementById('quiz-score').innerText = score;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('certificate-box').classList.add('hidden');
+            loadQuestion();
+        }
+
+        function generateCertificate() {
+            const name = document.getElementById('student-name-input').value || "Siswa SMPN SATAP Wulublolong";
+            const canvas = document.getElementById('canvasCert');
+            if (!canvas) return;
+            canvas.width = 800;
+            canvas.height = 500;
+
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            ctx.fillStyle = '#0d1b2a';
+            ctx.fillRect(0, 0, 800, 500);
+
+            // Border
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(15, 15, 770, 470);
+            ctx.strokeStyle = '#14b8a6';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(25, 25, 750, 450);
+
+            // Watermark icon
+            ctx.fillStyle = 'rgba(20, 184, 166, 0.05)';
+            ctx.font = '160px Plus Jakarta Sans';
+            ctx.fillText('🧪', 330, 310);
+
+            // Title
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = 'bold 24px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('SERTIFIKAT KELULUSAN PEMBELAJARAN IPA', 400, 80);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = '14px Plus Jakarta Sans';
+            ctx.fillText('SMPN SATAP WULUBLOLONG • SOLOR BARAT', 400, 110);
+
+            ctx.fillStyle = '#f1f5f9';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Diberikan Kepada Siswa/i:', 400, 160);
+
+            // Student Name
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 28px Plus Jakarta Sans';
+            ctx.fillText(name, 400, 210);
+
+            // Description
+            ctx.fillStyle = '#e2e8f0';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Telah Menyelesaikan Modul Interaktif & Evaluasi Sains:', 400, 260);
+            ctx.font = 'bold 15px Plus Jakarta Sans';
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillText('MATERI ZAT DAN PERUBAHANNYA', 400, 290);
+
+            // Score Badge
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(300, 320, 200, 45);
+            ctx.strokeStyle = '#14b8a6';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(300, 320, 200, 45);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px Plus Jakarta Sans';
+            ctx.fillText(`NILAI EVALUASI: ${score} / 100`, 400, 348);
+
+            // Date & Location
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '12px Plus Jakarta Sans';
+            ctx.fillText('Wulublolong, Solor Barat, Flores Timur', 400, 410);
+            ctx.fillText('Media Pembelajaran Digital Kurikulum Merdeka IPA', 400, 430);
+        }
+
+        function downloadCertificate() {
+            playTone(600);
+            const canvas = document.getElementById('canvasCert');
+            const link = document.createElement('a');
+            link.download = `Sertifikat_ZatPerubahannya_Wulublolong_${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        window.onload = function() {
+            populateGlossary();
+            loadQuestion();
+            drawParticles();
+            initSortingGame();
+            calculateDensity();
+
+            window.addEventListener('resize', () => {
+                const activePartikel = document.getElementById('section-partikel');
+                if (activePartikel && !activePartikel.classList.contains('hidden')) drawParticles();
+
+                const activeMassa = document.getElementById('section-massa-jenis');
+                if (activeMassa && !activeMassa.classList.contains('hidden')) calculateDensity();
+            });
+        };
+    </script>
+</body>
+</html>
