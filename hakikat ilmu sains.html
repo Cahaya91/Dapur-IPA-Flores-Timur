@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hakikat Ilmu Sains & Metode Ilmiah - IPA SMP Kelas 7 (Lewohedo)</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+        }
+        .lab-bg-pattern {
+            background-color: #020617;
+            background-image: 
+                radial-gradient(rgba(14, 165, 233, 0.15), rgba(2, 6, 23, 0) 2px),
+                radial-gradient(rgba(16, 185, 129, 0.1), rgba(2, 6, 23, 0) 1px);
+            background-size: 36px 36px, 18px 18px;
+            background-position: 0 0, 9px 9px;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+        }
+        .glass-card {
+            background: rgba(11, 19, 36, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);
+        }
+        .glow-emerald {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(2, 6, 23, 0.9);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0d9488;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body class="min-h-screen lab-bg-pattern flex flex-col justify-between custom-scrollbar selection:bg-teal-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-teal-800/60 px-4 py-3 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-teal-400 via-cyan-500 to-emerald-400 p-0.5 shadow-lg flex-shrink-0 glow-cyan">
+                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+                        <span class="text-2xl animate-pulse">🧪</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold tracking-wider text-teal-300 uppercase bg-teal-500/20 px-2.5 py-0.5 rounded-full border border-teal-400/40">
+                            Laboratorium Sains IPA
+                        </span>
+                        <span class="text-[10px] font-bold text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/30">
+                            Kurikulum Merdeka Kelas VII
+                        </span>
+                    </div>
+                    <h1 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mt-0.5">
+                        Papan Interaktif Hakikat Ilmu Sains & Metode Ilmiah
+                    </h1>
+                    <p class="text-xs text-teal-200/90 font-medium">
+                        SMPN Satap Wulublolong • Desa Lewohedo, Kec. Solor Timur, Kab. Flores Timur, NTT
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="hidden lg:flex flex-col text-right text-xs">
+                    <span class="text-teal-300 font-semibold" id="header-date">Solor Timur, NTT</span>
+                    <span class="text-emerald-200/80 text-[11px]" id="header-wita">00:00:00 WITA</span>
+                </div>
+                <button id="btn-sound" onclick="toggleSound()" class="px-3.5 py-2 rounded-xl bg-slate-950/80 hover:bg-teal-900 text-teal-200 text-xs font-semibold border border-teal-700/80 flex items-center gap-2 transition shadow-md">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-teal-400 text-sm"></i>
+                    <span id="sound-text">Efek Suara: Aktif</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+        <!-- Navigation Tabs -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-teal-800/80 pb-3">
+            <button onclick="switchTab('hakikat')" id="tab-btn-hakikat" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-teal-600 text-white shadow-lg shadow-teal-950/50">
+                <i class="fa-solid fa-atom text-emerald-300"></i> 1. Hakikat & Cabang Sains
+            </button>
+            <button onclick="switchTab('laboratorium')" id="tab-btn-laboratorium" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-teal-200 hover:bg-teal-950">
+                <i class="fa-solid fa-flask text-cyan-300"></i> 2. Alat Lab & Keselamatan
+            </button>
+            <button onclick="switchTab('metode')" id="tab-btn-metode" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-teal-200 hover:bg-teal-950">
+                <i class="fa-solid fa-vial-circle-check text-indigo-300"></i> 3. Metode Ilmiah & Virtual Lab
+            </button>
+            <button onclick="switchTab('pengukuran')" id="tab-btn-pengukuran" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-teal-200 hover:bg-teal-950">
+                <i class="fa-solid fa-ruler-combined text-amber-300"></i> 4. Pengukuran & Besaran
+            </button>
+            <button onclick="switchTab('glosarium')" id="tab-btn-glosarium" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-teal-200 hover:bg-teal-950">
+                <i class="fa-solid fa-book-bookmark text-purple-300"></i> 5. Glosarium Sains
+            </button>
+            <button onclick="switchTab('evaluasi')" id="tab-btn-evaluasi" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-teal-200 hover:bg-teal-950">
+                <i class="fa-solid fa-award text-amber-300"></i> 6. Evaluasi & Sertifikat
+            </button>
+        </div>
+
+        <div id="section-hakikat" class="tab-content block space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-teal-400 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 opacity-10 text-9xl select-none">🔬</div>
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 1: Hakikat Ilmu Sains & Cabang-Cabang Utama IPA</h2>
+                <p class="text-teal-100 text-sm max-w-4xl leading-relaxed">
+                    **Sains (Ilmiah/IPA)** adalah ilmu pengetahuan sistematis tentang alam semesta yang diperoleh melalui **observasi**, **eksperimen**, dan **penalaran logis**. Ilmuwan IPA disebut *Scientist*.
+                    Sains membantu masyarakat Solor Timur memahami alam sekitar, dari laut Selat Solor hingga kesuburan tanah perkebunan Desa Lewohedo!
+                </p>
+            </div>
+
+            <!-- Branch Explorer Interactive Grid -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <div class="border-b border-teal-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-network-wired text-emerald-400"></i> Eksplorasi 6 Cabang Utama Ilmu Sains
+                        </h3>
+                        <p class="text-xs text-teal-200">Klik cabang ilmu sains di bawah untuk mempelajari definisi & contoh penerapannya di Pulau Solor!</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3" id="branch-buttons">
+                    <!-- Populated via JS -->
+                </div>
+
+                <div id="branch-detail-card" class="glass-card p-5 rounded-xl border border-teal-500/40 space-y-3">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Matching Exercise: Solor Local Phenomena to Science Branch -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-base font-bold text-white flex items-center gap-2 border-b border-teal-800 pb-2">
+                    <i class="fa-solid fa-puzzle-piece text-amber-400"></i> Studi Kasus Solor: Tentukan Cabang Ilmu Sains yang Sesuai!
+                </h3>
+                <div id="branch-quiz-container" class="bg-slate-950 p-5 rounded-xl border border-teal-800 space-y-3">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+
+        <div id="section-laboratorium" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-cyan-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 2: Laboratorium IPA, Alat-Alat Lab & Keselamatan Kerja</h2>
+                <p class="text-teal-100 text-sm max-w-4xl leading-relaxed">
+                    **Laboratorium IPA** adalah tempat khusus melakukan eksperimen sains secara aman. Setiap alat memiliki fungsi spesifik, dan aturan keselamatan (*Safety Rules*) wajib dipatuhi untuk mencegah kecelakaan.
+                </p>
+            </div>
+
+            <!-- Lab Apparatus Viewer -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <div class="border-b border-teal-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-flask-vial text-cyan-300"></i> Katalog Alat Laboratorium IPA SMP
+                        </h3>
+                        <p class="text-xs text-teal-200">Pilih alat laboratorium untuk melihat nama, bahan, fungsi, dan cara penggunaan yang benar.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2" id="apparatus-buttons">
+                    <!-- Populated via JS -->
+                </div>
+
+                <div id="apparatus-detail-card" class="bg-slate-950 p-5 rounded-xl border border-cyan-700/60 flex flex-col sm:flex-row items-center gap-5">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Hazard Symbols Grid -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-base font-bold text-white flex items-center gap-2 border-b border-teal-800 pb-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Simbol-Simbol Bahaya Bahan Kimia (*Hazard Symbols*)
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="hazard-container">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Safety Rules Checklist -->
+            <div class="glass-card p-5 rounded-2xl border border-rose-500/30 space-y-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2 text-rose-300 border-b border-rose-900 pb-2">
+                    <i class="fa-solid fa-shield-halved"></i> 5 Aturan Emas Keselamatan Kerja Laboratorium SMPN Satap Wulublolong
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-teal-100">
+                    <div class="flex items-start gap-2.5 bg-slate-950 p-3 rounded-xl border border-rose-900/50">
+                        <span class="text-rose-400 font-bold">1.</span>
+                        <span><strong>Gunakan APD Lengkap:</strong> Wajib memakai jas laboratorium, kacamata goggle, dan sepatu tertutup saat eksperimen.</span>
+                    </div>
+                    <div class="flex items-start gap-2.5 bg-slate-950 p-3 rounded-xl border border-rose-900/50">
+                        <span class="text-rose-400 font-bold">2.</span>
+                        <span><strong>Dilarang Makan & Minum:</strong> Jangan pernah mencicipi bahan kimia atau membawa makanan/minuman ke ruang lab.</span>
+                    </div>
+                    <div class="flex items-start gap-2.5 bg-slate-950 p-3 rounded-xl border border-rose-900/50">
+                        <span class="text-rose-400 font-bold">3.</span>
+                        <span><strong>Membaui Bahan Secara Aman:</strong> Mengibaskan uap zat menggunakan tangan ke arah hidung (teknik *wafting*), jangan menghirup langsung!</span>
+                    </div>
+                    <div class="flex items-start gap-2.5 bg-slate-950 p-3 rounded-xl border border-rose-900/50">
+                        <span class="text-rose-400 font-bold">4.</span>
+                        <span><strong>Tangani Kaca & Panas:</strong> Gunakan penjepit kayu untuk memegang tabung reaksi panas dan pembakar spiritus.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-metode" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-indigo-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 3: Metode Ilmiah & Simulator Virtual Lab Percobaan</h2>
+                <p class="text-teal-100 text-sm max-w-4xl leading-relaxed">
+                    **Metode Ilmiah** adalah langkah-langkah sistematis yang digunakan ilmuwan untuk memecahkan masalah alam.
+                    Langkah mendasar: **1. Mengamati (Observasi)** ➔ **2. Merumuskan Masalah** ➔ **3. Membuat Hipotesis** ➔ **4. Merancang Percobaan (Variabel)** ➔ **5. Menganalisis Data** ➔ **6. Menarik Kesimpulan**.
+                </p>
+            </div>
+
+            <!-- Variables Card Explanation -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="glass-card p-4 rounded-xl border border-indigo-500/40 space-y-1.5">
+                    <span class="text-xs font-bold text-indigo-300 uppercase tracking-wider block">1. Variabel Bebas (Independen)</span>
+                    <p class="text-xs text-teal-100 leading-relaxed">Faktor yang **diubah-ubah/disengaja dibedakan** oleh peneliti dalam percobaan.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-emerald-500/40 space-y-1.5">
+                    <span class="text-xs font-bold text-emerald-300 uppercase tracking-wider block">2. Variabel Terikat (Dependen)</span>
+                    <p class="text-xs text-teal-100 leading-relaxed">Faktor yang **diukur/diamati hasilnya** sebagai akibat perubahan variabel bebas.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-amber-500/40 space-y-1.5">
+                    <span class="text-xs font-bold text-amber-300 uppercase tracking-wider block">3. Variabel Kontrol</span>
+                    <p class="text-xs text-teal-100 leading-relaxed">Faktor yang **dibuat sama/dijaga konstan** agar eksperimen berlangsung adil (*fair test*).</p>
+                </div>
+            </div>
+
+            <!-- Interactive Virtual Experiment Simulator -->
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="border-b border-teal-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-flask text-emerald-400"></i> Virtual Lab Percobaan: Pengaruh Suhu Air terhadap Waktu Pelarutan Garam Solor
+                        </h3>
+                        <p class="text-xs text-teal-200">Uji Hipotesis kamu secara interaktif! Uji coba melarutkan 10 gram Garam Laut Solor pada berbagai suhu air.</p>
+                    </div>
+                </div>
+
+                <!-- Simulation Controls -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-950 p-4 rounded-xl border border-teal-800">
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-teal-300 block">
+                            Variabel Bebas: Suhu Air (°C)
+                        </label>
+                        <input type="range" id="sim-temp" min="10" max="90" value="30" step="10" oninput="runVirtualExperiment()" class="w-full accent-teal-400 cursor-pointer">
+                        <div class="flex justify-between text-[11px] font-mono text-teal-200">
+                            <span>10°C (Dingin)</span>
+                            <span id="temp-val-display" class="font-bold text-amber-300">30°C</span>
+                            <span>90°C (Panas)</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-teal-300 block">
+                            Variabel Kontrol (Tetap)
+                        </label>
+                        <div class="text-[11px] text-teal-200 space-y-1 bg-slate-900 p-2 rounded-lg border border-teal-900">
+                            <div>• Massa Garam: <strong>10 gram</strong></div>
+                            <div>• Volume Air: <strong>200 mL</strong></div>
+                            <div>• Pengadukan: <strong>Konstan (100 RPM)</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col justify-center items-center bg-teal-950/60 p-3 rounded-xl border border-teal-700/60 text-center">
+                        <span class="text-[11px] font-semibold text-teal-300 block">Hasil Variabel Terikat:</span>
+                        <span id="sim-time-result" class="text-2xl font-black text-amber-300 font-mono">45.0 Detik</span>
+                        <span class="text-[10px] text-emerald-300">Waktu Pelarutan Sampai Larut Sempurna</span>
+                    </div>
+                </div>
+
+                <!-- Canvas Graph Visualization -->
+                <div class="h-[280px] bg-slate-950 rounded-xl overflow-hidden border border-teal-800 relative">
+                    <canvas id="canvasLabGraph" class="w-full h-full block"></canvas>
+                </div>
+
+                <!-- Experiment Conclusion Box -->
+                <div id="sim-conclusion-box" class="p-4 bg-slate-950 rounded-xl border border-emerald-500/40 text-xs text-teal-100 space-y-1">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+
+        <div id="section-pengukuran" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-amber-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 4: Pengukuran, Besaran Pokok, Besaran Turunan & Satuan SI</h2>
+                <p class="text-teal-100 text-sm max-w-4xl leading-relaxed">
+                    **Mengukur** adalah membandingkan suatu besaran yang diukur dengan besaran sejenis yang ditetapkan sebagai **Satuan**.
+                    **Sistem Internasional (SI)** digunakan secara global agar hasil pengukuran sains seragam di seluruh dunia.
+                </p>
+            </div>
+
+            <!-- 7 Fundamental SI Units Table -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-base font-bold text-white flex items-center gap-2 border-b border-teal-800 pb-2">
+                    <i class="fa-solid fa-list-ol text-amber-300"></i> Tabel 7 Besaran Pokok & Satuan Standar Internasional (SI)
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-teal-100 border-collapse">
+                        <thead>
+                            <tr class="bg-slate-950 border-b border-teal-800 text-amber-300 font-bold">
+                                <th class="p-3">No</th>
+                                <th class="p-3">Besaran Pokok</th>
+                                <th class="p-3">Satuan SI</th>
+                                <th class="p-3">Simbol Satuan</th>
+                                <th class="p-3">Alat Ukur Utama</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-teal-900/60 font-mono">
+                            <tr class="hover:bg-teal-950/40"><td class="p-2.5">1</td><td class="p-2.5 font-bold text-white">Panjang</td><td class="p-2.5">Meter</td><td class="p-2.5 text-emerald-300">m</td><td class="p-2.5 font-sans">Mistar, Jangka Sorong, Penggaris</td></tr>
+                            <tr class="hover:bg-teal-950/40"><td class="p-2.5">2</td><td class="p-2.5 font-bold text-white">Massa</td><td class="p-2.5">Kilogram</td><td class="p-2.5 text-emerald-300">kg</td><td class="p-2.5 font-sans">Neraca Ohaus, Timbangan Digital</td></tr>
+                            <tr class="hover:bg-teal-950/40"><td class="p-2.5">3</td><td class="p-2.5 font-bold text-white">Waktu</td><td class="p-2.5">Sekon (Detik)</td><td class="p-2.5 text-emerald-300">s</td><td class="p-2.5 font-sans">Stopwatch, Jam Dinding</td></tr>
+                            <tr class="hover:bg-teal-950/40"><td class="p-2.5">4</td><td class="p-2.5 font-bold text-white">Suhu</td><td class="p-2.5">Kelvin</td><td class="p-2.5 text-emerald-300">K</td><td class="p-2.5 font-sans">Termometer (Celcius/Kelvin)</td></tr>
+                            <tr class="hover:bg-teal-950/40"><td class="p-2.5">5</td><td class="p-2.5 font-bold text-white">Kuat Arus Listrik</td><td class="p-2.5">Ampere</td><td class="p-2.5 text-emerald-300">A</td><td class="p-2.5 font-sans">Amperemeter, Multimeter</td></tr>
+                            <tr class="hover:bg-teal-950/40"><td class="p-2.5">6</td><td class="p-2.5 font-bold text-white">Jumlah Zat</td><td class="p-2.5">Mol</td><td class="p-2.5 text-emerald-300">mol</td><td class="p-2.5 font-sans">Perhitungan Kimia Analitis</td></tr>
+                            <tr class="hover:bg-teal-950/40"><td class="p-2.5">7</td><td class="p-2.5 font-bold text-white">Intensitas Cahaya</td><td class="p-2.5">Kandela</td><td class="p-2.5 text-emerald-300">cd</td><td class="p-2.5 font-sans">Lux Meter</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Interactive Measurement Simulator: Volume & Meniscus Reading -->
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="border-b border-teal-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-eye text-cyan-300"></i> Simulator Membaca Meniskus Gelas Ukur secara Presisi
+                        </h3>
+                        <p class="text-xs text-teal-200">Atur volume cairan dan pelajari cara membaca **Meniskus Cekung** (sejajar mata di titik paling bawah cairan!).</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-teal-300 block">Atur Volume Cairan (mL):</label>
+                            <input type="range" id="slider-volume" min="10" max="100" value="45" step="1" oninput="updateMeniscusSim()" class="w-full accent-cyan-400 cursor-pointer">
+                        </div>
+
+                        <div class="bg-slate-950 p-4 rounded-xl border border-teal-800 space-y-2 text-xs text-teal-100">
+                            <div><strong>Volume Terbaca:</strong> <span id="vol-readout" class="font-mono text-cyan-300 text-base font-bold">45 mL</span></div>
+                            <p class="text-[11px] leading-relaxed">
+                                💡 **Aturan Meniskus Cekung:** Posisi mata harus tegak lurus (sejajar) dengan permukaan zat cair. Baca angka tepat di dasar lengkungan terbawah cairan!
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="h-[240px] bg-slate-950 rounded-xl overflow-hidden border border-teal-800 relative">
+                        <canvas id="canvasMeniscus" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-glosarium" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2 border-b border-teal-800 pb-2">
+                    <i class="fa-solid fa-book-bookmark text-purple-300"></i> Kamus Glosarium Hakikat Sains & Metode Ilmiah
+                </h3>
+
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-teal-400"></i>
+                    <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Cari istilah sains (misal: Hipotesis, Meniskus, Variabel, Presisi, Akurasi)..." class="w-full bg-slate-950 border border-teal-700 text-white rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-teal-400 shadow-inner">
+                </div>
+
+                <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+
+        <div id="section-evaluasi" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-teal-800 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-1">Evaluasi Hakikat Sains & Metode Ilmiah</h2>
+                        <p class="text-teal-100 text-sm">Uji pemahaman materi Anda dan raih Sertifikat Kelulusan Digital SMPN Satap Wulublolong!</p>
+                    </div>
+                    <div class="bg-slate-950 px-5 py-2.5 rounded-2xl border border-teal-800 text-center flex-shrink-0">
+                        <span class="text-xs text-teal-400 block font-bold">Skor Kamu</span>
+                        <span id="quiz-score" class="text-3xl font-black text-amber-300">0</span>
+                    </div>
+                </div>
+
+                <div id="quiz-container" class="space-y-6">
+                    <div class="flex justify-between items-center text-xs text-teal-300 font-bold">
+                        <span id="quiz-progress-text">Soal 1 dari 10</span>
+                        <span id="quiz-category" class="text-cyan-300 bg-cyan-500/20 px-3 py-1 rounded-full border border-cyan-400/30">
+                            Hakikat Sains
+                        </span>
+                    </div>
+
+                    <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-teal-800">
+                        <div id="quiz-progress-bar" class="bg-teal-400 h-full w-1/10 transition-all duration-300"></div>
+                    </div>
+
+                    <h3 id="quiz-question" class="text-base sm:text-lg font-bold text-white leading-relaxed">
+                        Memuat pertanyaan...
+                    </h3>
+
+                    <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Options populated via JS -->
+                    </div>
+
+                    <div id="quiz-feedback" class="hidden p-4 rounded-xl text-xs sm:text-sm font-semibold"></div>
+
+                    <button id="btn-next-quiz" onclick="nextQuestion()" class="hidden px-6 py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 ml-auto shadow-lg">
+                        Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Certificate Section -->
+                <div id="certificate-box" class="hidden space-y-6 text-center">
+                    <div class="text-5xl animate-bounce">🏆</div>
+                    <h3 class="text-2xl font-bold text-white">Selamat! Anda Berhasil Menyelesaikan Pembelajaran Hakikat Sains!</h3>
+                    <p class="text-xs sm:text-sm text-teal-200 max-w-xl mx-auto">
+                        Ketik nama lengkap Anda di bawah ini untuk mencetak Sertifikat Kelulusan Digital Hakikat Sains & Metode Ilmiah SMPN Satap Wulublolong Desa Lewohedo.
+                    </p>
+
+                    <div class="max-w-md mx-auto flex gap-2">
+                        <input type="text" id="student-name-input" placeholder="Masukkan Nama Lengkap Siswa..." class="flex-1 bg-slate-950 border border-teal-700 text-white rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-amber-400">
+                        <button onclick="generateCertificate()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition shadow-md">
+                            <i class="fa-solid fa-certificate mr-1"></i> Buat Sertifikat
+                        </button>
+                    </div>
+
+                    <div class="relative max-w-2xl mx-auto rounded-2xl overflow-hidden border-2 border-amber-400 shadow-2xl bg-slate-950 p-2">
+                        <canvas id="canvasCert" class="w-full h-auto block rounded-xl"></canvas>
+                    </div>
+
+                    <div class="flex justify-center gap-4">
+                        <button onclick="downloadCertificate()" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh Sertifikat (PNG)
+                        </button>
+                        <button onclick="resetQuiz()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-teal-200 font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> Ulangi Evaluasi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-panel border-t border-teal-800 py-4 px-4 text-center text-xs text-teal-300 mt-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© 2026 SMPN Satap Wulublolong • Desa Lewohedo, Kec. Solor Timur, Kab. Flores Timur, NTT</p>
+            <p class="text-teal-400 font-medium">Modul Digital Hakikat Ilmu Sains & Metode Ilmiah - Kurikulum Merdeka VII</p>
+        </div>
+    </footer>
+
+    <script>
+        // Web Audio Synthesizer
+        let soundEnabled = true;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playTone(freq, type = 'sine', duration = 0.15) {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio muted");
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            const text = document.getElementById('sound-text');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-teal-400 text-sm";
+                text.innerText = "Efek Suara: Aktif";
+                playTone(523.25);
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-slate-500 text-sm";
+                text.innerText = "Efek Suara: Mute";
+            }
+        }
+
+        // --- Live Clock WITA ---
+        function updateLiveClock() {
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const wita = new Date(utc + (3600000 * 8));
+
+            const formatTime = d => d.toTimeString().split(' ')[0];
+            const formatDate = d => d.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+            const elWita = document.getElementById('header-wita');
+            const elDate = document.getElementById('header-date');
+
+            if (elWita) elWita.innerText = `${formatTime(wita)} WITA`;
+            if (elDate) elDate.innerText = `Solor Timur, ${formatDate(wita)}`;
+        }
+        setInterval(updateLiveClock, 1000);
+
+        // --- Tab Switching ---
+        function switchTab(tabId) {
+            playTone(440);
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-teal-200 hover:bg-teal-950";
+            });
+
+            const activeContent = document.getElementById(`section-${tabId}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-teal-600 text-white shadow-lg shadow-teal-950/50";
+            }
+
+            setTimeout(() => {
+                if (tabId === 'hakikat') { initBranchModule(); initBranchQuiz(); }
+                if (tabId === 'laboratorium') { initApparatusModule(); initHazardModule(); }
+                if (tabId === 'metode') runVirtualExperiment();
+                if (tabId === 'pengukuran') updateMeniscusSim();
+                if (tabId === 'glosarium') populateGlossary();
+            }, 50);
+        }
+
+        const scienceBranches = [
+            { id: "biologi", name: "Biologi", icon: "🌱", focus: "Makhluk Hidup & Kehidupan", desc: "Ilmu tentang makhluk hidup, struktur, fungsi, pertumbuhan, dan interaksi hayati.", solor: "Mempelajari terumbu karang dan keanekaragaman Ikan di laut Selat Solor serta tanaman perkebunan mete Desa Lewohedo." },
+            { id: "fisika", name: "Fisika", icon: "⚡", focus: "Materi, Energi & Gaya", desc: "Ilmu tentang sifat materi, energi, gaya, gerak, cahaya, dan fenomena alam nonseluler.", solor: "Menganalisis arus gelombang laut Selat Solor dan prinsip kerja tuas alat pemecah biji mete masyarakat Lewohedo." },
+            { id: "kimia", name: "Kimia", icon: "🧪", focus: "Zat, Reaksi & Komposisi", desc: "Ilmu tentang komposisi, struktur, sifat zat, dan perubahan reaksi materi.", solor: "Meneliti kadar iodium pada Garam hasil olahan tradisional pesisir Solor Timur." },
+            { id: "geologi", name: "Geologi", icon: "🌋", focus: "Bumi, Batuan & Gunung", desc: "Ilmu tentang struktur bumi, batuan, tanah, dan fenomena vulkanik/gempa.", solor: "Mempelajari struktur tanah vulkanik di Flores Timur dan pembentukan bebatuan pesisir Solor." },
+            { id: "astronomi", name: "Astronomi", icon: "🪐", focus: "Benda Langit & Alam Semesta", desc: "Ilmu tentang planet, bintang, bulan, matahari, dan antariksa.", solor: "Mengamati pergerakan Bulan untuk menentukan jadwal pasang air laut bagi nelayan Lewohedo." },
+            { id: "ekologi", name: "Ekologi", icon: "🌍", focus: "Ekosistem & Lingkungan", desc: "Ilmu tentang hubungan timbal balik antara makhluk hidup dengan lingkungan sekitarnya.", solor: "Menjaga kelestarian hutan mangrove pesisir Solor dari abrasi laut." }
+        ];
+
+        function initBranchModule() {
+            const btnContainer = document.getElementById('branch-buttons');
+            if (!btnContainer) return;
+            btnContainer.innerHTML = '';
+
+            scienceBranches.forEach((b, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "p-3 rounded-xl bg-slate-950 border border-teal-800 hover:border-emerald-400 text-center transition flex flex-col items-center gap-1";
+                btn.innerHTML = `<span class="text-2xl">${b.icon}</span><span class="text-xs font-bold text-white">${b.name}</span>`;
+                btn.onclick = () => selectBranch(idx);
+                btnContainer.appendChild(btn);
+            });
+
+            selectBranch(0);
+        }
+
+        function selectBranch(idx) {
+            playTone(550);
+            const b = scienceBranches[idx];
+            const detail = document.getElementById('branch-detail-card');
+            if (!detail) return;
+
+            detail.innerHTML = `
+                <div class="flex items-center gap-3 border-b border-teal-800 pb-2">
+                    <span class="text-3xl">${b.icon}</span>
+                    <div>
+                        <h4 class="text-base font-bold text-white">${b.name}</h4>
+                        <span class="text-[10px] text-amber-300 font-mono">Fokus: ${b.focus}</span>
+                    </div>
+                </div>
+                <p class="text-xs text-teal-100 leading-relaxed">${b.desc}</p>
+                <div class="bg-slate-950 p-3 rounded-xl border border-teal-700/60 text-xs">
+                    <strong class="text-emerald-300 block mb-1">📍 Contoh Penerapan Nyata di Desa Lewohedo & Solor Timur:</strong>
+                    <span class="text-teal-200">${b.solor}</span>
+                </div>
+            `;
+        }
+
+        const branchQuizData = [
+            { q: "Pak Anton sedang menguji tingkat keasaman (pH) tanah kebun mete di Lewohedo. Cabang IPA apa yang dipakai?", a: "Kimia", opts: ["Kimia", "Astronomi", "Fisika"] },
+            { q: "Siswa SMPN Satap Wulublolong mengamati struktur sel daun pohon jati menggunakan mikroskop. Cabang IPA apa ini?", a: "Biologi", opts: ["Geologi", "Biologi", "Fisika"] },
+            { q: "Nelayan Solor mempelajari waktu surut laut berdasarkan gravitasi Bulan. Cabang IPA apa ini?", a: "Astronomi", opts: ["Astronomi", "Kimia", "Geologi"] }
+        ];
+
+        let branchQuizIdx = 0;
+
+        function initBranchQuiz() {
+            const card = document.getElementById('branch-quiz-container');
+            if (!card) return;
+
+            const q = branchQuizData[branchQuizIdx];
+            card.innerHTML = `
+                <span class="text-xs font-bold text-amber-300">Studi Kasus ${branchQuizIdx + 1} dari ${branchQuizData.length}:</span>
+                <p class="text-sm font-semibold text-white">${q.q}</p>
+                <div class="flex flex-wrap gap-2 pt-2">
+                    ${q.opts.map(opt => `<button onclick="checkBranchAnswer('${opt}')" class="px-4 py-2 bg-slate-900 border border-teal-700 hover:border-amber-400 rounded-xl text-xs text-white font-medium transition">${opt}</button>`).join('')}
+                </div>
+            `;
+        }
+
+        function checkBranchAnswer(ans) {
+            const q = branchQuizData[branchQuizIdx];
+            if (ans === q.a) {
+                playTone(700);
+                alert("🎉 Benar sekali! Cabang ilmu IPA yang tepat!");
+                branchQuizIdx = (branchQuizIdx + 1) % branchQuizData.length;
+                initBranchQuiz();
+            } else {
+                playTone(200);
+                alert("❌ Kurang tepat, coba pikirkan fokus utama studinya!");
+            }
+        }
+
+        const apparatusList = [
+            { name: "Gelas Kimia (Beaker)", icon: "🥛", mat: "Kaca Borosilikat", func: "Menampung, mencampur, dan memanaskan cairan bahan kimia." },
+            { name: "Tabung Reaksi", icon: "🧪", mat: "Kaca Tahan Panas", func: "Mereaksikan sedikit bahan kimia cair atau padat." },
+            { name: "Gelas Ukur", icon: "📏", mat: "Kaca/Plastik Bening", func: "Mengukur volume zat cair secara presisi berskala." },
+            { name: "Labu Erlenmeyer", icon: "🏺", mat: "Kaca Borosilikat", func: "Menampung dan mencampur cairan tanpa risiko tumpah saat dikocok." },
+            { name: "Pipet Tetes", icon: "💧", mat: "Kaca & Karet", func: "Mengambil dan memindahkan cairan dalam jumlah sangat kecil (tetes demi tetes)." },
+            { name: "Pembakar Spiritus", icon: "🔥", mat: "Kaca & Sumbu", func: "Sumber pemanas api untuk memanaskan zat kimia dalam eksperimen." },
+            { name: "Mikroskop Light", icon: "🔬", mat: "Logam & Lensa Optik", func: "Mengamati benda/mikroorganisme mikroskopis yang tidak bisa dilihat mata telanjang." },
+            { name: "Penjepit Kayu", icon: "🪵", mat: "Kayu Tahan Panas", func: "Memegang tabung reaksi saat dipanaskan di atas api spiritus." }
+        ];
+
+        function initApparatusModule() {
+            const container = document.getElementById('apparatus-buttons');
+            if (!container) return;
+            container.innerHTML = '';
+
+            apparatusList.forEach((a, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "p-3 rounded-xl bg-slate-950 border border-teal-800 hover:border-cyan-400 text-center transition flex flex-col items-center gap-1";
+                btn.innerHTML = `<span class="text-2xl">${a.icon}</span><span class="text-[10px] font-bold text-teal-200">${a.name.split(' ')[0]}</span>`;
+                btn.onclick = () => selectApparatus(idx);
+                container.appendChild(btn);
+            });
+
+            selectApparatus(0);
+        }
+
+        function selectApparatus(idx) {
+            playTone(500);
+            const a = apparatusList[idx];
+            const detail = document.getElementById('apparatus-detail-card');
+            if (!detail) return;
+
+            detail.innerHTML = `
+                <span class="text-6xl animate-pulse">${a.icon}</span>
+                <div class="space-y-1">
+                    <h4 class="text-base font-bold text-cyan-300">${a.name}</h4>
+                    <span class="text-[11px] bg-teal-500/20 text-teal-300 border border-teal-400/30 px-2.5 py-0.5 rounded-full inline-block font-mono">Bahan: ${a.mat}</span>
+                    <p class="text-xs text-teal-100 leading-relaxed pt-1"><strong>Fungsi Utama:</strong> ${a.func}</p>
+                </div>
+            `;
+        }
+
+        const hazardSymbols = [
+            { name: "Flammable (Mudah Terbakar)", icon: "🔥", color: "text-amber-400", desc: "Jauhkan dari sumber api terbuka/pembakar spiritus! (Contoh: Alkohol, Spiritus)." },
+            { name: "Toxic (Beracun)", icon: "☠️", color: "text-rose-400", desc: "Dapat menyebabkan keracunan berat atau kematian jika tertelan/terhirup. (Contoh: Merkuri)." },
+            { name: "Corrosive (Korosif)", icon: "🧪", color: "text-cyan-400", desc: "Dapat merusak jaringan kulit dan melubangi permukaan logam. (Contoh: Asam Klorida HCl)." },
+            { name: "Explosive (Mudah Meledak)", icon: "💥", color: "text-orange-400", desc: "Hindari benturan, gesekan, dan panas berlebih!" }
+        ];
+
+        function initHazardModule() {
+            const container = document.getElementById('hazard-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            hazardSymbols.forEach(h => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-950 p-4 rounded-xl border border-teal-800 space-y-2";
+                card.innerHTML = `
+                    <div class="flex items-center gap-2 border-b border-teal-900 pb-1.5">
+                        <span class="text-2xl ${h.color}">${h.icon}</span>
+                        <strong class="text-xs font-bold text-white">${h.name}</strong>
+                    </div>
+                    <p class="text-[11px] text-teal-200 leading-relaxed">${h.desc}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function runVirtualExperiment() {
+            const temp = parseInt(document.getElementById('sim-temp').value);
+            document.getElementById('temp-val-display').innerText = `${temp}°C`;
+
+            // Dissolution time model: T_sol = 120 / (temp ^ 0.7) + noise
+            const time = (1200 / (temp + 15)).toFixed(1);
+            document.getElementById('sim-time-result').innerText = `${time} Detik`;
+
+            const concBox = document.getElementById('sim-conclusion-box');
+            if (concBox) {
+                concBox.innerHTML = `
+                    <strong class="text-amber-300 block mb-0.5">📌 Kesimpulan Eksperimen Metode Ilmiah:</strong>
+                    <span>Semakin <strong>tinggi suhu air (${temp}°C)</strong>, semakin <strong>cepat waktu pelarutan garam Solor (${time} detik)</strong>. Hal ini membuktikan hipotesis bahwa energi kinetik molekul air panas bergerak lebih cepat memecah ikatan kristal garam!</span>
+                `;
+            }
+
+            renderLabGraph(temp);
+        }
+
+        function renderLabGraph(currentTemp) {
+            const canvas = document.getElementById('canvasLabGraph');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 600;
+            canvas.height = canvas.offsetHeight || 280;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, w, h);
+
+            // Grid Lines
+            ctx.strokeStyle = 'rgba(20, 184, 166, 0.15)';
+            ctx.lineWidth = 1;
+            for (let x = 50; x < w - 20; x += 50) {
+                ctx.beginPath(); ctx.moveTo(x, 20); ctx.lineTo(x, h - 40); ctx.stroke();
+            }
+            for (let y = 30; y < h - 40; y += 40) {
+                ctx.beginPath(); ctx.moveTo(50, y); ctx.lineTo(w - 20, y); ctx.stroke();
+            }
+
+            // Axes
+            ctx.strokeStyle = '#14b8a6';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(50, 20); ctx.lineTo(50, h - 40); ctx.lineTo(w - 20, h - 40);
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = '10px Plus Jakarta Sans';
+            ctx.fillText('Waktu Pelarutan (s)', 10, 15);
+            ctx.fillText('Suhu Air (°C)', w - 80, h - 15);
+
+            // Plot curve
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+
+            for (let t = 10; t <= 90; t += 2) {
+                const timeVal = 1200 / (t + 15);
+                const px = 50 + ((t - 10) / 80) * (w - 80);
+                const py = (h - 40) - (timeVal / 50) * (h - 70);
+
+                if (t === 10) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            // Highlight Active Temp Point
+            const activeTime = 1200 / (currentTemp + 15);
+            const activeX = 50 + ((currentTemp - 10) / 80) * (w - 80);
+            const activeY = (h - 40) - (activeTime / 50) * (h - 70);
+
+            ctx.fillStyle = '#f59e0b';
+            ctx.shadowBlur = 12; ctx.shadowColor = '#f59e0b';
+            ctx.beginPath();
+            ctx.arc(activeX, activeY, 7, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 11px Plus Jakarta Sans';
+            ctx.fillText(`${currentTemp}°C : ${activeTime.toFixed(1)}s`, activeX - 25, activeY - 12);
+        }
+
+        function updateMeniscusSim() {
+            const vol = parseInt(document.getElementById('slider-volume').value);
+            document.getElementById('vol-readout').innerText = `${vol} mL`;
+
+            const canvas = document.getElementById('canvasMeniscus');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 300;
+            canvas.height = canvas.offsetHeight || 240;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, w, h);
+
+            // Cylinder Glass Body
+            const cx = w / 2;
+            ctx.strokeStyle = '#0284c7';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(cx - 45, 20, 90, h - 40);
+
+            // Water Liquid Fill
+            const liquidHeight = ((vol / 100) * (h - 60));
+            const liquidTopY = (h - 20) - liquidHeight;
+
+            ctx.fillStyle = 'rgba(6, 182, 212, 0.6)';
+            ctx.fillRect(cx - 43, liquidTopY, 86, liquidHeight);
+
+            // Meniscus Curve (Concave Surface)
+            ctx.fillStyle = 'rgba(6, 182, 212, 0.9)';
+            ctx.beginPath();
+            ctx.moveTo(cx - 43, liquidTopY);
+            ctx.quadraticCurveTo(cx, liquidTopY + 12, cx + 43, liquidTopY);
+            ctx.lineTo(cx + 43, liquidTopY + 5);
+            ctx.quadraticCurveTo(cx, liquidTopY + 17, cx - 43, liquidTopY + 5);
+            ctx.fill();
+
+            // Eye Level Line
+            ctx.strokeStyle = '#f59e0b';
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(20, liquidTopY + 12);
+            ctx.lineTo(w - 20, liquidTopY + 12);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Label
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = 'bold 10px Plus Jakarta Sans';
+            ctx.fillText('👁️ Garis Sejajar Mata (Meniskus Cekung)', 20, liquidTopY + 8);
+        }
+
+        const glossaryData = [
+            { term: "Hipotesis", desc: "Dugaan sementara atau jawaban sementara terhadap rumusan masalah penelitian yang harus diuji kebenarannya melalui percobaan." },
+            { term: "Variabel Bebas", desc: "Faktor yang sengaja diubah-ubah dalam eksperimen untuk melihat pengaruhnya terhadap hasil." },
+            { term: "Variabel Terikat", desc: "Faktor yang diukur atau diamati sebagai respons dari perubahan variabel bebas." },
+            { term: "Variabel Kontrol", desc: "Faktor yang dijaga tetap sama selama eksperimen agar pengujian berlangsung adil." },
+            { term: "Meniskus Cekung", desc: "Lengkungan permukaan zat cair dalam wadah sempit di mana bagian tengah lebih rendah dari tepi (contoh: air dalam gelas ukur)." },
+            { term: "Presisi (Ketelitian)", desc: "Tingkat kesesuaian antara hasil-hasil pengukuran ulang yang dilakukan secara berulang-ulang." },
+            { term: "Akurasi (Ketepatan)", desc: "Tingkat kedekatan hasil pengukuran dengan nilai sebenarnya (nilai standar)." },
+            { term: "Satuan SI", desc: "Sistem Satuan Internasional yang disepakati secara global untuk pengukuran sains baku." }
+        ];
+
+        function populateGlossary() {
+            const container = document.getElementById('glossary-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            glossaryData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "glass-card p-4 rounded-xl border border-teal-800 space-y-1.5 gloss-item";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <strong class="text-amber-300 font-bold text-sm">${item.term}</strong>
+                        <span class="text-[10px] bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded border border-teal-500/30">Metode Ilmiah</span>
+                    </div>
+                    <p class="text-xs text-teal-100 leading-relaxed">${item.desc}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterGlossary() {
+            const q = document.getElementById('glossary-search').value.toLowerCase();
+            document.querySelectorAll('.gloss-item').forEach(el => {
+                const text = el.innerText.toLowerCase();
+                if (text.includes(q)) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+        }
+
+        const quizQuestions = [
+            {
+                question: "Langkah awal yang sistematis dalam metode ilmiah setelah seorang ilmuwan melakukan observasi terhadap gejala alam adalah...",
+                category: "Metode Ilmiah",
+                options: ["Merumuskan Masalah", "Membuat Kesimpulan", "Melakukan Eksperimen", "Mempublikasikan Jurnal"],
+                correct: 0,
+                explanation: "Setelah mengamati fenomena, ilmuwan merumuskan masalah berupa pertanyaan penelitian yang ingin dijawab."
+            },
+            {
+                question: "Dugaan awal atau jawaban sementara terhadap rumusan masalah yang masih harus diuji melalui percobaan disebut...",
+                category: "Metode Ilmiah",
+                options: ["Hipotesis", "Teori", "Variabel Kontrol", "Data Hasil"],
+                correct: 0,
+                explanation: "Hipotesis adalah dugaan sementara yang akan dibuktikan kebenarannya melalui eksperimen."
+            },
+            {
+                question: "Dalam percobaan 'Pengaruh Jenis Pupuk terhadap Pertumbuhan Tanaman Jagung', variabel bebasnya adalah...",
+                category: "Rancangan Percobaan",
+                options: ["Jenis Pupuk", "Tinggi Tanaman Jagung", "Jumlah Air Menyiram", "Jenis Tanah"],
+                correct: 0,
+                explanation: "Variabel bebas adalah faktor yang sengaja diubah-ubah (dalam hal ini, jenis pupuknya)."
+            },
+            {
+                question: "Faktor yang dibuat tetap dan sama selama eksperimen agar pengujian berlangsung adil (*fair test*) dinamakan...",
+                category: "Rancangan Percobaan",
+                options: ["Variabel Kontrol", "Variabel Bebas", "Variabel Terikat", "Variabel Acak"],
+                correct: 0,
+                explanation: "Variabel kontrol dijaga konstan agar tidak memengaruhi hasil variabel terikat."
+            },
+            {
+                question: "Alat laboratorium IPA yang digunakan untuk mengukur volume cairan secara presisi dan memiliki skala mililiter adalah...",
+                category: "Alat Laboratorium",
+                options: ["Gelas Ukur", "Tabung Reaksi", "Labu Erlenmeyer", "Gelas Kimia"],
+                correct: 0,
+                explanation: "Gelas ukur dirancang khusus dengan skala pengukuran volume zat cair secara teliti."
+            },
+            {
+                question: "Simbol bahaya bahan kimia berupa gambar tengkorak dan tulang silang (*Toxic*) menandakan bahwa bahan tersebut...",
+                category: "Keselamatan Lab",
+                options: ["Beracun dan berbahaya jika tertelan/terhirup", "Easily Flammable / Mudah terbakar", "Korosif terhadap logam", "Mudah meledak"],
+                correct: 0,
+                explanation: "Simbol tengkorak menunjukkan zat beracun (Toxic) yang dapat menyebabkan bahaya kesehatan fatal."
+            },
+            {
+                question: "Satuan standar Sistem Internasional (SI) untuk besaran Pokok Suhu adalah...",
+                category: "Besaran & Satuan",
+                options: ["Kelvin", "Celcius", "Fahrenheit", "Reamur"],
+                correct: 0,
+                explanation: "Kelvin (K) merupakan satuan baku Sistem Internasional (SI) untuk suhu."
+            },
+            {
+                question: "Saat membaca skala cairan dalam gelas ukur yang membentuk meniskus cekung, posisi mata yang benar adalah...",
+                category: "Pengukuran Presisi",
+                options: [
+                    "Sejajar dengan titik dasar lengkungan paling bawah",
+                    "Melihat dari arah atas gelas ukur secara miring",
+                    "Sejajar dengan tepi paling atas permukaan cairan",
+                    "Melihat dari bawah dasar gelas ukur"
+                ],
+                correct: 0,
+                explanation: "Untuk meniskus cekung, pembacaan yang presisi dilakukan sejajar mata pada titik dasar terendah lengkungan."
+            },
+            {
+                question: "Cabang ilmu IPA yang mempelajari hubungan timbal balik antara makhluk hidup dengan lingkungan sekitarnya dinamakan...",
+                category: "Cabang Sains",
+                options: ["Ekologi", "Geologi", "Fisika", "Astronomi"],
+                correct: 0,
+                explanation: "Ekologi adalah cabang biologi yang mengkaji interaksi organisme dengan lingkungannya."
+            },
+            {
+                question: "Teknik membaur uap bahan kimia yang aman di laboratorium adalah dengan cara...",
+                category: "Keselamatan Lab",
+                options: [
+                    "Mengibaskan uap dengan tangan ke arah hidung (*wafting*)",
+                    "Menghirup langsung di atas mulut tabung reaksi",
+                    "Mencicipi cairan sedikit pada lidah",
+                    "Mendekatkan hidung 1 cm dari gelas kimia"
+                ],
+                correct: 0,
+                explanation: "Teknik *wafting* (mengibaskan uap secara perlahan) mencegah terhirupnya gas pekat berbahan berbahaya."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            const q = quizQuestions[currentQuizIndex];
+
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuizIndex + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quiz-category').innerText = q.category;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQuizIndex + 1) / quizQuestions.length) * 100}%`;
+            document.getElementById('quiz-question').innerText = `${currentQuizIndex + 1}. ${q.question}`;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 rounded-xl bg-slate-950 border border-teal-800 hover:border-amber-400 text-teal-100 text-xs sm:text-sm font-medium transition flex items-center justify-between";
+                btn.innerHTML = `<span>${String.fromCharCode(65 + idx)}. ${opt}</span> <i class="fa-regular fa-circle text-teal-600"></i>`;
+                btn.onclick = () => selectOption(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+        }
+
+        function selectOption(selectedIndex, btnEl) {
+            if (answered) return;
+            answered = true;
+
+            const q = quizQuestions[currentQuizIndex];
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const allBtns = document.getElementById('quiz-options').children;
+
+            if (selectedIndex === q.correct) {
+                score += 10;
+                playTone(650);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-teal-900 border-2 border-teal-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-check text-teal-300 text-lg"></i>`;
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-teal-900/70 border border-teal-500 text-teal-200";
+                feedbackEl.innerHTML = `🎉 <strong>Jawaban Tepat!</strong> ${q.explanation}`;
+            } else {
+                playTone(220);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-rose-950 border-2 border-rose-500 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-xmark text-rose-400 text-lg"></i>`;
+
+                const correctBtn = allBtns[q.correct];
+                correctBtn.className = "w-full text-left p-3.5 rounded-xl bg-teal-900 border-2 border-teal-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-rose-950/70 border border-rose-500 text-rose-200";
+                feedbackEl.innerHTML = `❌ <strong>Kurang Tepat.</strong> ${q.explanation}`;
+            }
+
+            document.getElementById('quiz-score').innerText = score;
+            feedbackEl.classList.remove('hidden');
+            document.getElementById('btn-next-quiz').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            playTone(480);
+            currentQuizIndex++;
+            if (currentQuizIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('certificate-box').classList.remove('hidden');
+                generateCertificate();
+            }
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            document.getElementById('quiz-score').innerText = score;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('certificate-box').classList.add('hidden');
+            loadQuestion();
+        }
+
+        function generateCertificate() {
+            const name = document.getElementById('student-name-input').value || "Siswa SMP Kelas VII";
+            const canvas = document.getElementById('canvasCert');
+            if (!canvas) return;
+            canvas.width = 800;
+            canvas.height = 500;
+
+            const ctx = canvas.getContext('2d');
+
+            // Lab Theme Background Gradient
+            const grad = ctx.createLinearGradient(0, 0, 800, 500);
+            grad.addColorStop(0, '#020617');
+            grad.addColorStop(0.5, '#0f172a');
+            grad.addColorStop(1, '#064e3b');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 800, 500);
+
+            // Double Border Gold & Emerald
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(15, 15, 770, 470);
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(25, 25, 750, 450);
+
+            // Watermark Logo Icon
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.05)';
+            ctx.font = '160px Plus Jakarta Sans';
+            ctx.fillText('🧪', 320, 310);
+
+            // Header Text
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = 'bold 22px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('SERTIFIKAT KELULUSAN PEMBELAJARAN IPA SAINS', 400, 80);
+
+            ctx.fillStyle = '#10b981';
+            ctx.font = '14px Plus Jakarta Sans';
+            ctx.fillText('SMPN SATAP WULUBLOLONG • DESA LEWOHEDO, FLORES TIMUR', 400, 110);
+
+            ctx.fillStyle = '#f8fafc';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Diberikan Kepada Siswa/i:', 400, 160);
+
+            // Student Name
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 28px Plus Jakarta Sans';
+            ctx.fillText(name, 400, 210);
+
+            // Course Title
+            ctx.fillStyle = '#e2e8f0';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Telah Menyelesaikan Modul Interaktif & Evaluasi Sains:', 400, 260);
+            ctx.font = 'bold 16px Plus Jakarta Sans';
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillText('HAKIKAT ILMU SAINS DAN METODE ILMIAH (KELAS VII)', 400, 290);
+
+            // Score Box
+            ctx.fillStyle = '#022c22';
+            ctx.fillRect(300, 320, 200, 45);
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(300, 320, 200, 45);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px Plus Jakarta Sans';
+            ctx.fillText(`NILAI EVALUASI: ${score} / 100`, 400, 348);
+
+            // Footer Place
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '12px Plus Jakarta Sans';
+            ctx.fillText('Desa Lewohedo, Kec. Solor Timur, Kabupaten Flores Timur, NTT', 400, 410);
+            ctx.fillText('Laboratorium Digital IPA SMPN Satap Wulublolong', 400, 430);
+        }
+
+        function downloadCertificate() {
+            playTone(600);
+            const canvas = document.getElementById('canvasCert');
+            const link = document.createElement('a');
+            link.download = `Sertifikat_HakikatSains_SMPN_Wulublolong_${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        window.onload = function() {
+            updateLiveClock();
+            initBranchModule();
+            initBranchQuiz();
+            initApparatusModule();
+            initHazardModule();
+            runVirtualExperiment();
+            updateMeniscusSim();
+            populateGlossary();
+            loadQuestion();
+
+            window.addEventListener('resize', () => {
+                runVirtualExperiment();
+                updateMeniscusSim();
+            });
+        };
+    </script>
+</body>
+</html>
