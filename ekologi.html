@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papan Interaktif Ekologi & Keanekaragaman Hayati - IPA SMP Kelas 7 (Lewohedo)</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #022c22;
+            color: #ecfdf5;
+        }
+        .eco-bg-pattern {
+            background-color: #022c22;
+            background-image: radial-gradient(#059669 1.5px, transparent 1.5px), radial-gradient(#10b981 1.5px, #022c22 1.5px);
+            background-size: 36px 36px;
+            background-position: 0 0, 18px 18px;
+        }
+        .glass-panel {
+            background: rgba(6, 78, 59, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(52, 211, 153, 0.25);
+        }
+        .glass-card {
+            background: rgba(4, 47, 38, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        .glow-emerald {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
+        }
+        .glow-amber {
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.35);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(2, 44, 34, 0.9);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #059669;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body class="min-h-screen eco-bg-pattern flex flex-col justify-between custom-scrollbar selection:bg-emerald-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-emerald-800/60 px-4 py-3 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-400 via-teal-500 to-amber-400 p-0.5 shadow-lg flex-shrink-0 glow-emerald">
+                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+                        <span class="text-2xl animate-bounce">🌱</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold tracking-wider text-emerald-300 uppercase bg-emerald-500/20 px-2.5 py-0.5 rounded-full border border-emerald-400/40">
+                            Biologi IPA SMP
+                        </span>
+                        <span class="text-[10px] font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-400/30">
+                            Kurikulum Merdeka Kelas VII
+                        </span>
+                    </div>
+                    <h1 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mt-0.5">
+                        Papan Interaktif Ekologi & Keanekaragaman Hayati
+                    </h1>
+                    <p class="text-xs text-emerald-200/90 font-medium">
+                        SMPN Satap Wulublolong • Desa Lewohedo, Kec. Solor Timur, Kab. Flores Timur, NTT
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <div class="hidden lg:flex flex-col text-right text-xs">
+                    <span class="text-emerald-300 font-semibold">Tahun Ajaran 2026/2027</span>
+                    <span class="text-emerald-200/70 text-[11px]">Lab Digital Ekologi Solor Timur</span>
+                </div>
+                <button id="btn-sound" onclick="toggleSound()" class="px-3.5 py-2 rounded-xl bg-slate-950/80 hover:bg-emerald-900 text-emerald-200 text-xs font-semibold border border-emerald-700/80 flex items-center gap-2 transition shadow-md">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-emerald-400 text-sm"></i>
+                    <span id="sound-text">Efek Suara: Aktif</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-emerald-800/80 pb-3">
+            <button onclick="switchTab('komponen')" id="tab-btn-komponen" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-emerald-600 text-white shadow-lg shadow-emerald-950/50">
+                <i class="fa-solid fa-tree text-amber-300"></i> 1. Komponen Ekosistem
+            </button>
+            <button onclick="switchTab('interaksi')" id="tab-btn-interaksi" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                <i class="fa-solid fa-diagram-project text-cyan-300"></i> 2. Rantai & Jaring Makanan
+            </button>
+            <button onclick="switchTab('biodiversitas')" id="tab-btn-biodiversitas" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                <i class="fa-solid fa-earth-asia text-emerald-300"></i> 3. Keanekaragaman NTT & Wallacea
+            </button>
+            <button onclick="switchTab('konservasi')" id="tab-btn-konservasi" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                <i class="fa-solid fa-hand-holding-droplet text-amber-300"></i> 4. Ancam & Pelestarian
+            </button>
+            <button onclick="switchTab('glosarium')" id="tab-btn-glosarium" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                <i class="fa-solid fa-book text-indigo-300"></i> 5. Glosarium Ekologi
+            </button>
+            <button onclick="switchTab('evaluasi')" id="tab-btn-evaluasi" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                <i class="fa-solid fa-trophy text-amber-300"></i> 6. Kuis & Sertifikat
+            </button>
+        </div>
+
+        <div id="section-komponen" class="tab-content block space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-emerald-400 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 opacity-10 text-9xl select-none">🌴</div>
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 1: Konsep Ekosistem & Komponent Biotik - Abiotik</h2>
+                <p class="text-emerald-100 text-sm max-w-4xl leading-relaxed">
+                    **Ekologi** adalah ilmu yang mempelajari hubungan timbal balik antara makhluk hidup dengan lingkungannya. 
+                    Ekosistem terdiri dari **Komponen Biotik** (makhluk hidup) dan **Komponen Abiotik** (benda tak hidup) di wilayah Desa Lewohedo dan Pulau Solor.
+                </p>
+            </div>
+
+            <!-- Satuan Organisasi Organisme Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                <div class="glass-card p-4 rounded-xl border border-emerald-500/30 text-center space-y-1">
+                    <span class="text-2xl">🦎</span>
+                    <h4 class="text-xs font-bold text-amber-300">1. Individu</h4>
+                    <p class="text-[11px] text-emerald-200">Satu makhluk hidup tunggal (contoh: Seekor Komodo / Burung Kakatua Kecil Jambul Kuning).</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-emerald-500/30 text-center space-y-1">
+                    <span class="text-2xl">🦎🦎🦎</span>
+                    <h4 class="text-xs font-bold text-amber-300">2. Populasi</h4>
+                    <p class="text-[11px] text-emerald-200">Kumpulan individu sejenis di tempat dan waktu sama (contoh: Populasi pohon Lontar Lewohedo).</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-emerald-500/30 text-center space-y-1">
+                    <span class="text-2xl">🌴🦎🐟</span>
+                    <h4 class="text-xs font-bold text-amber-300">3. Komunitas</h4>
+                    <p class="text-[11px] text-emerald-200">Kumpulan berbagai populasi yang hidup bersama di area tertentu (contoh: Komunitas pesisir Solor).</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-emerald-500/30 text-center space-y-1">
+                    <span class="text-2xl">🏝️🌊☀️</span>
+                    <h4 class="text-xs font-bold text-amber-300">4. Ekosistem</h4>
+                    <p class="text-[11px] text-emerald-200">Interaksi komunitas biotik dengan lingkungan abiotiknya (contoh: Ekosistem Laut & Savana Solor).</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-emerald-500/30 text-center space-y-1">
+                    <span class="text-2xl">🌍</span>
+                    <h4 class="text-xs font-bold text-amber-300">5. Biosfer</h4>
+                    <p class="text-[11px] text-emerald-200">Seluruh zona kehidupan di permukaan bumi tempat makhluk hidup berinteraksi.</p>
+                </div>
+            </div>
+
+            <!-- Sorting Game: Biotik vs Abiotik Lewohedo -->
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-emerald-800 pb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-gamepad text-amber-400"></i> Game Klasifikasi: Biotik vs Abiotik Lingkungan Solor
+                        </h3>
+                        <p class="text-xs text-emerald-200">
+                            Kelompokkan unsur-unsur ekosistem di Desa Lewohedo & Wulublolong ke kategori **Biotik** atau **Abiotik**!
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span id="sort-score-display" class="bg-slate-950 px-3 py-1.5 rounded-xl border border-emerald-700 text-xs font-bold text-amber-300">
+                            Skor: 0 / 8
+                        </span>
+                        <button onclick="resetEcoSortGame()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-200 font-bold text-xs rounded-xl border border-emerald-700 transition">
+                            <i class="fa-solid fa-rotate-right"></i> Reset Game
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Unsorted Items Pool -->
+                <div>
+                    <label class="text-xs font-bold text-emerald-300 mb-2 block">Daftar Komponen Ekosistem Solor Timur:</label>
+                    <div id="eco-sort-pool" class="flex flex-wrap gap-3 p-4 bg-slate-950 rounded-xl border border-emerald-800 min-h-[90px]">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Drop Zones -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Biotik Zone -->
+                    <div class="bg-emerald-950/60 p-5 rounded-xl border-2 border-dashed border-emerald-500/80 min-h-[160px] space-y-3">
+                        <div class="flex items-center gap-2 text-emerald-300 font-bold text-sm">
+                            <i class="fa-solid fa-leaf text-lg"></i> KOMPONEN BIOTIK (Makhluk Hidup)
+                        </div>
+                        <div id="zone-biotik" class="flex flex-wrap gap-2">
+                            <!-- Items inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Abiotik Zone -->
+                    <div class="bg-amber-950/60 p-5 rounded-xl border-2 border-dashed border-amber-500/80 min-h-[160px] space-y-3">
+                        <div class="flex items-center gap-2 text-amber-300 font-bold text-sm">
+                            <i class="fa-solid fa-mountain-sun text-lg"></i> KOMPONEN ABIOTIK (Benda Tak Hidup)
+                        </div>
+                        <div id="zone-abiotik" class="flex flex-wrap gap-2">
+                            <!-- Items inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="eco-sort-feedback" class="p-4 rounded-xl text-xs sm:text-sm font-semibold hidden"></div>
+            </div>
+        </div>
+
+        <div id="section-interaksi" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-cyan-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 2: Interaksi Antar Makhluk Hidup & Rantai Makanan Solor</h2>
+                <p class="text-emerald-100 text-sm max-w-4xl leading-relaxed">
+                    Setiap organisme memainkan peran sebagai **Produsen**, **Konsumen (I, II, III)**, atau **Pengurai (Dekomposer)**. Energi mengalir dari matahari melalui rantai dan jaring makanan.
+                </p>
+            </div>
+
+            <!-- Food Chain Visualizer Interactive -->
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-emerald-800 pb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-route text-amber-400"></i> Simulator Rantai Makanan Ekosistem Laut & Kebun Solor
+                        </h3>
+                        <p class="text-xs text-emerald-200">Pilih ekosistem untuk menyusun dan mensimulasikan aliran energi makanan!</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="switchEcoChain('kebun')" id="btn-chain-kebun" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 shadow">
+                            🌴 Ekosistem Kebun Mente & Lontar
+                        </button>
+                        <button onclick="switchEcoChain('laut')" id="btn-chain-laut" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                            🌊 Ekosistem Terumbu Karang Solor
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Interactive Chain Canvas Animation -->
+                <div class="h-[280px] bg-slate-950 rounded-xl border border-emerald-800 relative overflow-hidden">
+                    <canvas id="canvasFoodChain" class="w-full h-full block"></canvas>
+                </div>
+
+                <div id="chain-description-box" class="p-4 bg-slate-950 rounded-xl border border-emerald-700/60 text-xs text-emerald-100 space-y-2">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Simbiosis Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-5 rounded-2xl border border-emerald-500/30 space-y-3">
+                    <div class="flex items-center gap-3 border-b border-emerald-800 pb-2">
+                        <span class="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-300 text-lg"><i class="fa-solid fa-handshake"></i></span>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Simbiosis Mutualisme</h4>
+                            <span class="text-[10px] text-emerald-300 font-mono">( Saling Menguntungkan + / + )</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-emerald-100 leading-relaxed">
+                        **Contoh di Lewohedo:** Lebah madu hutan yang mengisap nektar bunga mente/mangga sambil membantu penyerbukan tanaman warga.
+                    </p>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl border border-teal-500/30 space-y-3">
+                    <div class="flex items-center gap-3 border-b border-teal-800 pb-2">
+                        <span class="p-2.5 rounded-xl bg-teal-500/20 text-teal-300 text-lg"><i class="fa-solid fa-leaf"></i></span>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Simbiosis Komensalisme</h4>
+                            <span class="text-[10px] text-teal-300 font-mono">( Satu Untung, Satu Netral + / 0 )</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-emerald-100 leading-relaxed">
+                        **Contoh di Lewohedo:** Tanaman Anggrek hutan atau paku tanduk rusa yang menempel pada batang pohon lontar tua tanpa merugikan pohon induknya.
+                    </p>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl border border-rose-500/30 space-y-3">
+                    <div class="flex items-center gap-3 border-b border-rose-800 pb-2">
+                        <span class="p-2.5 rounded-xl bg-rose-500/20 text-rose-300 text-lg"><i class="fa-solid fa-bug"></i></span>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Simbiosis Parasitisme</h4>
+                            <span class="text-[10px] text-rose-300 font-mono">( Satu Untung, Satu Rugi + / - )</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-emerald-100 leading-relaxed">
+                        **Contoh di Lewohedo:** Tumbuhan benalu (*Loranthus*) yang menyerap zat hara dan air langsung dari dahan pohon mangga/pohon asam warga Solor.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-biodiversitas" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-amber-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 3: Keanekaragaman Hayati Indonesia & Zona Wallacea NTT</h2>
+                <p class="text-emerald-100 text-sm max-w-4xl leading-relaxed">
+                    Indonesia merupakan negara *Megabiodiversitas*. Pembagian wilayah fauna diapit oleh **Garis Wallace** dan **Garis Weber**. Wilayah Nusa Tenggara (termasuk Pulau Solor) berada di kawasan transisi **Wallacea** dengan fauna yang sangat unik dan endemik!
+                </p>
+            </div>
+
+            <!-- Interactive Wallacea Map & Fauna Explorer -->
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="border-b border-emerald-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-map-location-dot text-amber-400"></i> Eksplorasi 3 Tipe Fauna Indonesia & Kawasan Solor (NTT)
+                        </h3>
+                        <p class="text-xs text-emerald-200">Klik zona wilayah untuk melihat persebaran fauna endemik khas Indonesia!</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="selectFaunaZone('asiatis')" id="btn-zone-asiatis" class="zone-btn px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow">
+                        1. Zona Asiatis (Barat / Sunda)
+                    </button>
+                    <button onclick="selectFaunaZone('wallacea')" id="btn-zone-wallacea" class="zone-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                        2. Zona Peralihan / Wallacea (NTT, Solor, Sulawesi)
+                    </button>
+                    <button onclick="selectFaunaZone('australis')" id="btn-zone-australis" class="zone-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                        3. Zona Australis (Timur / Papua)
+                    </button>
+                </div>
+
+                <!-- Display Zone Content -->
+                <div id="fauna-zone-content" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Solor Local Biodiversity Focus -->
+            <div class="glass-card p-6 rounded-2xl border border-amber-500/40 space-y-4">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-dharmachakra text-amber-300"></i> kekayaan Floraan & Fauna Lokal Pulau Solor (Desa Lewohedo)
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-emerald-800 space-y-1">
+                        <span class="text-amber-300 font-bold block text-sm">🌴 Pohon Lontar (Borassus)</span>
+                        <p class="text-emerald-200">Pohon kehidupan khas Solor: penghasil nira/tuak manis, daun untuk kerajinan anyaman, dan kayu bangunan.</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-emerald-800 space-y-1">
+                        <span class="text-amber-300 font-bold block text-sm">🥜 Pohon Jambu Mente</span>
+                        <p class="text-emerald-200">Komoditas kebun utama masyarakat Lewohedo & Wulublolong yang beradaptasi di tanah iklim kering.</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-emerald-800 space-y-1">
+                        <span class="text-amber-300 font-bold block text-sm">🦜 Kakatua Kecil Jambul Kuning</span>
+                        <p class="text-emerald-200">Burung langka terancam punah khas Nusa Tenggara yang habitatnya wajib dilindungi dari pemburu.</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-emerald-800 space-y-1">
+                        <span class="text-amber-300 font-bold block text-sm">🪸 Terumbu Karang Selor</span>
+                        <p class="text-emerald-200">Ekosistem laut Selat Solor tempat berkembang biak ikan kerapu, penyu hijau, dan keanekaragaman ikan hias.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-konservasi" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-rose-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 4: Ancaman Ekosistem & Upaya Pelestarian Lingkungan</h2>
+                <p class="text-emerald-100 text-sm max-w-4xl leading-relaxed">
+                    Keseimbangan ekosistem terganggu akibat aktivitas manusia seperti pembakaran lahan, penggunaan racun/pemboman ikan di laut, serta pembuangan sampah plastik.
+                </p>
+            </div>
+
+            <!-- Interactive Human Impact Simulator -->
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="border-b border-emerald-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-biohazard text-rose-400"></i> Simulator Indeks Kesehatan Ekosistem Pesisir & Hutan Solor
+                        </h3>
+                        <p class="text-xs text-emerald-200">Atur tingkat tindakan manusia untuk melihat dampaknya terhadap skor kesehatan lingkungan!</p>
+                    </div>
+                    <span id="eco-health-badge" class="bg-slate-950 px-3 py-1.5 rounded-xl border border-emerald-500 text-xs font-mono font-bold text-emerald-300">
+                        Skor Ekosistem: 100% (Sangat Sehat)
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="space-y-4 bg-slate-950 p-5 rounded-xl border border-emerald-900 text-xs">
+                        <div>
+                            <label class="text-rose-300 font-bold block mb-1">Tingkat Penangkapan Ikan Ramah Lingkungan vs Bom:</label>
+                            <input type="range" id="slider-fishing" min="0" max="100" value="0" oninput="updateEcoSim()" class="w-full accent-rose-500">
+                            <span class="text-[10px] text-emerald-300">0% = Ramah Lingkungan | 100% = Pemboman Karang</span>
+                        </div>
+
+                        <div>
+                            <label class="text-rose-300 font-bold block mb-1">Tingkat Penanaman Pohon / Reboisasi Lahan Kering:</label>
+                            <input type="range" id="slider-reforest" min="0" max="100" value="100" oninput="updateEcoSim()" class="w-full accent-emerald-500">
+                            <span class="text-[10px] text-emerald-300">0% = Deforestasi/Bakar | 100% = Reboisasi Penghijauan</span>
+                        </div>
+
+                        <div>
+                            <label class="text-rose-300 font-bold block mb-1">Pengelolaan Sampah Plastik Pantai Lewohedo:</label>
+                            <input type="range" id="slider-waste" min="0" max="100" value="0" oninput="updateEcoSim()" class="w-full accent-amber-500">
+                            <span class="text-[10px] text-emerald-300">0% = Bersih Didaur Ulang | 100% = Sampah Dibuang ke Laut</span>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 h-[260px] bg-slate-950 rounded-xl overflow-hidden border border-emerald-800 relative">
+                        <canvas id="canvasEcoSim" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conservation Methods -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card p-5 rounded-2xl border border-emerald-500/40 space-y-3">
+                    <div class="flex items-center gap-3 border-b border-emerald-800 pb-2">
+                        <span class="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-300 text-xl"><i class="fa-solid fa-shield-halved"></i></span>
+                        <div>
+                            <h3 class="text-base font-bold text-white">1. Pelestarian In Situ</h3>
+                            <p class="text-xs text-emerald-200">Pelestarian fauna & flora di dalam habitat aslinya.</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-emerald-100 leading-relaxed">
+                        **Contoh:** Taman Nasional Komodo (NTT), Suaka Margasatwa, Cagar Alam Laut Selat Solor untuk perlindungan penyu dan karang.
+                    </p>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl border border-amber-500/40 space-y-3">
+                    <div class="flex items-center gap-3 border-b border-amber-800 pb-2">
+                        <span class="p-2.5 rounded-xl bg-amber-500/20 text-amber-300 text-xl"><i class="fa-solid fa-building-ngo"></i></span>
+                        <div>
+                            <h3 class="text-base font-bold text-white">2. Pelestarian Ex Situ</h3>
+                            <p class="text-xs text-emerald-200">Pelestarian fauna & flora di luar habitat aslinya.</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-emerald-100 leading-relaxed">
+                        **Contoh:** Kebun Raya, Kebun Binatang, Penangkaran Penyu, Bank Benih Tanaman Obat Tradisional Lewohedo.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-glosarium" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2 border-b border-emerald-800 pb-2">
+                    <i class="fa-solid fa-book-bookmark text-indigo-300"></i> Glosarium Ekologi & Keanekaragaman Hayati
+                </h3>
+
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-emerald-400"></i>
+                    <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Cari istilah biologi (misal: Autotrof, Wallacea, Endemik, Simbiosis, Rantai Makanan)..." class="w-full bg-slate-950 border border-emerald-700 text-white rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-emerald-400 shadow-inner">
+                </div>
+
+                <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+
+        <div id="section-evaluasi" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-emerald-800 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-1">Kuis Evaluasi Ekologi & Keanekaragaman Hayati</h2>
+                        <p class="text-emerald-100 text-sm">Uji pemahaman Anda dan dapatkan Sertifikat Kelulusan Digital IPA SMPN Satap Wulublolong!</p>
+                    </div>
+                    <div class="bg-slate-950 px-5 py-2.5 rounded-2xl border border-emerald-800 text-center flex-shrink-0">
+                        <span class="text-xs text-emerald-400 block font-bold">Skor Kamu</span>
+                        <span id="quiz-score" class="text-3xl font-black text-amber-300">0</span>
+                    </div>
+                </div>
+
+                <div id="quiz-container" class="space-y-6">
+                    <div class="flex justify-between items-center text-xs text-emerald-300 font-bold">
+                        <span id="quiz-progress-text">Soal 1 dari 10</span>
+                        <span id="quiz-category" class="text-cyan-300 bg-cyan-500/20 px-3 py-1 rounded-full border border-cyan-400/30">
+                            Komponen Ekosistem
+                        </span>
+                    </div>
+
+                    <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-emerald-800">
+                        <div id="quiz-progress-bar" class="bg-emerald-400 h-full w-1/10 transition-all duration-300"></div>
+                    </div>
+
+                    <h3 id="quiz-question" class="text-base sm:text-lg font-bold text-white leading-relaxed">
+                        Memuat pertanyaan...
+                    </h3>
+
+                    <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Options populated via JS -->
+                    </div>
+
+                    <div id="quiz-feedback" class="hidden p-4 rounded-xl text-xs sm:text-sm font-semibold"></div>
+
+                    <button id="btn-next-quiz" onclick="nextQuestion()" class="hidden px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 ml-auto shadow-lg">
+                        Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Certificate Section -->
+                <div id="certificate-box" class="hidden space-y-6 text-center">
+                    <div class="text-5xl animate-bounce">🏆</div>
+                    <h3 class="text-2xl font-bold text-white">Selamat! Anda Berhasil Menyelesaikan Pembelajaran Ekologi!</h3>
+                    <p class="text-xs sm:text-sm text-emerald-200 max-w-xl mx-auto">
+                        Ketik nama lengkap Anda di bawah ini untuk mencetak Sertifikat Kelulusan Digital Ekologi IPA SMPN Satap Wulublolong Desa Lewohedo.
+                    </p>
+
+                    <div class="max-w-md mx-auto flex gap-2">
+                        <input type="text" id="student-name-input" placeholder="Masukkan Nama Lengkap Siswa..." class="flex-1 bg-slate-950 border border-emerald-700 text-white rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-amber-400">
+                        <button onclick="generateCertificate()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition shadow-md">
+                            <i class="fa-solid fa-certificate mr-1"></i> Buat Sertifikat
+                        </button>
+                    </div>
+
+                    <div class="relative max-w-2xl mx-auto rounded-2xl overflow-hidden border-2 border-amber-400 shadow-2xl bg-slate-950 p-2">
+                        <canvas id="canvasCert" class="w-full h-auto block rounded-xl"></canvas>
+                    </div>
+
+                    <div class="flex justify-center gap-4">
+                        <button onclick="downloadCertificate()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh Sertifikat (PNG)
+                        </button>
+                        <button onclick="resetQuiz()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-emerald-200 font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> Ulangi Kuis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-panel border-t border-emerald-800 py-4 px-4 text-center text-xs text-emerald-300 mt-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© 2026 SMPN Satap Wulublolong • Desa Lewohedo, Kec. Solor Timur, Kab. Flores Timur, NTT</p>
+            <p class="text-emerald-400 font-medium">Media Pembelajaran Digital Ekologi IPA SMP Kelas VII - Kurikulum Merdeka</p>
+        </div>
+    </footer>
+
+    <script>
+        let soundEnabled = true;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playTone(freq, type = 'sine', duration = 0.15) {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio playback muted");
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            const text = document.getElementById('sound-text');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-emerald-400 text-sm";
+                text.innerText = "Efek Suara: Aktif";
+                playTone(523.25);
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-slate-500 text-sm";
+                text.innerText = "Efek Suara: Mute";
+            }
+        }
+
+        function switchTab(tabId) {
+            playTone(440);
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-emerald-200 hover:bg-emerald-950";
+            });
+
+            const activeContent = document.getElementById(`section-${tabId}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-emerald-600 text-white shadow-lg shadow-emerald-950/50";
+            }
+
+            setTimeout(() => {
+                if (tabId === 'komponen') initEcoSortGame();
+                if (tabId === 'interaksi') switchEcoChain('kebun');
+                if (tabId === 'biodiversitas') selectFaunaZone('asiatis');
+                if (tabId === 'konservasi') updateEcoSim();
+                if (tabId === 'glosarium') populateGlossary();
+            }, 50);
+        }
+
+        const ecoSortItemsData = [
+            { id: 1, name: "🌴 Pohon Lontar Lewohedo", type: "biotik" },
+            { id: 2, name: "☀️ Sinar Matahari Solor Timur", type: "abiotik" },
+            { id: 3, name: "🦎 Komodo & Biawak", type: "biotik" },
+            { id: 4, name: "🪨 Batuan Vulkanik & Tanah Cadas", type: "abiotik" },
+            { id: 5, name: "🪸 Terumbu Karang Selat Solor", type: "biotik" },
+            { id: 6, name: "🌊 Air Laut & Kandungan Garam", type: "abiotik" },
+            { id: 7, name: "🦜 Burung Kakatua Kecil Jambul Kuning", type: "biotik" },
+            { id: 8, name: "💨 Angin Musim & Suhu Udara Solor", type: "abiotik" }
+        ];
+
+        let userEcoSortState = {};
+
+        function initEcoSortGame() {
+            const pool = document.getElementById('eco-sort-pool');
+            const zoneBiotik = document.getElementById('zone-biotik');
+            const zoneAbiotik = document.getElementById('zone-abiotik');
+            if (!pool) return;
+
+            pool.innerHTML = '';
+            zoneBiotik.innerHTML = '';
+            zoneAbiotik.innerHTML = '';
+            userEcoSortState = {};
+
+            ecoSortItemsData.forEach(item => {
+                const btn = document.createElement('button');
+                btn.id = `eco-item-${item.id}`;
+                btn.className = "px-3 py-2 rounded-xl bg-slate-900 border border-emerald-600 text-white font-medium text-xs hover:border-amber-400 transition shadow flex items-center gap-2";
+                btn.innerHTML = `${item.name}`;
+                btn.onclick = () => openEcoSortAction(item);
+                pool.appendChild(btn);
+            });
+
+            updateEcoSortScore();
+        }
+
+        function openEcoSortAction(item) {
+            playTone(500);
+            if (userEcoSortState[item.id]) return;
+
+            const targetZone = confirm(`Apakah "${item.name}" merupakan KOMPONEN BIOTIK (Makhluk Hidup)?\n\nKlik OK untuk BIOTIK, Batal untuk ABIOTIK (Benda Tak Hidup).`) ? 'biotik' : 'abiotik';
+
+            userEcoSortState[item.id] = targetZone;
+            const btn = document.getElementById(`eco-item-${item.id}`);
+
+            if (targetZone === item.type) {
+                playTone(700);
+                btn.className = "px-3 py-1.5 rounded-lg bg-emerald-900 border border-emerald-400 text-emerald-200 font-medium text-xs flex items-center gap-1";
+                btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i> ${item.name}`;
+                if (item.type === 'biotik') document.getElementById('zone-biotik').appendChild(btn);
+                else document.getElementById('zone-abiotik').appendChild(btn);
+            } else {
+                playTone(200);
+                alert(`❌ Kurang tepat! "${item.name}" termasuk komponen ${item.type === 'biotik' ? 'BIOTIK (Makhluk Hidup)' : 'ABIOTIK (Benda Tak Hidup)'}.`);
+                delete userEcoSortState[item.id];
+            }
+
+            updateEcoSortScore();
+        }
+
+        function updateEcoSortScore() {
+            let correct = 0;
+            Object.keys(userEcoSortState).forEach(id => {
+                const item = ecoSortItemsData.find(x => x.id === parseInt(id));
+                if (item && userEcoSortState[id] === item.type) correct++;
+            });
+
+            document.getElementById('sort-score-display').innerText = `Skor: ${correct} / ${ecoSortItemsData.length}`;
+
+            const fb = document.getElementById('eco-sort-feedback');
+            if (correct === ecoSortItemsData.length) {
+                fb.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-900/80 border border-emerald-400 text-emerald-200 block";
+                fb.innerHTML = `🎉 <strong>Luar Biasa!</strong> Anda berhasil mengklasifikasikan seluruh komponen biotik dan abiotik Solor Timur dengan sempurna!`;
+            } else {
+                fb.classList.add('hidden');
+            }
+        }
+
+        function resetEcoSortGame() {
+            initEcoSortGame();
+        }
+
+        let currentChain = 'kebun';
+
+        function switchEcoChain(type) {
+            playTone(550);
+            currentChain = type;
+
+            document.getElementById('btn-chain-kebun').className = type === 'kebun' 
+                ? "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 shadow"
+                : "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-emerald-200 hover:bg-emerald-950";
+
+            document.getElementById('btn-chain-laut').className = type === 'laut' 
+                ? "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 shadow"
+                : "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-emerald-200 hover:bg-emerald-950";
+
+            renderFoodChainCanvas();
+        }
+
+        function renderFoodChainCanvas() {
+            const canvas = document.getElementById('canvasFoodChain');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 600;
+            canvas.height = canvas.offsetHeight || 280;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            let nodes = [];
+            let descHTML = "";
+
+            if (currentChain === 'kebun') {
+                // Background Garden Kebun Solor
+                ctx.fillStyle = '#064e3b';
+                ctx.fillRect(0, 0, w, h);
+
+                nodes = [
+                    { icon: '☀️', name: 'Matahari', role: 'Energi Utama', x: w * 0.1, y: h * 0.5 },
+                    { icon: '🌴', name: 'Pohon Mente/Lontar', role: 'Produsen', x: w * 0.3, y: h * 0.5 },
+                    { icon: '🦗', name: 'Belalang / Ulat', role: 'Konsumen I (Herbivora)', x: w * 0.5, y: h * 0.5 },
+                    { icon: '🦎', name: 'Biawak / Ayam', role: 'Konsumen II (Karnivora)', x: w * 0.7, y: h * 0.5 },
+                    { icon: '🦅', name: 'Burung Elang Solor', role: 'Konsumen III (Puncak)', x: w * 0.9, y: h * 0.5 }
+                ];
+
+                descHTML = `
+                    <strong class="text-amber-300 block text-sm">🌴 Rantai Makanan Kebun Mente & Savana Lewohedo:</strong>
+                    Matahari Memberikan Energi ➔ Pohon Mente/Lontar (Produsen) ➔ Dimakan Belalang (Konsumen I) ➔ Dimakan Ayam/Biawak (Konsumen II) ➔ Dimakan Elang Solor (Konsumen Puncak) ➔ Mati Diurai Jamur/Bakteri (Pengurai).
+                `;
+            } else {
+                // Background Marine Selat Solor
+                ctx.fillStyle = '#0284c7';
+                ctx.fillRect(0, 0, w, h);
+
+                nodes = [
+                    { icon: '☀️', name: 'Matahari', role: 'Energi Utama', x: w * 0.1, y: h * 0.5 },
+                    { icon: '🌿', name: 'Fitoplankton', role: 'Produsen Laut', x: w * 0.3, y: h * 0.5 },
+                    { icon: '🦐', name: 'Zooplankton / Udang', role: 'Konsumen I', x: w * 0.5, y: h * 0.5 },
+                    { icon: '🐟', name: 'Ikan Komak / Kerapu', role: 'Konsumen II', x: w * 0.7, y: h * 0.5 },
+                    { icon: '🦈', name: 'Ikan Hiu / Lumba-lumba', role: 'Konsumen III', x: w * 0.9, y: h * 0.5 }
+                ];
+
+                descHTML = `
+                    <strong class="text-amber-300 block text-sm">🌊 Rantai Makanan Selat Solor & Terumbu Karang:</strong>
+                    Matahari ➔ Fitoplankton Tumbuhan Laut (Produsen) ➔ Dimakan Udang Kecil (Konsumen I) ➔ Dimakan Ikan Karang Kerapu (Konsumen II) ➔ Dimakan Hiu / Lumba-lumba Selat Solor (Konsumen Puncak).
+                `;
+            }
+
+            // Draw Connection Arrows
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 3;
+            for (let i = 0; i < nodes.length - 1; i++) {
+                const n1 = nodes[i];
+                const n2 = nodes[i + 1];
+
+                ctx.beginPath();
+                ctx.moveTo(n1.x + 25, n1.y);
+                ctx.lineTo(n2.x - 25, n2.y);
+                ctx.stroke();
+
+                // Arrowhead
+                ctx.fillStyle = '#fbbf24';
+                ctx.beginPath();
+                ctx.moveTo(n2.x - 25, n2.y - 6);
+                ctx.lineTo(n2.x - 15, n2.y);
+                ctx.lineTo(n2.x - 25, n2.y + 6);
+                ctx.fill();
+            }
+
+            // Draw Nodes
+            nodes.forEach(node => {
+                ctx.fillStyle = 'rgba(2, 44, 34, 0.9)';
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, 28, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#34d399';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.font = '22px Plus Jakarta Sans';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(node.icon, node.x, node.y);
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 11px Plus Jakarta Sans';
+                ctx.fillText(node.name, node.x, node.y + 42);
+
+                ctx.fillStyle = '#fbbf24';
+                ctx.font = '9px Plus Jakarta Sans';
+                ctx.fillText(node.role, node.x, node.y + 55);
+            });
+
+            document.getElementById('chain-description-box').innerHTML = descHTML;
+        }
+
+        const faunaData = {
+            asiatis: [
+                { icon: '🐅', name: 'Harimau Sumatera', desc: 'Mamalia karnivora berukuran besar khas pulau Sunda Besar.' },
+                { icon: '🐘', name: 'Gajah Sumatera', desc: 'Mamalia herbivora raksasa hutan tropis dataran rendah.' },
+                { icon: '🦏', name: 'Badak Jawa', desc: 'Hewan cula tunggal yang sangat terancam punah.' }
+            ],
+            wallacea: [
+                { icon: '🦎', name: 'Komodo (NTT)', desc: 'Reptil purba terbesar di dunia khas kepulauan Nusa Tenggara!' },
+                { icon: '🦜', name: 'Kakatua Jambul Kuning', desc: 'Burung endemik langka penghasi savana NTT & Solor.' },
+                { icon: '🐖', name: 'Anoa & Babirusa', desc: 'Mamalia endemik khas zona peralihan Wallacea.' }
+            ],
+            australis: [
+                { icon: '🦘', name: 'Kanguru Pohon', desc: 'Mamalia berkantung khas hutan Papua.' },
+                { icon: '🦚', name: 'Burung Cenderawasih', desc: 'Burung dengan bulu indah luar biasa khas pulau Papua.' },
+                { icon: '🦔', name: 'Kaskus / Ekidna', desc: 'Hewan pemakan semut bersisik berkantung.' }
+            ]
+        };
+
+        function selectFaunaZone(zoneKey) {
+            playTone(600);
+            document.querySelectorAll('.zone-btn').forEach(b => {
+                b.className = "zone-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-emerald-200 hover:bg-emerald-950";
+            });
+
+            document.getElementById(`btn-zone-${zoneKey}`).className = "zone-btn px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow";
+
+            const container = document.getElementById('fauna-zone-content');
+            container.innerHTML = '';
+
+            faunaData[zoneKey].forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-950 p-5 rounded-2xl border border-emerald-800 space-y-2 text-center";
+                card.innerHTML = `
+                    <span class="text-5xl block animate-pulse">${item.icon}</span>
+                    <h4 class="text-sm font-bold text-amber-300">${item.name}</h4>
+                    <p class="text-xs text-emerald-200 leading-relaxed">${item.desc}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updateEcoSim() {
+            const bomb = parseFloat(document.getElementById('slider-fishing').value);
+            const reforest = parseFloat(document.getElementById('slider-reforest').value);
+            const waste = parseFloat(document.getElementById('slider-waste').value);
+
+            // Calculate health index (100 is best)
+            let score = Math.round(100 - (bomb * 0.4) - (waste * 0.3) + (reforest * 0.3) - 30);
+            score = Math.max(10, Math.min(100, score));
+
+            const badge = document.getElementById('eco-health-badge');
+
+            if (score > 75) {
+                badge.className = "bg-slate-950 px-3 py-1.5 rounded-xl border border-emerald-500 text-xs font-mono font-bold text-emerald-300";
+                badge.innerText = `Skor Ekosistem: ${score}% (Sangat Sehat & Lestari)`;
+            } else if (score > 45) {
+                badge.className = "bg-slate-950 px-3 py-1.5 rounded-xl border border-amber-500 text-xs font-mono font-bold text-amber-300";
+                badge.innerText = `Skor Ekosistem: ${score}% (Terancam Sedang)`;
+            } else {
+                badge.className = "bg-slate-950 px-3 py-1.5 rounded-xl border border-rose-500 text-xs font-mono font-bold text-rose-300";
+                badge.innerText = `Skor Ekosistem: ${score}% (Rusak Parah / Kritis)`;
+            }
+
+            renderEcoSimCanvas(score, bomb, waste, reforest);
+        }
+
+        function renderEcoSimCanvas(score, bomb, waste, reforest) {
+            const canvas = document.getElementById('canvasEcoSim');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 260;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Sky Color based on score
+            if (score > 70) ctx.fillStyle = '#0284c7';
+            else if (score > 40) ctx.fillStyle = '#475569';
+            else ctx.fillStyle = '#1e1b4b';
+            ctx.fillRect(0, 0, w, h * 0.5);
+
+            // Forest Trees on Land
+            const treeCount = Math.round((reforest / 100) * 12);
+            for (let i = 0; i < treeCount; i++) {
+                const tx = 20 + i * 22;
+                ctx.fillStyle = '#78350f';
+                ctx.fillRect(tx, h * 0.5 - 20, 6, 20);
+                ctx.fillStyle = '#10b981';
+                ctx.beginPath();
+                ctx.arc(tx + 3, h * 0.5 - 25, 12, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Sea Water Selat Solor
+            if (score > 60) ctx.fillStyle = '#0d9488';
+            else ctx.fillStyle = '#334155';
+            ctx.fillRect(0, h * 0.5, w, h * 0.5);
+
+            // Coral Reefs & Fishes
+            if (bomb < 50) {
+                ctx.fillStyle = '#f43f5e';
+                ctx.fillRect(100, h - 30, 40, 20);
+                ctx.fillStyle = '#fbbf24';
+                ctx.fillRect(200, h - 25, 50, 15);
+
+                // Fish icons
+                ctx.fillStyle = '#f59e0b';
+                ctx.font = '16px Plus Jakarta Sans';
+                ctx.fillText('🐟', 150, h * 0.7);
+                ctx.fillText('🐠', 280, h * 0.8);
+            } else {
+                ctx.fillStyle = '#475569';
+                ctx.fillText('💥 Terumbu karang hancur terkena bom!', 80, h * 0.8);
+            }
+
+            // Floating Plastic Waste
+            if (waste > 30) {
+                ctx.fillStyle = '#cbd5e1';
+                ctx.font = '14px Plus Jakarta Sans';
+                ctx.fillText('🧴 🛍️ 🍾', 320, h * 0.6);
+            }
+        }
+
+        const glossaryData = [
+            { term: "Autotrof", desc: "Organisme yang dapat membuat makanannya sendiri melalui proses fotosintesis (contoh: Pohon Lontar, Padi)." },
+            { term: "Heterotrof", desc: "Organisme yang tidak dapat membuat makanan sendiri sehingga memakan makhluk lain (contoh: Hewan & Manusia)." },
+            { term: "Dekomposer (Pengurai)", desc: "Organisme pengurai sisa-sisa mahluk hidup yang mati menjadi hara tanah (contoh: Jamur & Bakteri)." },
+            { term: "Garis Wallace", desc: "Garis khayal yang memisahkan fauna tipe Asiatis dengan kawasan transisi Wallacea." },
+            { term: "Spesies Endemik", desc: "Spesies makhluk hidup asli yang hanya ditemukan di wilayah geografis tertentu dan tidak ada di tempat lain." },
+            { term: "Simbiosis", desc: "Interaksi biologis yang erat dan berjangka panjang antara dua organisme berbeda spesies." },
+            { term: "Bioindikator", desc: "Spesies yang kehadirannya dapat menjadi penanda kualitas kesehatan suatu lingkungan ekosistem." },
+            { term: "Pirramida Makanan", desc: "Diagram yang menggambarkan penurunan jumlah energi/biomassa dari tingkat trofik bawah ke atas." }
+        ];
+
+        function populateGlossary() {
+            const container = document.getElementById('glossary-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            glossaryData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "glass-card p-4 rounded-xl border border-emerald-800 space-y-1.5 gloss-item";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <strong class="text-amber-300 font-bold text-sm">${item.term}</strong>
+                        <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">IPA SMP VII</span>
+                    </div>
+                    <p class="text-xs text-emerald-100 leading-relaxed">${item.desc}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterGlossary() {
+            const q = document.getElementById('glossary-search').value.toLowerCase();
+            document.querySelectorAll('.gloss-item').forEach(el => {
+                const text = el.innerText.toLowerCase();
+                if (text.includes(q)) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+        }
+
+        const quizQuestions = [
+            {
+                question: "Komponen ekosistem yang terdiri atas benda-benda tak hidup seperti batu cadas, sinar matahari, dan air laut di Desa Lewohedo dinamakan...",
+                category: "Komponen Ekosistem",
+                options: [
+                    "Komponen Abiotik",
+                    "Komponen Biotik",
+                    "Komponen Parasit",
+                    "Komponen Dekomposer"
+                ],
+                correct: 0,
+                explanation: "Komponen abiotik mencakup seluruh kondisi fisik dan kimiawi tak hidup dalam lingkungan."
+            },
+            {
+                question: "Pohon Lontar dan Pohon Jambu Mente di Pulau Solor berperan sebagai produsen karena memiliki kemampuan...",
+                category: "Peran Organisme",
+                options: [
+                    "Melakukan fotosintesis menghasilkan makanan (Autotrof)",
+                    "Menguraikan bangkai hewan mati",
+                    "Memangsa konsumen tingkat satu",
+                    "Menyerap nutrisi secara heterotrof"
+                ],
+                correct: 0,
+                explanation: "Produsen adalah organisme autotrof yang menghasilkan zat organik melalui fotosintesis."
+            },
+            {
+                question: "Interaksi lebah madu hutan yang mengisap nektar bunga mente sambil membantu penyerbukan tanaman merupakan contoh...",
+                category: "Simbiosis",
+                options: [
+                    "Simbiosis Mutualisme",
+                    "Simbiosis Komensalisme",
+                    "Simbiosis Parasitisme",
+                    "Predasi"
+                ],
+                correct: 0,
+                explanation: "Mutualisme menguntungkan kedua belah pihak: lebah mendapat nektar dan bunga terbantu penyerbukannya."
+            },
+            {
+                question: "Kepulauan Nusa Tenggara (termasuk Pulau Solor) masuk dalam zona fauna unik yang diapit Garis Wallace dan Weber, yaitu kawasan...",
+                category: "Keanekaragaman Hayati",
+                options: ["Wallacea (Peralihan)", "Asiatis (Sunda)", "Australis (Papua)", "Neartik"],
+                correct: 0,
+                explanation: "Kawasan Wallacea adalah wilayah peralihan dengan keanekaragaman spesies endemik yang tinggi."
+            },
+            {
+                question: "Contoh hewan endemik purba khas kepulauan Nusa Tenggara (NTT) yang terlindungi adalah...",
+                category: "Fauna Endemik",
+                options: ["Komodo", "Gajah Sumatera", "Harimau Jawa", "Burung Cenderawasih"],
+                correct: 0,
+                explanation: "Komodo (*Varanus komodoensis*) adalah reptil purba endemik khas provinsi Nusa Tenggara Timur."
+            },
+            {
+                question: "Penggunaan bom ikan atau racun potasium di Selat Solor dapat merusak ekosistem laut karena...",
+                category: "Dampak Manusia",
+                options: [
+                    "Menghancurkan rumah terumbu karang dan membunuh benih ikan kecil",
+                    "Mempercepat pertumbuhan rumpu laut",
+                    "Menambah jumlah oksigen terlarut dalam air",
+                    "Menjaga kelestarian penyu hijau"
+                ],
+                correct: 0,
+                explanation: "Pemboman karang merusak terumbu karang yang membutuhkan puluhan tahun untuk tumbuh kembali."
+            },
+            {
+                question: "Pelestarian penyu hijau atau Burung Kakatua Kecil Jambul Kuning langsung di dalam habitat aslinya dinamakan...",
+                category: "Konservasi",
+                options: ["Pelestarian In Situ", "Pelestarian Ex Situ", "Reboisasi Ex Situ", "Domestikasi"],
+                correct: 0,
+                explanation: "In Situ artinya perlindungan flora/fauna yang dilakukan langsung di dalam habitat aslinya."
+            },
+            {
+                question: "Dalam rantai makanan laut Selat Solor, organisme fitoplankton berkedudukan sebagai...",
+                category: "Rantai Makanan",
+                options: ["Produsen", "Konsumen I", "Konsumen II", "Pengurai"],
+                correct: 0,
+                explanation: "Fitoplankton adalah mikroorganisme autotrof penghasil energi utama (produsen) di ekosistem perairan."
+            },
+            {
+                question: "Urutan satuan organisasi kehidupan dalam ekosistem dari yang terkecil hingga terbesar adalah...",
+                category: "Satuan Ekologi",
+                options: [
+                    "Individu ➔ Populasi ➔ Komunitas ➔ Ekosistem ➔ Biosfer",
+                    "Populasi ➔ Individu ➔ Ekosistem ➔ Komunitas ➔ Biosfer",
+                    "Ekosistem ➔ Komunitas ➔ Populasi ➔ Individu ➔ Biosfer",
+                    "Biosfer ➔ Ekosistem ➔ Komunitas ➔ Populasi ➔ Individu"
+                ],
+                correct: 0,
+                explanation: "Urutan yang benar dari tingkat terendah adalah Individu hingga Biosfer."
+            },
+            {
+                question: "Tumbuhan benalu yang menyerap air dan hara dari dahan pohon mangga warga Lewohedo merupakan contoh...",
+                category: "Simbiosis",
+                options: ["Simbiosis Parasitisme", "Simbiosis Mutualisme", "Simbiosis Komensalisme", "Simbiosis Amensalisme"],
+                correct: 0,
+                explanation: "Benalu diuntungkan mendapat hara, sedangkan pohon mangga dirugikan karena nutrisinya dicuri."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            const q = quizQuestions[currentQuizIndex];
+
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuizIndex + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quiz-category').innerText = q.category;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQuizIndex + 1) / quizQuestions.length) * 100}%`;
+            document.getElementById('quiz-question').innerText = `${currentQuizIndex + 1}. ${q.question}`;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 rounded-xl bg-slate-950 border border-emerald-800 hover:border-amber-400 text-emerald-100 text-xs sm:text-sm font-medium transition flex items-center justify-between";
+                btn.innerHTML = `<span>${String.fromCharCode(65 + idx)}. ${opt}</span> <i class="fa-regular fa-circle text-emerald-600"></i>`;
+                btn.onclick = () => selectOption(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+        }
+
+        function selectOption(selectedIndex, btnEl) {
+            if (answered) return;
+            answered = true;
+
+            const q = quizQuestions[currentQuizIndex];
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const allBtns = document.getElementById('quiz-options').children;
+
+            if (selectedIndex === q.correct) {
+                score += 10;
+                playTone(650);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-emerald-900 border-2 border-emerald-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-check text-emerald-300 text-lg"></i>`;
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-emerald-900/70 border border-emerald-500 text-emerald-200";
+                feedbackEl.innerHTML = `🎉 <strong>Tepat sekali!</strong> ${q.explanation}`;
+            } else {
+                playTone(220);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-rose-950 border-2 border-rose-500 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-xmark text-rose-400 text-lg"></i>`;
+
+                const correctBtn = allBtns[q.correct];
+                correctBtn.className = "w-full text-left p-3.5 rounded-xl bg-emerald-900 border-2 border-emerald-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-rose-950/70 border border-rose-500 text-rose-200";
+                feedbackEl.innerHTML = `❌ <strong>Kurang Tepat.</strong> ${q.explanation}`;
+            }
+
+            document.getElementById('quiz-score').innerText = score;
+            feedbackEl.classList.remove('hidden');
+            document.getElementById('btn-next-quiz').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            playTone(480);
+            currentQuizIndex++;
+            if (currentQuizIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('certificate-box').classList.remove('hidden');
+                generateCertificate();
+            }
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            document.getElementById('quiz-score').innerText = score;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('certificate-box').classList.add('hidden');
+            loadQuestion();
+        }
+
+        function generateCertificate() {
+            const name = document.getElementById('student-name-input').value || "Siswa SMP Kelas VII";
+            const canvas = document.getElementById('canvasCert');
+            if (!canvas) return;
+            canvas.width = 800;
+            canvas.height = 500;
+
+            const ctx = canvas.getContext('2d');
+            
+            // Background Ecology Theme
+            const grad = ctx.createLinearGradient(0, 0, 800, 500);
+            grad.addColorStop(0, '#022c22');
+            grad.addColorStop(0.5, '#064e3b');
+            grad.addColorStop(1, '#020617');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 800, 500);
+
+            // Gold and Emerald Border
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(15, 15, 770, 470);
+            ctx.strokeStyle = '#34d399';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(25, 25, 750, 450);
+
+            // Watermark icon
+            ctx.fillStyle = 'rgba(52, 211, 153, 0.05)';
+            ctx.font = '160px Plus Jakarta Sans';
+            ctx.fillText('🌱', 320, 310);
+
+            // Header Title
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = 'bold 24px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('SERTIFIKAT KELULUSAN PEMBELAJARAN IPA BIOLOGI', 400, 80);
+
+            ctx.fillStyle = '#34d399';
+            ctx.font = '14px Plus Jakarta Sans';
+            ctx.fillText('SMPN SATAP WULUBLOLONG • DESA LEWOHEDO, FLORES TIMUR', 400, 110);
+
+            ctx.fillStyle = '#f0f9ff';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Diberikan Kepada Siswa/i:', 400, 160);
+
+            // Student Name
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 28px Plus Jakarta Sans';
+            ctx.fillText(name, 400, 210);
+
+            // Module Title
+            ctx.fillStyle = '#e0f2fe';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Telah Menyelesaikan Modul Interaktif & Evaluasi Biologi IPA:', 400, 260);
+            ctx.font = 'bold 16px Plus Jakarta Sans';
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillText('EKOLOGI DAN KEANEKARAGAMAN HAYATI INDONESIA (KELAS VII)', 400, 290);
+
+            // Score Badge
+            ctx.fillStyle = '#047857';
+            ctx.fillRect(300, 320, 200, 45);
+            ctx.strokeStyle = '#34d399';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(300, 320, 200, 45);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px Plus Jakarta Sans';
+            ctx.fillText(`NILAI EVALUASI: ${score} / 100`, 400, 348);
+
+            // Date & Location
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '12px Plus Jakarta Sans';
+            ctx.fillText('Desa Lewohedo, Kec. Solor Timur, Kabupaten Flores Timur, NTT', 400, 410);
+            ctx.fillText('Media Lab Digital Biologi Kurikulum Merdeka SMP VII', 400, 430);
+        }
+
+        function downloadCertificate() {
+            playTone(600);
+            const canvas = document.getElementById('canvasCert');
+            const link = document.createElement('a');
+            link.download = `Sertifikat_Ekologi_SMPN_Wulublolong_${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        window.onload = function() {
+            initEcoSortGame();
+            switchEcoChain('kebun');
+            selectFaunaZone('asiatis');
+            updateEcoSim();
+            populateGlossary();
+            loadQuestion();
+
+            window.addEventListener('resize', () => {
+                renderFoodChainCanvas();
+                updateEcoSim();
+            });
+        };
+    </script>
+</body>
+</html>
