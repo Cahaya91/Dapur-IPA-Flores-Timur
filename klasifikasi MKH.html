@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papan Interaktif Klasifikasi Makhluk Hidup - IPA SMP Kelas 7 (Solor Timur)</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #022c22;
+            color: #f0fdf4;
+        }
+        .bio-bg-pattern {
+            background-color: #022c22;
+            background-image: radial-gradient(#059669 1.5px, transparent 1.5px), radial-gradient(#0d9488 1.5px, #022c22 1.5px);
+            background-size: 36px 36px;
+            background-position: 0 0, 18px 18px;
+        }
+        .glass-panel {
+            background: rgba(6, 78, 59, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(52, 211, 153, 0.25);
+        }
+        .glass-card {
+            background: rgba(4, 47, 38, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(45, 212, 191, 0.2);
+        }
+        .glow-emerald {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+        .glow-teal {
+            box-shadow: 0 0 20px rgba(20, 184, 166, 0.3);
+        }
+        .glow-amber {
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(2, 44, 34, 0.9);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body class="min-h-screen bio-bg-pattern flex flex-col justify-between custom-scrollbar selection:bg-emerald-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-emerald-700/60 px-4 py-3 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-400 via-teal-500 to-amber-400 p-0.5 shadow-lg flex-shrink-0 glow-emerald">
+                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+                        <span class="text-2xl animate-pulse">🌿</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold tracking-wider text-emerald-300 uppercase bg-emerald-500/20 px-2.5 py-0.5 rounded-full border border-emerald-400/40">
+                            Biologi Sains SMP
+                        </span>
+                        <span class="text-[10px] font-bold text-teal-300 bg-teal-500/20 px-2 py-0.5 rounded-full border border-teal-400/30">
+                            Kurikulum Merdeka Kelas VII
+                        </span>
+                    </div>
+                    <h1 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mt-0.5">
+                        Papan Interaktif Klasifikasi Makhluk Hidup
+                    </h1>
+                    <p class="text-xs text-emerald-200/90 font-medium">
+                        SMP Negeri 1 Solor Timur • Menanga, Kec. Solor Timur, Kab. Flores Timur, NTT
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <div class="hidden lg:flex flex-col text-right text-xs">
+                    <span class="text-emerald-300 font-semibold">Tahun Ajaran 2026/2027</span>
+                    <span class="text-emerald-200/70 text-[11px]">Media Lab Digital Bio-Sains</span>
+                </div>
+                <button id="btn-sound" onclick="toggleSound()" class="px-3.5 py-2 rounded-xl bg-slate-950/80 hover:bg-emerald-900 text-emerald-200 text-xs font-semibold border border-emerald-700/80 flex items-center gap-2 transition shadow-md">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-emerald-400 text-sm"></i>
+                    <span id="sound-text">Efek Suara: Aktif</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+        <!-- Navigation Tabs Bar -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-emerald-800/80 pb-3">
+            <button onclick="switchTab('ciri')" id="tab-btn-ciri" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-emerald-600 text-white shadow-lg shadow-emerald-950/50">
+                <i class="fa-solid fa-dna text-teal-200"></i> 1. Ciri Makhluk Hidup & Sortir
+            </button>
+            <button onclick="switchTab('kunci')" id="tab-btn-kunci" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                <i class="fa-solid fa-diagram-project text-amber-300"></i> 2. Kunci Determinasi Interaktif
+            </button>
+            <button onclick="switchTab('kerajaan')" id="tab-btn-kerajaan" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                <i class="fa-solid fa-sitemap text-teal-300"></i> 3. Sistem 5 Kerajaan (Whittaker)
+            </button>
+            <button onclick="switchTab('takson')" id="tab-btn-takson" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                <i class="fa-solid fa-tag text-emerald-300"></i> 4. Taksonomi & Binomial
+            </button>
+            <button onclick="switchTab('glosarium')" id="tab-btn-glosarium" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                <i class="fa-solid fa-book-bookmark text-cyan-300"></i> 5. Glosarium Biologi
+            </button>
+            <button onclick="switchTab('evaluasi')" id="tab-btn-evaluasi" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                <i class="fa-solid fa-trophy text-amber-300"></i> 6. Kuis & Sertifikat
+            </button>
+        </div>
+
+        <div id="section-ciri" class="tab-content block space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-emerald-400 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 opacity-10 text-9xl select-none">🌴</div>
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 1: Ciri-Ciri Utama Makhluk Hidup (Biotik) vs Benda Mati (Abiotik)</h2>
+                <p class="text-emerald-100 text-sm max-w-4xl leading-relaxed">
+                    Makhluk hidup (organisme) di ekosistem Solor Timur memiliki **7 karakteristik mendasar** yang membedakannya secara mutlak dari benda tak hidup/benda mati.
+                </p>
+            </div>
+
+            <!-- 7 Characteristics Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-card p-4 rounded-xl border border-emerald-500/30 space-y-1.5 text-xs">
+                    <span class="text-emerald-300 font-bold text-sm block">1. Bernapas (Respirasi)</span>
+                    <p class="text-emerald-100">Mengambil oksigen ($O_2$) dan mengeluarkan karbon dioksida ($CO_2$) untuk memecah nutrisi menjadi energi.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-teal-500/30 space-y-1.5 text-xs">
+                    <span class="text-teal-300 font-bold text-sm block">2. Membutuhkan Nutrisi</span>
+                    <p class="text-emerald-100">Memerlukan makanan/unsur hara untuk pertumbuhan dan aktivitas (Autotrof / Heterotrof).</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-amber-500/30 space-y-1.5 text-xs">
+                    <span class="text-amber-300 font-bold text-sm block">3. Bergerak</span>
+                    <p class="text-emerald-100">Perpindahan posisi tubuh aktif (hewan) atau gerak sebagian organ pasif mengikuti rangsang (tumbuhan).</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-cyan-500/30 space-y-1.5 text-xs">
+                    <span class="text-cyan-300 font-bold text-sm block">4. Tumbuh & Berkembang</span>
+                    <p class="text-emerald-100">Pertambahan ukuran/jumlah sel tak kembali (irreversible) serta pendewasaan fungsi organ.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-emerald-500/30 space-y-1.5 text-xs">
+                    <span class="text-emerald-300 font-bold text-sm block">5. Peka Rangsang (Iritabilitas)</span>
+                    <p class="text-emerald-100">Kemampuan merespons perubahan lingkungan (cahaya, sentuhan, suhu, kimia).</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-teal-500/30 space-y-1.5 text-xs">
+                    <span class="text-teal-300 font-bold text-sm block">6. Berkembang Biak (Reproduksi)</span>
+                    <p class="text-emerald-100">Menghasilkan keturunan secara vegetatif/generatif untuk melestarikan jenis dari kepunahan.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-amber-500/30 space-y-1.5 text-xs">
+                    <span class="text-amber-300 font-bold text-sm block">7. Mengeluarkan Sisa (Ekskresi)</span>
+                    <p class="text-emerald-100">Membuang sisa metabolisme bernitrogen, $CO_2$, air, atau garam agar tubuh tetap seimbang.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-rose-500/30 space-y-1.5 text-xs">
+                    <span class="text-rose-300 font-bold text-sm block">8. Adaptasi Lingkungan</span>
+                    <p class="text-emerald-100">Penyesuaian bentuk fisik/perilaku terhadap iklim pesisir kering di Pulau Solor.</p>
+                </div>
+            </div>
+
+            <!-- Interactive Sorting Game -->
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-emerald-800 pb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-box-archive text-amber-400"></i> Game Interaktif: Classify Solor Ecosystem Objects
+                        </h3>
+                        <p class="text-xs text-emerald-200">
+                            Pilih atau klik objek dari pesisir Solor Timur di bawah ini, lalu tentukan apakah objek tersebut **Makhluk Hidup (Biotik)** atau **Benda Mati (Abiotik)**!
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span id="sort-score-display" class="bg-slate-950 px-3 py-1.5 rounded-xl border border-emerald-700 text-xs font-bold text-amber-300">
+                            Skor: 0 / 8
+                        </span>
+                        <button onclick="resetSortGame()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-200 font-bold text-xs rounded-xl border border-emerald-700 transition">
+                            <i class="fa-solid fa-rotate-right"></i> Reset Game
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Items Pool -->
+                <div>
+                    <label class="text-xs font-bold text-emerald-300 mb-2 block">Daftar Objek Lingkungan Solor Timur:</label>
+                    <div id="sort-pool" class="flex flex-wrap gap-3 p-4 bg-slate-950 rounded-xl border border-emerald-800 min-h-[90px]">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Drop Zones / Target Buckets -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Biotik -->
+                    <div class="bg-emerald-950/60 p-5 rounded-xl border-2 border-dashed border-emerald-500/80 min-h-[160px] space-y-3">
+                        <div class="flex items-center gap-2 text-emerald-300 font-bold text-sm">
+                            <i class="fa-solid fa-seedling text-lg"></i> KELOMPOK BIOTIK (Makhluk Hidup)
+                        </div>
+                        <div id="zone-biotik" class="flex flex-wrap gap-2">
+                            <!-- Selected items go here -->
+                        </div>
+                    </div>
+
+                    <!-- Abiotik -->
+                    <div class="bg-slate-950/80 p-5 rounded-xl border-2 border-dashed border-slate-600 min-h-[160px] space-y-3">
+                        <div class="flex items-center gap-2 text-slate-300 font-bold text-sm">
+                            <i class="fa-solid fa-mountain text-lg"></i> KELOMPOK ABIOTIK (Benda Mati)
+                        </div>
+                        <div id="zone-abiotik" class="flex flex-wrap gap-2">
+                            <!-- Selected items go here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sort-feedback" class="p-4 rounded-xl text-xs sm:text-sm font-semibold hidden"></div>
+            </div>
+        </div>
+
+        <div id="section-kunci" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-amber-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 2: Kunci Determinasi & Kunci Dikotom Interaktif</h2>
+                <p class="text-emerald-100 text-sm max-w-4xl leading-relaxed">
+                    **Kunci Dikotom** membagi makhluk hidup menjadi dua kelompok berlawanan berdasarkan ciri-ciri fisik menonjol secara bertahap hingga ditemukan nama takson spesimen lokal Solor Timur.
+                </p>
+            </div>
+
+            <!-- Interactive Dichotomous Key Simulator -->
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="border-b border-emerald-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-sitemap text-amber-400"></i> Simulator Kunci Determinasi Organisme Solor
+                        </h3>
+                        <p class="text-xs text-emerald-200">
+                            Jawab pilihan dikotom bernomor di bawah ini untuk mengidentifikasi spesies khas Solor Timur!
+                        </p>
+                    </div>
+                    <button onclick="resetKeyEngine()" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-amber-300 font-bold text-xs rounded-xl border border-amber-500/40 transition">
+                        <i class="fa-solid fa-arrows-rotate"></i> Mulai Ulang Identifikasi
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="space-y-4 bg-slate-950 p-5 rounded-xl border border-emerald-900 text-xs">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="text-emerald-400 font-bold">Langkah Identifikasi:</span>
+                            <span id="key-step-badge" class="bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-mono">1a / 1b</span>
+                        </div>
+
+                        <div id="key-question-box" class="space-y-3">
+                            <p id="key-question-text" class="text-white font-bold text-sm leading-snug">
+                                1. Apakah organisme ini tergolong Tumbuhan (mempunyai klorofil) atau Hewan?
+                            </p>
+                            <div class="space-y-2">
+                                <button onclick="selectKeyOption('A')" id="btn-key-a" class="w-full text-left p-3 rounded-xl bg-slate-900 hover:bg-emerald-950 border border-emerald-700 text-emerald-100 transition flex items-center justify-between">
+                                    <span id="label-key-a">1a. Memiliki klorofil & fotosintesis (Tumbuhan)</span>
+                                    <i class="fa-solid fa-chevron-right text-emerald-400"></i>
+                                </button>
+                                <button onclick="selectKeyOption('B')" id="btn-key-b" class="w-full text-left p-3 rounded-xl bg-slate-900 hover:bg-emerald-950 border border-emerald-700 text-emerald-100 transition flex items-center justify-between">
+                                    <span id="label-key-b">1b. Tidak memiliki klorofil & bergerak aktif (Hewan)</span>
+                                    <i class="fa-solid fa-chevron-right text-emerald-400"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="key-result-box" class="hidden p-4 bg-emerald-950/90 rounded-xl border border-emerald-400 space-y-2">
+                            <span class="text-amber-300 font-bold text-xs uppercase tracking-wider block">🎉 Hasil Identifikasi Determinasi:</span>
+                            <h4 id="key-result-title" class="text-lg font-extrabold text-white">Pohon Lontar / Koli</h4>
+                            <p id="key-result-latin" class="text-xs font-mono text-cyan-300 italic">Borassus flabellifer</p>
+                            <p id="key-result-code" class="text-[11px] font-mono text-emerald-200 bg-slate-950 p-2 rounded">
+                                Urutan Kunci Determinasi: <strong>1a - 2a - 3b</strong>
+                            </p>
+                            <p id="key-result-desc" class="text-xs text-emerald-100 leading-relaxed pt-1">
+                                Pohon Lontar adalah tanaman khas Solor Timur yang dimanfaatkan warga untuk nira, sarang lontar, dan kerajinan daun.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Decision Tree Canvas Visualizer -->
+                    <div class="lg:col-span-2 h-[300px] bg-slate-950 rounded-xl overflow-hidden border border-emerald-800 p-2 relative">
+                        <canvas id="canvasTree" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-kerajaan" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-teal-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 3: Sistem Klasifikasi 5 Kerajaan (Robert H. Whittaker)</h2>
+                <p class="text-emerald-100 text-sm max-w-4xl leading-relaxed">
+                    Seluruh makhluk hidup dikelompokkan ke dalam 5 Kingdom utama berdasarkan tipe sel (prokariotik/eukariotik), jumlah sel (uniseluler/multiseluler), serta cara memperoleh nutrisi.
+                </p>
+            </div>
+
+            <!-- Kingdom Filter Bar -->
+            <div class="flex flex-wrap gap-2">
+                <button onclick="filterKingdom('all')" class="kingdom-btn px-3.5 py-1.5 rounded-xl font-bold text-xs bg-emerald-600 text-white">
+                    Semua Kingdom (5)
+                </button>
+                <button onclick="filterKingdom('monera')" class="kingdom-btn px-3.5 py-1.5 rounded-xl font-bold text-xs bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                    🦠 Monera
+                </button>
+                <button onclick="filterKingdom('protista')" class="kingdom-btn px-3.5 py-1.5 rounded-xl font-bold text-xs bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                    🔬 Protista
+                </button>
+                <button onclick="filterKingdom('fungi')" class="kingdom-btn px-3.5 py-1.5 rounded-xl font-bold text-xs bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                    🍄 Fungi (Jamur)
+                </button>
+                <button onclick="filterKingdom('plantae')" class="kingdom-btn px-3.5 py-1.5 rounded-xl font-bold text-xs bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                    🌴 Plantae (Tumbuhan)
+                </button>
+                <button onclick="filterKingdom('animalia')" class="kingdom-btn px-3.5 py-1.5 rounded-xl font-bold text-xs bg-slate-900 text-emerald-200 hover:bg-emerald-950">
+                    🐬 Animalia (Hewan)
+                </button>
+            </div>
+
+            <!-- Specimen Cards Grid -->
+            <div id="kingdom-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+
+        <div id="section-takson" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-emerald-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 4: Urutan Taksonomi & Tata Nama Binomial Nomenclature</h2>
+                <p class="text-emerald-100 text-sm max-w-4xl leading-relaxed">
+                    Carolus Linnaeus memperkenalkan sistem penamaan ilmiah sejagad (**Binomial Nomenclature**) menggunakan bahasa Latin dengan dua kata: kata pertama **Genus** (diawali huruf kapital) dan kata kedua **Spesies** (huruf kecil), dicetak miring.
+                </p>
+            </div>
+
+            <!-- Taxonomy Hierarchy Mnemonic Card -->
+            <div class="glass-card p-5 rounded-2xl border border-emerald-500/30 space-y-4">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-amber-300"></i> Tingkatan Hierarki Taksonomi (Dari Tertinggi ke Terendah)
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-7 gap-2 text-center text-xs font-bold">
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-emerald-700">
+                        <span class="text-amber-300 block text-[10px]">1. Kerajaan</span>
+                        <span class="text-white">Regnum / Kingdom</span>
+                    </div>
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-emerald-700">
+                        <span class="text-amber-300 block text-[10px]">2. Filum / Divisi</span>
+                        <span class="text-white">Phylum / Divisio</span>
+                    </div>
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-emerald-700">
+                        <span class="text-amber-300 block text-[10px]">3. Kelas</span>
+                        <span class="text-white">Classis</span>
+                    </div>
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-emerald-700">
+                        <span class="text-amber-300 block text-[10px]">4. Bangsa</span>
+                        <span class="text-white">Ordo</span>
+                    </div>
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-emerald-700">
+                        <span class="text-amber-300 block text-[10px]">5. Suku</span>
+                        <span class="text-white">Familia</span>
+                    </div>
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-emerald-700">
+                        <span class="text-amber-300 block text-[10px]">6. Marga</span>
+                        <span class="text-white">Genus</span>
+                    </div>
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-emerald-700">
+                        <span class="text-amber-300 block text-[10px]">7. Jenis</span>
+                        <span class="text-white">Species</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Binomial Nomenclature Matching Game -->
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="border-b border-emerald-800 pb-3 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-gamepad text-emerald-400"></i> Game Mencocokkan Nama Latin Organisme Solor Timur
+                        </h3>
+                        <p class="text-xs text-emerald-200">
+                            Pilih nama lokal di kolom kiri lalu pasangkan dengan Nama Latin Binomial yang tepat di kolom kanan!
+                        </p>
+                    </div>
+                    <span id="match-score-badge" class="bg-slate-950 px-3 py-1.5 rounded-xl border border-emerald-700 text-xs font-bold text-amber-300">
+                        Terpasang: 0 / 5
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                    <div class="space-y-2">
+                        <span class="font-bold text-emerald-300 block">Nama Lokal Organisme:</span>
+                        <div id="match-left-list" class="space-y-2">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <span class="font-bold text-teal-300 block">Nama Latin Binomial (Genus + species):</span>
+                        <div id="match-right-list" class="space-y-2">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="match-feedback" class="p-4 rounded-xl text-xs sm:text-sm font-semibold hidden"></div>
+            </div>
+        </div>
+
+        <div id="section-glosarium" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2 border-b border-emerald-800 pb-2">
+                    <i class="fa-solid fa-book-bookmark text-cyan-300"></i> Glosarium Biologi Klasifikasi Makhluk Hidup
+                </h3>
+
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-emerald-400"></i>
+                    <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Cari istilah biologi (misal: Autotrof, Heterotrof, Prokariotik, Kunci Dikotom, Endemik)..." class="w-full bg-slate-950 border border-emerald-700 text-white rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-emerald-400 shadow-inner">
+                </div>
+
+                <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+
+        <div id="section-evaluasi" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-emerald-800 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-1">Kuis Evaluasi Klasifikasi Makhluk Hidup</h2>
+                        <p class="text-emerald-100 text-sm">Jawab 10 soal evaluasi interaktif dan dapatkan Sertifikat Kelulusan Digital IPA Kelas VII SMPN 1 Solor Timur!</p>
+                    </div>
+                    <div class="bg-slate-950 px-5 py-2.5 rounded-2xl border border-emerald-800 text-center flex-shrink-0">
+                        <span class="text-xs text-emerald-400 block font-bold">Skor Kamu</span>
+                        <span id="quiz-score" class="text-3xl font-black text-amber-300">0</span>
+                    </div>
+                </div>
+
+                <div id="quiz-container" class="space-y-6">
+                    <div class="flex justify-between items-center text-xs text-emerald-300 font-bold">
+                        <span id="quiz-progress-text">Soal 1 dari 10</span>
+                        <span id="quiz-category" class="text-teal-300 bg-teal-500/20 px-3 py-1 rounded-full border border-teal-400/30">
+                            Ciri Makhluk Hidup
+                        </span>
+                    </div>
+
+                    <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-emerald-800">
+                        <div id="quiz-progress-bar" class="bg-emerald-400 h-full w-1/10 transition-all duration-300"></div>
+                    </div>
+
+                    <h3 id="quiz-question" class="text-base sm:text-lg font-bold text-white leading-relaxed">
+                        Memuat pertanyaan...
+                    </h3>
+
+                    <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Options populated via JS -->
+                    </div>
+
+                    <div id="quiz-feedback" class="hidden p-4 rounded-xl text-xs sm:text-sm font-semibold"></div>
+
+                    <button id="btn-next-quiz" onclick="nextQuestion()" class="hidden px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 ml-auto shadow-lg">
+                        Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Certificate Section (Hidden initially) -->
+                <div id="certificate-box" class="hidden space-y-6 text-center">
+                    <div class="text-5xl animate-bounce">🏆</div>
+                    <h3 class="text-2xl font-bold text-white">Selamat! Anda Berhasil Menyelesaikan Kuis Evaluasi Biologi!</h3>
+                    <p class="text-xs sm:text-sm text-emerald-200 max-w-xl mx-auto">
+                        Ketik nama lengkap Anda untuk mencetak Sertifikat Kelulusan Digital IPA Klasifikasi Makhluk Hidup.
+                    </p>
+
+                    <div class="max-w-md mx-auto flex gap-2">
+                        <input type="text" id="student-name-input" placeholder="Masukkan Nama Lengkap Siswa..." class="flex-1 bg-slate-950 border border-emerald-700 text-white rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-amber-400">
+                        <button onclick="generateCertificate()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition shadow-md">
+                            <i class="fa-solid fa-certificate mr-1"></i> Buat Sertifikat
+                        </button>
+                    </div>
+
+                    <div class="relative max-w-2xl mx-auto rounded-2xl overflow-hidden border-2 border-amber-400 shadow-2xl bg-slate-950 p-2">
+                        <canvas id="canvasCert" class="w-full h-auto block rounded-xl"></canvas>
+                    </div>
+
+                    <div class="flex justify-center gap-4">
+                        <button onclick="downloadCertificate()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh Sertifikat (PNG)
+                        </button>
+                        <button onclick="resetQuiz()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-emerald-200 font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> Ulangi Kuis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-panel border-t border-emerald-800 py-4 px-4 text-center text-xs text-emerald-300 mt-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© 2026 SMP Negeri 1 Solor Timur • Menanga, Kec. Solor Timur, Kab. Flores Timur, NTT</p>
+            <p class="text-emerald-400 font-medium">Media Pembelajaran Digital Biologi IPA SMP Kelas VII - Kurikulum Merdeka</p>
+        </div>
+    </footer>
+
+    <!-- Specimen Detail Modal -->
+    <div id="specimen-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-emerald-500/50 rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeSpecimenModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                <span id="modal-icon" class="text-4xl">🌴</span>
+                <div>
+                    <h3 id="modal-title" class="text-lg font-bold text-white">Pohon Lontar</h3>
+                    <p id="modal-latin" class="text-xs font-mono text-cyan-300 italic">Borassus flabellifer</p>
+                </div>
+            </div>
+            <div class="space-y-2 text-xs text-emerald-100">
+                <p><strong>Kingdom / Takson:</strong> <span id="modal-kingdom" class="text-amber-300">Plantae (Spermatophyta)</span></p>
+                <p><strong>Ciri Khas Fisik:</strong> <span id="modal-ciri">Batang lurus tinggi, daun seperti kipas keras, autotrof fotosintesis.</span></p>
+                <p><strong>Peran Ekologis di Solor Timur:</strong> <span id="modal-peran">Penahan erosi tanah pesisir Solor, bahan pangan tradisional nira, dan kerajinan lontar lokal.</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let soundEnabled = true;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playTone(freq, type = 'sine', duration = 0.15) {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio playback muted");
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            const text = document.getElementById('sound-text');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-emerald-400 text-sm";
+                text.innerText = "Efek Suara: Aktif";
+                playTone(523.25);
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-slate-500 text-sm";
+                text.innerText = "Efek Suara: Mute";
+            }
+        }
+
+        function switchTab(tabId) {
+            playTone(440);
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-emerald-200 hover:bg-emerald-950";
+            });
+
+            const activeContent = document.getElementById(`section-${tabId}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-emerald-600 text-white shadow-lg shadow-emerald-950/50";
+            }
+
+            setTimeout(() => {
+                if (tabId === 'ciri') initSortGame();
+                if (tabId === 'kunci') resetKeyEngine();
+                if (tabId === 'kerajaan') renderKingdomCards('all');
+                if (tabId === 'takson') initMatchGame();
+                if (tabId === 'glosarium') populateGlossary();
+            }, 50);
+        }
+
+        const sortItemsData = [
+            { id: 1, name: "🌴 Pohon Lontar / Koli", type: "biotik" },
+            { id: 2, name: "🪨 Batu Cadas Menanga", type: "abiotik" },
+            { id: 3, name: "🐬 Duyung (Dugong Solor)", type: "biotik" },
+            { id: 4, name: "⛵ Sampan Kayu Nelayan", type: "abiotik" },
+            { id: 5, name: "🌾 Tanaman Sorgum", type: "biotik" },
+            { id: 6, name: "🌊 Air Laut Selat Solor", type: "abiotik" },
+            { id: 7, name: "🍄 Jamur Kayu Solor", type: "biotik" },
+            { id: 8, name: "🏜️ Pasir Pantai Menanga", type: "abiotik" }
+        ];
+
+        let userSortState = {};
+
+        function initSortGame() {
+            const pool = document.getElementById('sort-pool');
+            const zoneBiotik = document.getElementById('zone-biotik');
+            const zoneAbiotik = document.getElementById('zone-abiotik');
+            if (!pool) return;
+
+            pool.innerHTML = '';
+            zoneBiotik.innerHTML = '';
+            zoneAbiotik.innerHTML = '';
+            userSortState = {};
+
+            sortItemsData.forEach(item => {
+                const btn = document.createElement('button');
+                btn.id = `sort-item-${item.id}`;
+                btn.className = "px-3 py-2 rounded-xl bg-slate-900 border border-emerald-600 text-white font-medium text-xs hover:border-amber-400 transition shadow flex items-center gap-2";
+                btn.innerHTML = `${item.name}`;
+                btn.onclick = () => openSortAction(item);
+                pool.appendChild(btn);
+            });
+
+            updateSortScore();
+        }
+
+        function openSortAction(item) {
+            playTone(500);
+            if (userSortState[item.id]) return;
+
+            const targetZone = confirm(`Apakah "${item.name}" tergolong MAKHLUK HIDUP (BIOTIK)?\n\nKlik OK untuk BIOTIK, Batal untuk ABIOITIK.`) ? 'biotik' : 'abiotik';
+
+            userSortState[item.id] = targetZone;
+            const btn = document.getElementById(`sort-item-${item.id}`);
+
+            if (targetZone === item.type) {
+                playTone(700);
+                btn.className = "px-3 py-1.5 rounded-lg bg-emerald-900 border border-emerald-400 text-emerald-200 font-medium text-xs flex items-center gap-1";
+                btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i> ${item.name}`;
+                if (item.type === 'biotik') document.getElementById('zone-biotik').appendChild(btn);
+                else document.getElementById('zone-abiotik').appendChild(btn);
+            } else {
+                playTone(200);
+                alert(`❌ Kurang tepat! "${item.name}" tergolong ${item.type.toUpperCase()}.`);
+                delete userSortState[item.id];
+            }
+
+            updateSortScore();
+        }
+
+        function updateSortScore() {
+            let correct = 0;
+            Object.keys(userSortState).forEach(id => {
+                const item = sortItemsData.find(x => x.id === parseInt(id));
+                if (item && userSortState[id] === item.type) correct++;
+            });
+
+            document.getElementById('sort-score-display').innerText = `Skor: ${correct} / ${sortItemsData.length}`;
+
+            const fb = document.getElementById('sort-feedback');
+            if (correct === sortItemsData.length) {
+                fb.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-900/80 border border-emerald-400 text-emerald-200 block";
+                fb.innerHTML = `🎉 <strong>Luar biasa!</strong> Anda berhasil mengelompokkan seluruh objek ekosistem Solor Timur dengan tepat!`;
+            } else {
+                fb.classList.add('hidden');
+            }
+        }
+
+        function resetSortGame() {
+            initSortGame();
+        }
+
+        const keySteps = {
+            '1': {
+                question: "1. Apakah organisme ini tergolong Tumbuhan (mempunyai klorofil) atau Hewan/Jamur?",
+                optA: "1a. Memiliki klorofil & fotosintesis sendiri (Tumbuhan)",
+                nextA: '2',
+                optB: "1b. Tidak memiliki klorofil (Hewan / Jamur / Microbe)",
+                nextB: '4'
+            },
+            '2': {
+                question: "2. Tumbuhan berbiji terbuka (Gymnospermae) atau berbiji tertutup (Angiospermae)?",
+                optA: "2a. Berbiji tertutup (Angiospermae) bertulang daun sejajar/menjari",
+                nextA: '3',
+                optB: "2b. Tumbuhan spora tanpa biji (Paku-pakuan Solor)",
+                resultB: {
+                    title: "Paku Resam / Paku Pohon",
+                    latin: "Gleichenia linearis",
+                    code: "1a - 2b",
+                    desc: "Tumbuhan paku sporofit yang tumbuh di perbukitan batu Solor Timur."
+                }
+            },
+            '3': {
+                question: "3. Bentuk pohon palem tinggi dengan daun kipas keras atau tanaman pangan serealia?",
+                optA: "3a. Pohon palem tinggi, daun kipas keras penampung nira",
+                resultA: {
+                    title: "Pohon Lontar / Koli Solor",
+                    latin: "Borassus flabellifer",
+                    code: "1a - 2a - 3a",
+                    desc: "Pohon Palem ikonik Pulau Solor penyedia bahan nira dan kerajinan lontar lokal."
+                },
+                optB: "3b. Tanaman Serealia Pangan tahan kering Solor",
+                resultB: {
+                    title: "Tanaman Sorgum Solor",
+                    latin: "Sorghum bicolor",
+                    code: "1a - 2a - 3b",
+                    desc: "Tanaman pangan lokal tinggi gizi unggulan warga Solor Timur."
+                }
+            },
+            '4': {
+                question: "4. Memiliki tulang belakang (Vertebrata) atau tidak bertulang belakang (Invertebrata)?",
+                optA: "4a. Memiliki tulang belakang (Vertebrata)",
+                nextA: '5',
+                optB: "4b. Tubuh lunak berselaput/jamur pemurai (Fungi/Invertebrata)",
+                resultB: {
+                    title: "Jamur Kayu Solor (Fungi)",
+                    latin: "Ganoderma applanatum",
+                    code: "1b - 4b",
+                    desc: "Organisme heterotrof saprofit pengurai batang kayu mati di kebun."
+                }
+            },
+            '5': {
+                question: "5. Mamalia air bernapas dengan paru-paru atau Ikan bersangkar karang?",
+                optA: "5a. Mamalia laut melahirkan & menyusui (Mamalia Laut Solor)",
+                resultA: {
+                    title: "Duyung / Dugong Solor",
+                    latin: "Dugong dugon",
+                    code: "1b - 4a - 5a",
+                    desc: "Mamalia laut herbivora dilindungi yang menghuni padang lamun pesisir Solor."
+                },
+                optB: "5b. Ikan bernapas dengan insang di terumbu karang",
+                resultB: {
+                    title: "Ikan Kerapu Karang Solor",
+                    latin: "Epinephelus merra",
+                    code: "1b - 4a - 5b",
+                    desc: "Ikan karnivora karang bernilai ekonomis tinggi bagi nelayan Solor Timur."
+                }
+            }
+        };
+
+        let currentKeyStep = '1';
+        let keyHistory = [];
+
+        function resetKeyEngine() {
+            currentKeyStep = '1';
+            keyHistory = [];
+            document.getElementById('key-question-box').classList.remove('hidden');
+            document.getElementById('key-result-box').classList.add('hidden');
+            renderKeyStep();
+            drawTreeCanvas();
+        }
+
+        function renderKeyStep() {
+            const step = keySteps[currentKeyStep];
+            if (!step) return;
+
+            document.getElementById('key-step-badge').innerText = `Langkah ${currentKeyStep}`;
+            document.getElementById('key-question-text').innerText = step.question;
+            document.getElementById('label-key-a').innerText = step.optA;
+            document.getElementById('label-key-b').innerText = step.optB;
+        }
+
+        function selectKeyOption(choice) {
+            playTone(600);
+            const step = keySteps[currentKeyStep];
+            keyHistory.push(`${currentKeyStep}${choice.toLowerCase()}`);
+
+            if (choice === 'A') {
+                if (step.resultA) {
+                    showKeyResult(step.resultA);
+                } else if (step.nextA) {
+                    currentKeyStep = step.nextA;
+                    renderKeyStep();
+                }
+            } else {
+                if (step.resultB) {
+                    showKeyResult(step.resultB);
+                } else if (step.nextB) {
+                    currentKeyStep = step.nextB;
+                    renderKeyStep();
+                }
+            }
+            drawTreeCanvas();
+        }
+
+        function showKeyResult(res) {
+            playTone(800);
+            document.getElementById('key-question-box').classList.add('hidden');
+            const resBox = document.getElementById('key-result-box');
+            resBox.classList.remove('hidden');
+
+            document.getElementById('key-result-title').innerText = res.title;
+            document.getElementById('key-result-latin').innerText = res.latin;
+            document.getElementById('key-result-code').innerHTML = `Kunci Determinasi: <strong>${keyHistory.join(' - ')}</strong>`;
+            document.getElementById('key-result-desc').innerText = res.desc;
+        }
+
+        function drawTreeCanvas() {
+            const canvas = document.getElementById('canvasTree');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 300;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Title
+            ctx.fillStyle = '#34d399';
+            ctx.font = 'bold 12px Plus Jakarta Sans';
+            ctx.fillText('Diagram Pohon Keputusan Determinasi Biota Solor Timur:', 20, 25);
+
+            // Root node
+            ctx.fillStyle = '#059669';
+            ctx.fillRect(w/2 - 60, 45, 120, 30);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 10px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('1. Organisme Solor', w/2, 63);
+
+            // Branch 1a & 1b
+            ctx.strokeStyle = '#34d399';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(w/2 - 30, 75);
+            ctx.lineTo(w/4, 120);
+            ctx.moveTo(w/2 + 30, 75);
+            ctx.lineTo(3*w/4, 120);
+            ctx.stroke();
+
+            // Node 1a Tumbuhan
+            ctx.fillStyle = '#0d9488';
+            ctx.fillRect(w/4 - 55, 120, 110, 28);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('1a. Tumbuhan (Autotrof)', w/4, 137);
+
+            // Node 1b Non-Tumbuhan
+            ctx.fillStyle = '#0284c7';
+            ctx.fillRect(3*w/4 - 60, 120, 120, 28);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('1b. Non-Tumbuhan', 3*w/4, 137);
+
+            // Path highlight
+            if (keyHistory.length > 0) {
+                ctx.fillStyle = '#fbbf24';
+                ctx.font = 'bold 11px Plus Jakarta Sans';
+                ctx.fillText(`Jalur aktif: ${keyHistory.join(' ➔ ')}`, w/2, h - 20);
+            }
+        }
+
+        const kingdomSpecimens = [
+            {
+                id: 'm1',
+                kingdom: 'monera',
+                name: 'Bakteri Lactobacillus Solor',
+                latin: 'Lactobacillus plantarum',
+                icon: '🦠',
+                type: 'Monera (Prokariotik, Uniseluler)',
+                ciri: 'Sel prokariotik (tanpa membran inti), uniseluler, mikroskopis.',
+                peran: 'Fermentasi bahan pangan lokal olahan Solor Timur.'
+            },
+            {
+                id: 'p1',
+                kingdom: 'protista',
+                name: 'Rumput Laut Sargassum Solor',
+                latin: 'Sargassum polycystum',
+                icon: '🔬',
+                type: 'Protista Mirip Tumbuhan (Alga Cokelat)',
+                ciri: 'Eukariotik, fotosintetik autotrof, multiseluler thallus.',
+                peran: 'Habitat benih ikan karang pesisir Lamakera & Menanga.'
+            },
+            {
+                id: 'f1',
+                kingdom: 'fungi',
+                name: 'Jamur Kayu Solor',
+                latin: 'Ganoderma applanatum',
+                icon: '🍄',
+                type: 'Fungi (Eukariotik Heterotrof Saprofit)',
+                ciri: 'Dinding sel kitin, tanpa klorofil, menyerap nutrisi organ mati.',
+                peran: 'Dekomposer utama kayu lapuk di ekosistem darat Solor.'
+            },
+            {
+                id: 'pl1',
+                kingdom: 'plantae',
+                name: 'Pohon Lontar / Koli',
+                latin: 'Borassus flabellifer',
+                icon: '🌴',
+                type: 'Plantae (Angiospermae Monokotil)',
+                ciri: 'Multiseluler eukariotik, berklorofil, kormofita sejati.',
+                peran: 'Ikon flora Solor penyedia nira & kerajinan anyaman.'
+            },
+            {
+                id: 'pl2',
+                kingdom: 'plantae',
+                name: 'Pohon Mangrove Bakau',
+                latin: 'Rhizophora mucronata',
+                icon: '🪴',
+                type: 'Plantae (Kormofita Berbiji)',
+                ciri: 'Akar tunjang penahan ombak, kelenjar garam daun.',
+                peran: 'Mencegah abrasi pantai pesisir Menanga & Solor Timur.'
+            },
+            {
+                id: 'a1',
+                kingdom: 'animalia',
+                name: 'Duyung / Dugong Solor',
+                latin: 'Dugong dugon',
+                icon: '🐬',
+                type: 'Animalia (Vertebrata Mamalia)',
+                ciri: 'Multiseluler heterotrof, menyusui, bernapas paru-paru.',
+                peran: 'Spesies kunci pembuka padang lamun sehat laut Solor.'
+            }
+        ];
+
+        function renderKingdomCards(filter = 'all') {
+            const container = document.getElementById('kingdom-cards-grid');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const filtered = filter === 'all' ? kingdomSpecimens : kingdomSpecimens.filter(x => x.kingdom === filter);
+
+            document.querySelectorAll('.kingdom-btn').forEach(btn => {
+                btn.className = "kingdom-btn px-3.5 py-1.5 rounded-xl font-bold text-xs bg-slate-900 text-emerald-200 hover:bg-emerald-950";
+            });
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "glass-card p-5 rounded-2xl border border-emerald-500/30 space-y-3 hover:border-amber-400 transition cursor-pointer";
+                card.onclick = () => openSpecimenModal(item);
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-4xl">${item.icon}</span>
+                        <span class="text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-400/30">
+                            Kingdom ${item.kingdom}
+                        </span>
+                    </div>
+                    <div>
+                        <h4 class="text-base font-bold text-white">${item.name}</h4>
+                        <p class="text-xs font-mono text-cyan-300 italic">${item.latin}</p>
+                    </div>
+                    <p class="text-xs text-emerald-100 line-clamp-2">${item.ciri}</p>
+                    <button class="w-full py-2 bg-slate-950 hover:bg-emerald-900 text-amber-300 text-xs font-bold rounded-xl border border-emerald-800 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-eye"></i> Detail Spesimen Solor
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterKingdom(k) {
+            playTone(550);
+            renderKingdomCards(k);
+        }
+
+        function openSpecimenModal(item) {
+            playTone(650);
+            document.getElementById('modal-icon').innerText = item.icon;
+            document.getElementById('modal-title').innerText = item.name;
+            document.getElementById('modal-latin').innerText = item.latin;
+            document.getElementById('modal-kingdom').innerText = item.type;
+            document.getElementById('modal-ciri').innerText = item.ciri;
+            document.getElementById('modal-peran').innerText = item.peran;
+            document.getElementById('specimen-modal').classList.remove('hidden');
+        }
+
+        function closeSpecimenModal() {
+            document.getElementById('specimen-modal').classList.add('hidden');
+        }
+
+        const matchData = [
+            { id: 1, local: "Pohon Lontar / Koli", latin: "Borassus flabellifer" },
+            { id: 2, name: "Duyung Solor", latin: "Dugong dugon" },
+            { id: 3, local: "Tanaman Sorgum", latin: "Sorghum bicolor" },
+            { id: 4, local: "Bakau Mangrove", latin: "Rhizophora mucronata" },
+            { id: 5, local: "Ikan Kerapu Karang", latin: "Epinephelus merra" }
+        ];
+
+        let selectedLeft = null;
+        let selectedRight = null;
+        let matchedPairs = {};
+
+        function initMatchGame() {
+            const leftList = document.getElementById('match-left-list');
+            const rightList = document.getElementById('match-right-list');
+            if (!leftList) return;
+
+            leftList.innerHTML = '';
+            rightList.innerHTML = '';
+            selectedLeft = null;
+            selectedRight = null;
+            matchedPairs = {};
+
+            const shuffledRight = [...matchData].sort(() => Math.random() - 0.5);
+
+            matchData.forEach(item => {
+                const btn = document.createElement('button');
+                btn.id = `match-left-${item.id}`;
+                btn.className = "w-full text-left p-3 rounded-xl bg-slate-950 border border-emerald-800 text-emerald-100 font-medium hover:border-amber-400 transition";
+                btn.innerText = item.local;
+                btn.onclick = () => selectMatchLeft(item.id, btn);
+                leftList.appendChild(btn);
+            });
+
+            shuffledRight.forEach(item => {
+                const btn = document.createElement('button');
+                btn.id = `match-right-${item.id}`;
+                btn.className = "w-full text-left p-3 rounded-xl bg-slate-950 border border-teal-800 text-teal-100 font-mono italic hover:border-amber-400 transition";
+                btn.innerText = item.latin;
+                btn.onclick = () => selectMatchRight(item.id, btn);
+                rightList.appendChild(btn);
+            });
+
+            updateMatchScore();
+        }
+
+        function selectMatchLeft(id, el) {
+            playTone(500);
+            if (matchedPairs[id]) return;
+
+            document.querySelectorAll('[id^="match-left-"]').forEach(b => b.classList.remove('border-amber-400', 'bg-emerald-950'));
+            selectedLeft = id;
+            el.classList.add('border-amber-400', 'bg-emerald-950');
+            checkMatchPair();
+        }
+
+        function selectMatchRight(id, el) {
+            playTone(520);
+            if (Object.values(matchedPairs).includes(id)) return;
+
+            document.querySelectorAll('[id^="match-right-"]').forEach(b => b.classList.remove('border-amber-400', 'bg-teal-950'));
+            selectedRight = id;
+            el.classList.add('border-amber-400', 'bg-teal-950');
+            checkMatchPair();
+        }
+
+        function checkMatchPair() {
+            if (selectedLeft !== null && selectedRight !== null) {
+                if (selectedLeft === selectedRight) {
+                    playTone(750);
+                    matchedPairs[selectedLeft] = selectedRight;
+
+                    const lEl = document.getElementById(`match-left-${selectedLeft}`);
+                    const rEl = document.getElementById(`match-right-${selectedRight}`);
+
+                    lEl.className = "w-full text-left p-3 rounded-xl bg-emerald-900 border-2 border-emerald-400 text-white font-bold";
+                    rEl.className = "w-full text-left p-3 rounded-xl bg-emerald-900 border-2 border-emerald-400 text-white font-mono italic font-bold";
+
+                    selectedLeft = null;
+                    selectedRight = null;
+                } else {
+                    playTone(220);
+                    alert("❌ Pasangan Nama Latin belum tepat, silakan coba lagi!");
+                    selectedLeft = null;
+                    selectedRight = null;
+                    document.querySelectorAll('[id^="match-left-"]').forEach(b => b.classList.remove('border-amber-400', 'bg-emerald-950'));
+                    document.querySelectorAll('[id^="match-right-"]').forEach(b => b.classList.remove('border-amber-400', 'bg-teal-950'));
+                }
+                updateMatchScore();
+            }
+        }
+
+        function updateMatchScore() {
+            const count = Object.keys(matchedPairs).length;
+            document.getElementById('match-score-badge').innerText = `Terpasang: ${count} / ${matchData.length}`;
+
+            const fb = document.getElementById('match-feedback');
+            if (count === matchData.length) {
+                fb.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-900/80 border border-emerald-400 text-emerald-200 block";
+                fb.innerHTML = `🎉 <strong>Sempurna!</strong> Anda telah menguasai penulisan Binomial Nomenclature organisme Solor Timur!`;
+            } else {
+                fb.classList.add('hidden');
+            }
+        }
+
+        const glossaryData = [
+            { term: "Autotrof", desc: "Organisme yang mampu membuat makanannya sendiri melalui fotosintesis (misal: Pohon Lontar & Sorgum)." },
+            { term: "Heterotrof", desc: "Organisme yang tidak dapat membuat makanan sendiri sehingga bergantung pada organisme lain (misal: Duyung & Ikan Kerapu)." },
+            { term: "Prokariotik", desc: "Tipe sel yang tidak memiliki membran inti sel (misal: Bakteri Monera)." },
+            { term: "Eukariotik", desc: "Tipe sel yang sudah memiliki membran inti sel sejati (Protista, Fungi, Plantae, Animalia)." },
+            { term: "Binomial Nomenclature", desc: "Sistem penamaan ganda gubahan Carolus Linnaeus menggunakan bahasa Latin (Genus + species)." },
+            { term: "Kunci Dikotom", desc: "Kunci determinasi berpola cabang dua pilihan berlawanan untuk mengidentifikasi takson." }
+        ];
+
+        function populateGlossary() {
+            const container = document.getElementById('glossary-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            glossaryData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "glass-card p-4 rounded-xl border border-emerald-800 space-y-1.5 gloss-item";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <strong class="text-amber-300 font-bold text-sm">${item.term}</strong>
+                        <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">Bio IPA VII</span>
+                    </div>
+                    <p class="text-xs text-emerald-100 leading-relaxed">${item.desc}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterGlossary() {
+            const q = document.getElementById('glossary-search').value.toLowerCase();
+            document.querySelectorAll('.gloss-item').forEach(el => {
+                const text = el.innerText.toLowerCase();
+                if (text.includes(q)) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+        }
+
+        const quizQuestions = [
+            {
+                question: "Pohon Lontar di Solor Timur menyerap sinar matahari dan air untuk menghasilkan zat gula melalui fotosintesis. Hal ini membuktikan ciri makhluk hidup...",
+                category: "Ciri Makhluk Hidup",
+                options: [
+                    "Membutuhkan Nutrisi (Autotrof)",
+                    "Berkembang Biak (Reproduksi)",
+                    "Mengeluarkan Zat Sisa",
+                    "Peka Terhadap Rangsang"
+                ],
+                correct: 0,
+                explanation: "Fotosintesis adalah proses pembentukan nutrisi mandiri oleh tumbuhan autotrof."
+            },
+            {
+                question: "Daun putri malu atau daun lontar muda yang menguncup saat disentuh menunjukkan ciri...",
+                category: "Iritabilitas",
+                options: [
+                    "Iritabilitas (Peka Terhadap Rangsang)",
+                    "Respirasi Seluler",
+                    "Adaptasi Morfologi",
+                    "Ekskresi Garam"
+                ],
+                correct: 0,
+                explanation: "Iritabilitas adalah kemampuan organisme merespons rangsangan dari luar."
+            },
+            {
+                question: "Bakteri pengurai kayu yang tidak memiliki membran inti sel (prokariotik) dikelompokkan ke dalam Kingdom...",
+                category: "Monera",
+                options: ["Monera", "Protista", "Fungi", "Plantae"],
+                correct: 0,
+                explanation: "Kingdom Monera terdiri atas organisme bersel satu dengan tipe sel prokariotik."
+            },
+            {
+                question: "Sistem penamaan ilmiah dua kata gubahan Carolus Linnaeus dinamakan...",
+                category: "Binomial Nomenclature",
+                options: [
+                    "Binomial Nomenclature",
+                    "Kunci Determinasi",
+                    "Sistem Taksonomi Filogenetik",
+                    "Kodeks Spesies Dikotom"
+                ],
+                correct: 0,
+                explanation: "Binomial Nomenclature adalah sistem penamaan latin ganda (Kata 1: Genus, Kata 2: Spesies)."
+            },
+            {
+                question: "Penulisan tata nama ilmiah Pohon Lontar yang sesuai dengan aturan Linnaeus adalah...",
+                category: "Aturan Penulisan Latin",
+                options: [
+                    "Borassus flabellifer (cetak miring/kapital Genus)",
+                    "borassus Flabellifer",
+                    "BORASSUS FLABELLIFER",
+                    "Borassus Flabellifer"
+                ],
+                correct: 0,
+                explanation: "Genus diawali huruf kapital (Borassus) dan spesies huruf kecil (flabellifer) dicetak miring."
+            },
+            {
+                question: "Urutan tingkatan taksonomi dari yang tertinggi sampai terendah adalah...",
+                category: "Hierarki Takson",
+                options: [
+                    "Kingdom - Filum - Kelas - Ordo - Famili - Genus - Spesies",
+                    "Spesies - Genus - Famili - Ordo - Kelas - Filum - Kingdom",
+                    "Kingdom - Kelas - Filum - Genus - Famili - Spesies",
+                    "Filum - Kingdom - Ordo - Kelas - Spesies - Genus"
+                ],
+                correct: 0,
+                explanation: "Tingkatan takson: Kingdom ➔ Filum/Divisi ➔ Kelas ➔ Ordo ➔ Famili ➔ Genus ➔ Spesies."
+            },
+            {
+                question: "Duyung (Dugong dugon) di perairan Solor dikelompokkan ke dalam Kingdom Animalia karena...",
+                category: "Animalia",
+                options: [
+                    "Multiseluler, eukariotik, dan heterotrof",
+                    "Memiliki klorofil dan dinding sel selulosa",
+                    "Prokariotik dan dapat berfotosintesis",
+                    "Dapat membelah diri menjadi spora"
+                ],
+                correct: 0,
+                explanation: "Hewan bersifat eukariotik, multiseluler, dan heterotrof (mencari makan dari luar)."
+            },
+            {
+                question: "Jamur Kayu di kebun Solor tidak dapat dikelompokkan ke dalam Tumbuhan (Plantae) karena...",
+                category: "Fungi",
+                options: [
+                    "Tidak memiliki klorofil dan bersifat heterotrof",
+                    "Memiliki batang dan daun sejati",
+                    "Bergerak cepat menangkap mangsa",
+                    "Memiliki sel prokariotik tanpa inti"
+                ],
+                correct: 0,
+                explanation: "Jamur (Fungi) tidak berklorofil sehingga mengambil nutrisi organik sebagai pengurai."
+            },
+            {
+                question: "Manakah contoh komponen ABIOTIK di ekosistem pesisir Menanga Solor Timur?",
+                category: "Abiotik Solor",
+                options: [
+                    "Pasir pantai, air laut, dan batu cadas",
+                    "Pohon Bakau dan Rumput Laut",
+                    "Ikan Kerapu dan Duyung",
+                    "Bakteri dan Jamur"
+                ],
+                correct: 0,
+                explanation: "Abiotik adalah komponen tak hidup seperti pasir, air, dan batuan."
+            },
+            {
+                question: "Tujuan utama pengelompokkan (klasifikasi) makhluk hidup oleh para ilmuwan adalah...",
+                category: "Tujuan Klasifikasi",
+                options: [
+                    "Mempermudah mempelajari dan mengenali keanekaragaman makhluk hidup",
+                    "Menghabiskan nama latin di dunia",
+                    "Mengubah struktur DNA tumbuhan",
+                    "Membuat semua hewan menjadi autotrof"
+                ],
+                correct: 0,
+                explanation: "Klasifikasi mempermudah penyederhanaan objek studi keanekaragaman hayati."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            const q = quizQuestions[currentQuizIndex];
+
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuizIndex + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quiz-category').innerText = q.category;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQuizIndex + 1) / quizQuestions.length) * 100}%`;
+            document.getElementById('quiz-question').innerText = `${currentQuizIndex + 1}. ${q.question}`;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 rounded-xl bg-slate-950 border border-emerald-800 hover:border-amber-400 text-emerald-100 text-xs sm:text-sm font-medium transition flex items-center justify-between";
+                btn.innerHTML = `<span>${String.fromCharCode(65 + idx)}. ${opt}</span> <i class="fa-regular fa-circle text-emerald-600"></i>`;
+                btn.onclick = () => selectOption(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+        }
+
+        function selectOption(selectedIndex, btnEl) {
+            if (answered) return;
+            answered = true;
+
+            const q = quizQuestions[currentQuizIndex];
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const allBtns = document.getElementById('quiz-options').children;
+
+            if (selectedIndex === q.correct) {
+                score += 10;
+                playTone(650);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-emerald-900 border-2 border-emerald-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-check text-emerald-300 text-lg"></i>`;
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-emerald-900/70 border border-emerald-500 text-emerald-200";
+                feedbackEl.innerHTML = `🎉 <strong>Tepat sekali!</strong> ${q.explanation}`;
+            } else {
+                playTone(220);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-rose-950 border-2 border-rose-500 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-xmark text-rose-400 text-lg"></i>`;
+
+                const correctBtn = allBtns[q.correct];
+                correctBtn.className = "w-full text-left p-3.5 rounded-xl bg-emerald-900 border-2 border-emerald-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-rose-950/70 border border-rose-500 text-rose-200";
+                feedbackEl.innerHTML = `❌ <strong>Kurang Tepat.</strong> ${q.explanation}`;
+            }
+
+            document.getElementById('quiz-score').innerText = score;
+            feedbackEl.classList.remove('hidden');
+            document.getElementById('btn-next-quiz').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            playTone(480);
+            currentQuizIndex++;
+            if (currentQuizIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('certificate-box').classList.remove('hidden');
+                generateCertificate();
+            }
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            document.getElementById('quiz-score').innerText = score;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('certificate-box').classList.add('hidden');
+            loadQuestion();
+        }
+
+        function generateCertificate() {
+            const name = document.getElementById('student-name-input').value || "Siswa SMP Kelas VII";
+            const canvas = document.getElementById('canvasCert');
+            if (!canvas) return;
+            canvas.width = 800;
+            canvas.height = 500;
+
+            const ctx = canvas.getContext('2d');
+            
+            // Background Emerald Bio Gradient
+            const grad = ctx.createLinearGradient(0, 0, 800, 500);
+            grad.addColorStop(0, '#022c22');
+            grad.addColorStop(0.5, '#064e3b');
+            grad.addColorStop(1, '#020617');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 800, 500);
+
+            // Gold and Emerald Border
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(15, 15, 770, 470);
+            ctx.strokeStyle = '#34d399';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(25, 25, 750, 450);
+
+            // Watermark icon
+            ctx.fillStyle = 'rgba(52, 211, 153, 0.05)';
+            ctx.font = '160px Plus Jakarta Sans';
+            ctx.fillText('🌿', 320, 310);
+
+            // Header Title
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = 'bold 24px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('SERTIFIKAT KELULUSAN PEMBELAJARAN IPA BIOLOGI', 400, 80);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = '14px Plus Jakarta Sans';
+            ctx.fillText('SMP NEGERI 1 SOLOR TIMUR • MENANGA, FLORES TIMUR', 400, 110);
+
+            ctx.fillStyle = '#f0f9ff';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Diberikan Kepada Siswa/i:', 400, 160);
+
+            // Student Name
+            ctx.fillStyle = '#34d399';
+            ctx.font = 'bold 28px Plus Jakarta Sans';
+            ctx.fillText(name, 400, 210);
+
+            // Module Title
+            ctx.fillStyle = '#e0f2fe';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Telah Menyelesaikan Modul Interaktif & Evaluasi Biologi IPA:', 400, 260);
+            ctx.font = 'bold 16px Plus Jakarta Sans';
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillText('KLASIFIKASI MAKHLUK HIDUP (KELAS VII)', 400, 290);
+
+            // Score Badge
+            ctx.fillStyle = '#059669';
+            ctx.fillRect(300, 320, 200, 45);
+            ctx.strokeStyle = '#34d399';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(300, 320, 200, 45);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px Plus Jakarta Sans';
+            ctx.fillText(`NILAI EVALUASI: ${score} / 100`, 400, 348);
+
+            // Date & Location
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '12px Plus Jakarta Sans';
+            ctx.fillText('Menanga, Solor Timur, Kabupaten Flores Timur, NTT', 400, 410);
+            ctx.fillText('Media Lab Digital Biologi Kurikulum Merdeka SMP VII', 400, 430);
+        }
+
+        function downloadCertificate() {
+            playTone(600);
+            const canvas = document.getElementById('canvasCert');
+            const link = document.createElement('a');
+            link.download = `Sertifikat_Klasifikasi_Makhluk_Hidup_SMP_${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        window.onload = function() {
+            initSortGame();
+            resetKeyEngine();
+            renderKingdomCards('all');
+            initMatchGame();
+            populateGlossary();
+            loadQuestion();
+
+            window.addEventListener('resize', () => {
+                const activeKunci = document.getElementById('section-kunci');
+                if (activeKunci && !activeKunci.classList.contains('hidden')) drawTreeCanvas();
+            });
+        };
+    </script>
+</body>
+</html>
