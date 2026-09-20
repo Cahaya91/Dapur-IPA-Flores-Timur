@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papan Interaktif Kelistrikan & Kemagnetan IPA - SMPN SATAP Wulublolong</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #09131e;
+            color: #f1f5f9;
+        }
+        .solor-bg-pattern {
+            background-color: #09131e;
+            background-image: radial-gradient(#0284c7 1.5px, transparent 1.5px), radial-gradient(#06b6d4 1.5px, #09131e 1.5px);
+            background-size: 36px 36px;
+            background-position: 0 0, 18px 18px;
+        }
+        .glass-panel {
+            background: rgba(9, 19, 30, 0.88);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(6, 182, 212, 0.25);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(9, 19, 30, 0.8);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0891b2;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body class="min-h-screen solor-bg-pattern flex flex-col justify-between custom-scrollbar selection:bg-cyan-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-cyan-800/60 px-4 py-3 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-400 via-sky-500 to-amber-400 p-0.5 shadow-lg flex-shrink-0">
+                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+                        <span class="text-2xl animate-pulse">⚡</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold tracking-wider text-cyan-300 uppercase bg-cyan-500/20 px-2.5 py-0.5 rounded-full border border-cyan-400/40">
+                            Kontekstual Solor Barat & Flores Timur
+                        </span>
+                        <span class="text-[10px] font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-400/30">
+                            Kurikulum Merdeka IPA IX
+                        </span>
+                    </div>
+                    <h1 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mt-0.5">
+                        Papan Interaktif Kelistrikan & Kemagnetan
+                    </h1>
+                    <p class="text-xs text-cyan-200/90 font-medium">
+                        SMPN SATAP WuluBlolong • Solor Barat, Kab. Flores Timur, NTT
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <div class="hidden lg:flex flex-col text-right text-xs">
+                    <span class="text-cyan-300 font-semibold">Tahun Ajaran 2026/2027</span>
+                    <span class="text-cyan-200/70 text-[11px]">Media Digital Fisika Terpadu</span>
+                </div>
+                <button id="btn-sound" onclick="toggleSound()" class="px-3.5 py-2 rounded-xl bg-slate-950/80 hover:bg-cyan-900 text-cyan-200 text-xs font-semibold border border-cyan-700/80 flex items-center gap-2 transition shadow-md">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-cyan-400 text-sm"></i>
+                    <span id="sound-text">Efek Suara: Aktif</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+        <!-- Navigation Tabs Bar -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-cyan-800/80 pb-3">
+            <button onclick="switchTab('statis')" id="tab-btn-statis" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-cyan-600 text-white shadow-lg shadow-cyan-950/50">
+                <i class="fa-solid fa-bolt text-amber-300"></i> 1. Kelistrikan Statis
+            </button>
+            <button onclick="switchTab('dinamis')" id="tab-btn-dinamis" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-cyan-200 hover:bg-cyan-950">
+                <i class="fa-solid fa-car-battery text-emerald-400"></i> 2. Kelistrikan Dinamis & Lab Rangkaian
+            </button>
+            <button onclick="switchTab('plts')" id="tab-btn-plts" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-cyan-200 hover:bg-cyan-950">
+                <i class="fa-solid fa-solar-panel text-yellow-300"></i> 3. Energi & PLTS Solor
+            </button>
+            <button onclick="switchTab('magnet')" id="tab-btn-magnet" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-cyan-200 hover:bg-cyan-950">
+                <i class="fa-solid fa-compass text-rose-400"></i> 4. Kemagnetan & Navigasi Laut
+            </button>
+            <button onclick="switchTab('induksi')" id="tab-btn-induksi" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-cyan-200 hover:bg-cyan-950">
+                <i class="fa-solid fa-plug text-sky-300"></i> 5. Induksi & Trafo
+            </button>
+            <button onclick="switchTab('biomagnet')" id="tab-btn-biomagnet" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-cyan-200 hover:bg-cyan-950">
+                <i class="fa-solid fa-turtle text-emerald-300"></i> 6. Biomagnetisme Penyu
+            </button>
+            <button onclick="switchTab('evaluasi')" id="tab-btn-evaluasi" class="nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-cyan-200 hover:bg-cyan-950">
+                <i class="fa-solid fa-trophy text-amber-300"></i> 7. Glosarium, Kuis & Sertifikat
+            </button>
+        </div>
+
+        <div id="section-statis" class="tab-content block space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-amber-400 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 opacity-10 text-9xl select-none">⚡</div>
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 1: Kelistrikan Statis & Muatan Listrik</h2>
+                <p class="text-cyan-100 text-sm max-w-4xl leading-relaxed">
+                    Kelistrikan Statis mempelajari muatan listrik yang diam atau tidak mengalir terus-menerus. Fenomena ini sering kita temui di Solor Barat, seperti penggaris yang digosokkan ke rambut kering untuk menarik serpihan daun kelor, gesekan kain tenun ikatan Solor, hingga terjadinya **Petir/Kilat Dahsyat** di atas perairan Selat Solor saat musim hujan!
+                </p>
+            </div>
+
+            <!-- Theory Cards for Static Electricity -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Atom & Muatan -->
+                <div class="glass-card p-5 rounded-2xl border border-cyan-500/30 space-y-3">
+                    <div class="flex items-center gap-3 border-b border-cyan-800/80 pb-3">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center font-bold text-xl">
+                            ⚛️
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white">1. Struktur Atom & Muatan</h3>
+                            <span class="text-xs text-cyan-300 font-semibold">Proton, Elektron, Neutron</span>
+                        </div>
+                    </div>
+                    <ul class="text-xs text-cyan-100 space-y-2 leading-relaxed">
+                        <li><i class="fa-solid fa-circle text-amber-400 mr-1.5"></i> <strong>Proton (+):</strong> Muatan positif di dalam inti atom.</li>
+                        <li><i class="fa-solid fa-circle text-sky-400 mr-1.5"></i> <strong>Elektron (-):</strong> Muatan negatif yang mengelilingi inti.</li>
+                        <li><i class="fa-solid fa-circle text-slate-400 mr-1.5"></i> <strong>Neutron (0):</strong> Partikel netral tanpa muatan.</li>
+                        <li><i class="fa-solid fa-lightbulb text-amber-300 mr-1.5"></i> <em>Catatan:</em> Hanya <strong>Elektron</strong> yang dapat berpindah dari satu benda ke benda lain!</li>
+                    </ul>
+                </div>
+
+                <!-- Hukum Coulomb -->
+                <div class="glass-card p-5 rounded-2xl border border-amber-500/30 space-y-3">
+                    <div class="flex items-center gap-3 border-b border-cyan-800/80 pb-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center font-bold text-xl">
+                            🧲
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white">2. Hukum Coulomb</h3>
+                            <span class="text-xs text-amber-300 font-semibold">Gaya Tarik & Tolak</span>
+                        </div>
+                    </div>
+                    <div class="p-2.5 bg-slate-950 rounded-lg text-center font-mono text-xs border border-cyan-800 text-amber-300">
+                        $$F = k \frac{q_1 \cdot q_2}{r^2}$$
+                    </div>
+                    <ul class="text-xs text-cyan-100 space-y-1.5 leading-relaxed">
+                        <li>• <strong>Muatan Sejenis:</strong> Tolak-menolak (+ dengan +, - dengan -).</li>
+                        <li>• <strong>Muatan Berlawanan:</strong> Tarik-menarik (+ dengan -).</li>
+                        <li>• Makin besar muatan ($q$), makin besar gaya ($F$). Makin jauh jarak ($r$), makin kecil gaya.</li>
+                    </ul>
+                </div>
+
+                <!-- Petir Solor -->
+                <div class="glass-card p-5 rounded-2xl border border-rose-500/30 space-y-3">
+                    <div class="flex items-center gap-3 border-b border-cyan-800/80 pb-3">
+                        <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-300 flex items-center justify-center font-bold text-xl">
+                            🌩️
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white">3. Petir di Laut Solor</h3>
+                            <span class="text-xs text-rose-300 font-semibold">Pelepasan Muatan Raksasa</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-cyan-100 leading-relaxed">
+                        Awan mendung yang saling bergesekan mengumpulkan muatan elektron raksasa di bagian bawahnya. Ketika beda potensial dengan laut/daratan Solor sangat besar, terjadi pelepasan elektron secara mendadak yang memicu kilat petir dan gemuruh mendentum!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Interactive Static Electricity Simulator -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-cyan-800/80 pb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-hand-pointer text-amber-300"></i> Lab Simulasi Gesekan Muatan (Kain Tenun vs Penggaris Plastik)
+                        </h3>
+                        <p class="text-xs text-cyan-200">
+                            Gesekkan penggaris ke kain tenun Solor untuk memindahkan elektron, lalu dekatkan ke potongan daun kelor!
+                        </p>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button onclick="rubRuler()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-hand-sparkles"></i> Gesek Penggaris (5x)
+                        </button>
+                        <button onclick="resetStaticSim()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-200 font-bold text-xs transition border border-cyan-800">
+                            <i class="fa-solid fa-rotate-right"></i> Reset Lab
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="space-y-4 bg-slate-950/80 p-4 rounded-xl border border-cyan-900 text-xs font-mono">
+                        <div class="flex justify-between text-cyan-300">
+                            <span>Status Penggaris Plastik:</span>
+                            <span id="st-ruler-state" class="text-emerald-300 font-bold">Netral (0 Elektron Tambahan)</span>
+                        </div>
+                        <div class="flex justify-between text-cyan-300">
+                            <span>Status Kain Tenun Solor:</span>
+                            <span id="st-cloth-state" class="text-amber-300 font-bold">Netral</span>
+                        </div>
+                        <div class="flex justify-between text-cyan-300">
+                            <span>Gaya Tarik Daun Kelor:</span>
+                            <span id="st-force-val" class="text-rose-300 font-bold">0 N (Belum Ada)</span>
+                        </div>
+
+                        <div class="p-3 bg-cyan-950/60 rounded-lg border border-cyan-800 text-[11px] text-cyan-200 font-sans leading-relaxed">
+                            💡 <strong>Prinsip Sains:</strong> Penggaris plastik yang digosok kain wol/tenun akan menarik elektron dari kain, sehingga penggaris menjadi **Bermuatan Negatif (-)** dan kain menjadi **Bermuatan Positif (+)**.
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 relative h-[260px] bg-slate-950 rounded-xl overflow-hidden border border-cyan-800 p-2">
+                        <canvas id="canvasStatic" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-dinamis" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-emerald-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 2: Kelistrikan Dinamis & Hukum Ohm ($V = I \cdot R$)</h2>
+                <p class="text-cyan-100 text-sm max-w-4xl leading-relaxed">
+                    Kelistrikan Dinamis adalah aliran muatan listrik (elektron) melalui penghantar/kabel secara berkesinambungan. Kuat arus listrik ($I$) berbanding lurus dengan Tegangan/Beda Potensial ($V$) dan berbanding terbalik dengan Hambatan ($R$).
+                </p>
+            </div>
+
+            <!-- Virtual Lab Circuit Simulator -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-cyan-800/80 pb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-microchip text-emerald-400"></i> Laboratorium Virtual Rangkaian Listrik Rumah Wulublolong
+                        </h3>
+                        <p class="text-xs text-cyan-200">
+                            Bandingkan performa Rangkaian Seri vs Rangkaian Paralel lampu rumah!
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button onclick="setCircuitType('seri')" id="btn-circuit-seri" class="px-3.5 py-2 rounded-xl bg-cyan-600 text-white font-bold text-xs transition">⚡ Rangkaian Seri</button>
+                        <button onclick="setCircuitType('paralel')" id="btn-circuit-paralel" class="px-3.5 py-2 rounded-xl bg-slate-800 text-cyan-200 font-bold text-xs transition border border-cyan-800">💡 Rangkaian Paralel</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Controls Panel -->
+                    <div class="space-y-4 bg-slate-950/80 p-4 rounded-xl border border-cyan-900 text-xs">
+                        <div>
+                            <div class="flex justify-between font-bold mb-1">
+                                <span class="text-cyan-200">Tegangan Baterai ($V$):</span>
+                                <span id="val-circuit-v" class="text-amber-300 font-mono">12 Volt</span>
+                            </div>
+                            <input type="range" id="slider-circuit-v" min="3" max="24" value="12" step="1" oninput="updateCircuitSim()" class="w-full accent-amber-400 cursor-pointer">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-bold mb-1">
+                                <span class="text-cyan-200">Hambatan Lampu 1 ($R_1$):</span>
+                                <span id="val-circuit-r1" class="text-cyan-300 font-mono">6 Ohm</span>
+                            </div>
+                            <input type="range" id="slider-circuit-r1" min="2" max="20" value="6" step="1" oninput="updateCircuitSim()" class="w-full accent-cyan-400 cursor-pointer">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-bold mb-1">
+                                <span class="text-cyan-200">Hambatan Lampu 2 ($R_2$):</span>
+                                <span id="val-circuit-r2" class="text-cyan-300 font-mono">6 Ohm</span>
+                            </div>
+                            <input type="range" id="slider-circuit-r2" min="2" max="20" value="6" step="1" oninput="updateCircuitSim()" class="w-full accent-cyan-400 cursor-pointer">
+                        </div>
+
+                        <div class="pt-2 flex items-center justify-between border-t border-cyan-900">
+                            <span class="font-bold text-cyan-200">Sakelar Utama:</span>
+                            <button id="btn-switch-toggle" onclick="toggleCircuitSwitch()" class="px-4 py-1.5 bg-emerald-600 text-white font-bold rounded-lg text-xs transition">
+                                SAKELAR TUTUP (ON)
+                            </button>
+                        </div>
+
+                        <div class="p-3 bg-slate-900 rounded-lg border border-cyan-800 space-y-1.5 font-mono text-[11px]">
+                            <div class="flex justify-between text-cyan-300">
+                                <span>Hambatan Total ($R_{tot}$):</span>
+                                <span id="res-r-total" class="text-amber-300 font-bold">12.0 Ω</span>
+                            </div>
+                            <div class="flex justify-between text-cyan-300">
+                                <span>Kuat Arus Total ($I_{tot}$):</span>
+                                <span id="res-i-total" class="text-emerald-300 font-bold">1.00 A</span>
+                            </div>
+                            <div class="flex justify-between text-cyan-300">
+                                <span>Daya Listrik Total ($P$):</span>
+                                <span id="res-p-total" class="text-sky-300 font-bold">12.0 Watt</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Visualizer for Circuit -->
+                    <div class="lg:col-span-2 relative h-[300px] bg-slate-950 rounded-xl overflow-hidden border border-cyan-800 p-2">
+                        <canvas id="canvasCircuit" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-plts" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-yellow-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 3: Energi Listrik ($E = P \cdot t$) & Pembangkit Listrik Tenaga Surya (PLTS) Solor</h2>
+                <p class="text-cyan-100 text-sm max-w-4xl leading-relaxed">
+                    Pulau Solor Barat kaya akan intensitas sinar matahari sepanjang tahun. Penerapan Panel Surya (PLTS) menjadi solusi ramah lingkungan untuk penerangan rumah warga dan perahu nelayan Wulublolong. Mari hitung konsumsi daya & biaya listrik bulanan!
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Formula Cards -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-base font-bold text-white border-b border-cyan-800 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-amber-300"></i> Formulasi Daya & Energi Listrik
+                    </h3>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 bg-slate-950 rounded-xl border border-cyan-800 font-mono">
+                            <span class="text-amber-300 font-bold text-sm block mb-1">Daya Listrik ($P$)</span>
+                            $$P = V \cdot I = I^2 \cdot R$$
+                            <span class="text-[11px] text-cyan-200 font-sans mt-1 block">Satuan: Watt ($W$)</span>
+                        </div>
+
+                        <div class="p-3 bg-slate-950 rounded-xl border border-cyan-800 font-mono">
+                            <span class="text-sky-300 font-bold text-sm block mb-1">Energi Listrik ($E$)</span>
+                            $$E = P \cdot t$$
+                            <span class="text-[11px] text-cyan-200 font-sans mt-1 block">Satuan: Joule ($J$) atau $kWh$</span>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-slate-950 rounded-xl border border-amber-500/30 text-xs text-cyan-100 leading-relaxed">
+                        ☀️ <strong>PLTS Solor Barat:</strong> Panel surya fotovoltaik mengubah energi foton matahari langsung menjadi Energi Listrik Arus Searah (DC), yang kemudian diubah inverter menjadi Arus Bolak-Balik (AC) untuk menyalakan alat rumah tangga.
+                    </div>
+                </div>
+
+                <!-- Calculator Appliance & Cost -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-base font-bold text-white border-b border-cyan-800 pb-2 flex justify-between items-center">
+                        <span><i class="fa-solid fa-plug-circle-bolt text-emerald-400 mr-2"></i> Kalkulator Rekening Listrik Wulublolong</span>
+                        <span class="text-xs text-amber-300 font-mono">Tarif: Rp 1.444 / kWh</span>
+                    </h3>
+
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="text-cyan-200 font-bold block mb-1">Daya Lampu LED Perahu/Rumah (Watt):</label>
+                            <input type="number" id="calc-watt" value="30" min="5" max="2000" oninput="calculatePowerCost()" class="w-full bg-slate-950 border border-cyan-800 text-white rounded-lg p-2.5 font-mono text-xs focus:outline-none focus:border-amber-400">
+                        </div>
+
+                        <div>
+                            <label class="text-cyan-200 font-bold block mb-1">Lama Pemakaian Per Hari (Jam):</label>
+                            <input type="number" id="calc-hours" value="10" min="1" max="24" oninput="calculatePowerCost()" class="w-full bg-slate-950 border border-cyan-800 text-white rounded-lg p-2.5 font-mono text-xs focus:outline-none focus:border-amber-400">
+                        </div>
+
+                        <div class="p-3 bg-slate-950 rounded-xl border border-cyan-800 space-y-2 font-mono text-xs">
+                            <div class="flex justify-between text-cyan-300">
+                                <span>Energi Harian:</span>
+                                <span id="res-kwh-day" class="text-amber-300 font-bold">0.30 kWh</span>
+                            </div>
+                            <div class="flex justify-between text-cyan-300">
+                                <span>Energi Bulanan (30 Hari):</span>
+                                <span id="res-kwh-month" class="text-sky-300 font-bold">9.00 kWh</span>
+                            </div>
+                            <div class="flex justify-between text-cyan-300 border-t border-cyan-900 pt-1.5">
+                                <span>Estimasi Biaya Bulanan:</span>
+                                <span id="res-cost-month" class="text-emerald-300 font-bold text-sm">Rp 12.996,-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-magnet" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-rose-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 4: Kemagnetan & Navigasi Kompas Nelayan Solor</h2>
+                <p class="text-cyan-100 text-sm max-w-4xl leading-relaxed">
+                    Magnet adalah benda yang memiliki kemampuan menarik benda-benda feromagnetik (besi, baja, nikel). Dalam kehidupan nelayan Wulublolong yang melaut di Selat Solor pada malam hari, sifat magnetik bumi dimanfaatkan pada **Kompas Navigasi** agar perahu tidak tersesat di tengah lautan!
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Theory Cards -->
+                <div class="glass-panel p-5 rounded-2xl space-y-3">
+                    <h3 class="text-base font-bold text-white border-b border-cyan-800 pb-2">
+                        <i class="fa-solid fa-magnet text-rose-400 mr-2"></i> Sifat Interaksi Kutub Magnet
+                    </h3>
+                    <ul class="text-xs text-cyan-100 space-y-2 leading-relaxed">
+                        <li><i class="fa-solid fa-check text-rose-400 mr-1.5"></i> <strong>2 Kutub:</strong> Kutub Utara (U / N) dan Kutub Selatan (S / S).</li>
+                        <li><i class="fa-solid fa-check text-rose-400 mr-1.5"></i> <strong>Kutub Sejenis (U-U / S-S):</strong> Saling Tolak-Menolak.</li>
+                        <li><i class="fa-solid fa-check text-rose-400 mr-1.5"></i> <strong>Kutub Berlawanan (U-S):</strong> Saling Tarik-Menarik.</li>
+                        <li><i class="fa-solid fa-location-arrow text-amber-300 mr-1.5"></i> <strong>Garis Gaya Magnet:</strong> Selalu keluar dari Kutub Utara dan masuk menuju Kutub Selatan.</li>
+                    </ul>
+                </div>
+
+                <!-- Canvas Visualizer Field Lines Magnet -->
+                <div class="lg:col-span-2 glass-panel p-5 rounded-2xl space-y-3">
+                    <div class="flex justify-between items-center border-b border-cyan-800 pb-2">
+                        <h3 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-eye text-sky-300"></i> Visualisator Garis Gaya Medan Magnet Batang
+                        </h3>
+                        <div class="flex gap-2">
+                            <button onclick="setMagnetMode('attract')" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition">U - S (Tarik)</button>
+                            <button onclick="setMagnetMode('repel')" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition">U - U (Tolak)</button>
+                        </div>
+                    </div>
+
+                    <div class="relative w-full h-[240px] bg-slate-950 rounded-xl overflow-hidden border border-cyan-800">
+                        <canvas id="canvasMagnet" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-induksi" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-sky-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 5: Induksi Elektromagnetik & Transformator (Trafo)</h2>
+                <p class="text-cyan-100 text-sm max-w-4xl leading-relaxed">
+                    Percobaan Faraday membuktikan bahwa perubahan medan magnet dapat menghasilkan Arus Listrik Induksi (GGL Induksi). Prinsip ini digunakan pada Generator Listrik/Genset kapal nelayan Solor dan Transformator (Trafo) PLN distribusi desa Wulublolong.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Trafo Formula & Theory -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-base font-bold text-white border-b border-cyan-800 pb-2">
+                        <i class="fa-solid fa-bolt-lightning text-sky-300 mr-2"></i> Persamaan Transformator (Trafo Ideal)
+                    </h3>
+
+                    <div class="p-3 bg-slate-950 rounded-xl border border-cyan-800 text-center font-mono text-xs">
+                        <span class="text-amber-300 font-bold text-sm block mb-1">$$\frac{V_p}{V_s} = \frac{N_p}{N_s} = \frac{I_s}{I_p}$$</span>
+                        <p class="text-[11px] text-cyan-200">
+                            $V_p, V_s$ = Tegangan Primer & Sekunder (Volt) <br>
+                            $N_p, N_s$ = Jumlah Lilitan Primer & Sekunder <br>
+                            $I_p, I_s$ = Kuat Arus Primer & Sekunder (Ampere)
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 bg-slate-950 rounded-xl border border-emerald-500/30">
+                            <strong class="text-emerald-300 block mb-1">🔼 Trafo Step-Up</strong>
+                            <p class="text-cyan-100">Menaikkan tegangan ($V_s > V_p$). Lilitan sekunder lebih banyak ($N_s > N_p$).</p>
+                        </div>
+                        <div class="p-3 bg-slate-950 rounded-xl border border-rose-500/30">
+                            <strong class="text-rose-300 block mb-1">🔽 Trafo Step-Down</strong>
+                            <p class="text-cyan-100">Menurunkan tegangan ($V_s < V_p$). Lilitan sekunder lebih sedikit ($N_s < N_p$).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculator Trafo Interactive -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-base font-bold text-white border-b border-cyan-800 pb-2">
+                        <i class="fa-solid fa-calculator text-amber-300 mr-2"></i> Kalkulator Transformator Wulublolong
+                    </h3>
+
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="text-cyan-200 font-bold block mb-1">Tegangan Primer ($V_p$) [Volt]:</label>
+                            <input type="number" id="trafo-vp" value="220" oninput="calculateTrafo()" class="w-full bg-slate-950 border border-cyan-800 text-white rounded-lg p-2.5 font-mono text-xs focus:outline-none focus:border-amber-400">
+                        </div>
+
+                        <div>
+                            <label class="text-cyan-200 font-bold block mb-1">Lilitan Primer ($N_p$):</label>
+                            <input type="number" id="trafo-np" value="1000" oninput="calculateTrafo()" class="w-full bg-slate-950 border border-cyan-800 text-white rounded-lg p-2.5 font-mono text-xs focus:outline-none focus:border-amber-400">
+                        </div>
+
+                        <div>
+                            <label class="text-cyan-200 font-bold block mb-1">Lilitan Sekunder ($N_s$):</label>
+                            <input type="number" id="trafo-ns" value="100" oninput="calculateTrafo()" class="w-full bg-slate-950 border border-cyan-800 text-white rounded-lg p-2.5 font-mono text-xs focus:outline-none focus:border-amber-400">
+                        </div>
+
+                        <div class="p-3 bg-slate-950 rounded-xl border border-cyan-800 space-y-2 font-mono text-xs">
+                            <div class="flex justify-between text-cyan-300">
+                                <span>Tegangan Sekunder ($V_s$):</span>
+                                <span id="res-trafo-vs" class="text-amber-300 font-bold">22.0 Volt</span>
+                            </div>
+                            <div class="flex justify-between text-cyan-300">
+                                <span>Jenis Transformator:</span>
+                                <span id="res-trafo-type" class="text-rose-300 font-bold">Trafo Step-Down</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-biomagnet" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-emerald-400 relative overflow-hidden">
+                <h2 class="text-2xl font-bold text-white mb-2">Modul 6: Biomagnetisme & Navigasi Hewan Perairan Solor</h2>
+                <p class="text-cyan-100 text-sm max-w-4xl leading-relaxed">
+                    Tahukah kamu bagaimana **Penyu Hijau** yang lahir di pesisir pantai Solor Barat dapat berkelana ribuan kilometer di Samudra Pasifik dan dapat kembali bertelur tepat di pantai asalnya? Hewan memanfaatkan partikel **Magnetit** dalam tubuhnya untuk mendeteksi Medan Magnet Bumi!
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Penyu Laut Solor -->
+                <div class="glass-card p-5 rounded-2xl border border-emerald-500/30 space-y-3">
+                    <div class="text-4xl text-center">🐢</div>
+                    <h3 class="text-base font-bold text-white text-center">1. Navigasi Penyu Laut Solor</h3>
+                    <p class="text-xs text-cyan-100 leading-relaxed">
+                        Penyu memiliki partikel magnetik mikroskopis di otak dan matanya. Medan magnet bumi bertindak sebagai "Peta GPS Alami" yang memandu arah migrasi penyu mengarungi laut Selat Solor tanpa tersesat.
+                    </p>
+                </div>
+
+                <!-- Burung Migran -->
+                <div class="glass-card p-5 rounded-2xl border border-sky-500/30 space-y-3">
+                    <div class="text-4xl text-center">🦅</div>
+                    <h3 class="text-base font-bold text-white text-center">2. Burung Migran Langit Solor</h3>
+                    <p class="text-xs text-cyan-100 leading-relaxed">
+                        Burung yang bermigrasi melintasi kepulauan Flores Timur memanfaatkan protein khusus bernama *Kriptokrom* di matanya yang peka terhadap garis-garis medan magnetik bumi untuk mendeteksi arah Utara-Selatan.
+                    </p>
+                </div>
+
+                <!-- Bakteri Magnetotaktik -->
+                <div class="glass-card p-5 rounded-2xl border border-amber-500/30 space-y-3">
+                    <div class="text-4xl text-center">🧫</div>
+                    <h3 class="text-base font-bold text-white text-center">3. Bakteri Magnetotaktik (MTB)</h3>
+                    <p class="text-xs text-cyan-100 leading-relaxed">
+                        Bakteri di dasar sedimen laut Solor memiliki organel *Magnetosom* mengandung kristal magnetit ($Fe_3O_4$). Bakteri ini berenang mengikuti garis medan magnet bumi menuju sedimen beroksigen rendah.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-evaluasi" class="tab-content hidden space-y-6">
+            <!-- Glosarium Search Bar -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2 border-b border-cyan-800 pb-2">
+                    <i class="fa-solid fa-book-bookmark text-amber-300"></i> Glosarium Istilah Kelistrikan & Kemagnetan
+                </h3>
+
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-cyan-400"></i>
+                    <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Cari istilah IPA (misal: Coulomb, Trafo, PLTS, Magnetit, Paralel)..." class="w-full bg-slate-950 border border-cyan-700 text-white rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-amber-400 shadow-inner">
+                </div>
+
+                <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Quiz Main Section -->
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-cyan-800 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-1">Kuis Evaluasi Kelistrikan & Kemagnetan</h2>
+                        <p class="text-cyan-100 text-sm">Jawab 10 soal evaluasi interaktif dan klaim Sertifikat Kelulusan Digital dari SMPN SATAP Wulublolong!</p>
+                    </div>
+                    <div class="bg-slate-950 px-5 py-2.5 rounded-2xl border border-cyan-800 text-center flex-shrink-0">
+                        <span class="text-xs text-cyan-400 block font-bold">Skor Kamu</span>
+                        <span id="quiz-score" class="text-3xl font-black text-amber-300">0</span>
+                    </div>
+                </div>
+
+                <div id="quiz-container" class="space-y-6">
+                    <div class="flex justify-between items-center text-xs text-cyan-300 font-bold">
+                        <span id="quiz-progress-text">Soal 1 dari 10</span>
+                        <span id="quiz-category" class="text-amber-300 bg-amber-500/20 px-3 py-1 rounded-full border border-amber-400/30">
+                            Kelistrikan Statis
+                        </span>
+                    </div>
+
+                    <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-cyan-800">
+                        <div id="quiz-progress-bar" class="bg-amber-400 h-full w-1/10 transition-all duration-300"></div>
+                    </div>
+
+                    <h3 id="quiz-question" class="text-base sm:text-lg font-bold text-white leading-relaxed">
+                        Memuat pertanyaan...
+                    </h3>
+
+                    <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Options populated via JS -->
+                    </div>
+
+                    <div id="quiz-feedback" class="hidden p-4 rounded-xl text-xs sm:text-sm font-semibold"></div>
+
+                    <button id="btn-next-quiz" onclick="nextQuestion()" class="hidden px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 ml-auto shadow-lg">
+                        Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Certificate Section (Hidden initially) -->
+                <div id="certificate-box" class="hidden space-y-6 text-center">
+                    <div class="text-5xl animate-bounce">🏆</div>
+                    <h3 class="text-2xl font-bold text-white">Selamat! Anda Berhasil Menyelesaikan Evaluasi!</h3>
+                    <p class="text-xs sm:text-sm text-cyan-200 max-w-xl mx-auto">
+                        Ketik nama lengkap Anda untuk mencetak Sertifikat Kelulusan Digital Pembelajaran IPA SMPN SATAP Wulublolong.
+                    </p>
+
+                    <div class="max-w-md mx-auto flex gap-2">
+                        <input type="text" id="student-name-input" placeholder="Masukkan Nama Lengkap Siswa..." class="flex-1 bg-slate-950 border border-cyan-700 text-white rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-amber-400">
+                        <button onclick="generateCertificate()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition shadow-md">
+                            <i class="fa-solid fa-certificate mr-1"></i> Buat Sertifikat
+                        </button>
+                    </div>
+
+                    <div class="relative max-w-2xl mx-auto rounded-2xl overflow-hidden border-2 border-amber-400 shadow-2xl bg-slate-950 p-2">
+                        <canvas id="canvasCert" class="w-full h-auto block rounded-xl"></canvas>
+                    </div>
+
+                    <div class="flex justify-center gap-4">
+                        <button onclick="downloadCertificate()" class="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh Gambar Sertifikat
+                        </button>
+                        <button onclick="resetQuiz()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-cyan-200 font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> Ulangi Kuis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-panel border-t border-cyan-800/80 py-4 px-4 text-center text-xs text-cyan-300 mt-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© 2026 SMPN SATAP WULUBLOLONG • Solor Barat, Kabupaten Flores Timur, NTT</p>
+            <p class="text-cyan-400 font-medium">Pengembangan Media Pembelajaran Sains Berbasis Kearifan Lokal Solor</p>
+        </div>
+    </footer>
+
+    <script>
+        let soundEnabled = true;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playTone(freq, type = 'sine', duration = 0.15) {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio playback muted");
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            const text = document.getElementById('sound-text');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-cyan-400 text-sm";
+                text.innerText = "Efek Suara: Aktif";
+                playTone(523.25);
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-slate-500 text-sm";
+                text.innerText = "Efek Suara: Mute";
+            }
+        }
+
+        function switchTab(tabId) {
+            playTone(440);
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-slate-900 text-cyan-200 hover:bg-cyan-950";
+            });
+
+            const activeContent = document.getElementById(`section-${tabId}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "nav-tab px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 bg-cyan-600 text-white shadow-lg shadow-cyan-950/50";
+            }
+
+            setTimeout(() => {
+                if (tabId === 'statis') drawStaticCanvas();
+                if (tabId === 'dinamis') updateCircuitSim();
+                if (tabId === 'plts') calculatePowerCost();
+                if (tabId === 'magnet') drawMagnetCanvas();
+                if (tabId === 'induksi') calculateTrafo();
+                if (tabId === 'evaluasi') populateGlossary();
+                if (window.KaTeX && typeof renderMathInElement === 'function') {
+                    renderMathInElement(document.body);
+                }
+            }, 60);
+        }
+
+        let extraElectrons = 0;
+
+        function rubRuler() {
+            extraElectrons += 5;
+            playTone(600 + extraElectrons * 20);
+            updateStaticState();
+        }
+
+        function resetStaticSim() {
+            extraElectrons = 0;
+            playTone(300);
+            updateStaticState();
+        }
+
+        function updateStaticState() {
+            const rulerState = document.getElementById('st-ruler-state');
+            const clothState = document.getElementById('st-cloth-state');
+            const forceVal = document.getElementById('st-force-val');
+
+            if (extraElectrons === 0) {
+                rulerState.innerText = "Netral (0 Elektron Tambahan)";
+                rulerState.className = "text-emerald-300 font-bold";
+                clothState.innerText = "Netral";
+                forceVal.innerText = "0 N (Belum Ada)";
+            } else {
+                rulerState.innerText = `Bermuatan Negatif (-${extraElectrons} e)`;
+                rulerState.className = "text-rose-400 font-bold";
+                clothState.innerText = `Bermuatan Positif (+${extraElectrons} p)`;
+                forceVal.innerText = `${(extraElectrons * 1.5).toFixed(1)} x 10⁻⁴ N (Kuat)`;
+            }
+
+            drawStaticCanvas();
+        }
+
+        function drawStaticCanvas() {
+            const canvas = document.getElementById('canvasStatic');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 260;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw Ruler (Plastik)
+            const rulerX = w / 2 - 120;
+            const rulerY = 50;
+            ctx.fillStyle = '#0284c7';
+            ctx.fillRect(rulerX, rulerY, 240, 40);
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(rulerX, rulerY, 240, 40);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px Plus Jakarta Sans';
+            ctx.fillText('Penggaris Plastik Solor', rulerX + 50, rulerY + 25);
+
+            // Draw Electrons on Ruler
+            ctx.fillStyle = '#f43f5e';
+            for (let i = 0; i < extraElectrons; i++) {
+                const ex = rulerX + 20 + (i * 12) % 200;
+                const ey = rulerY + 10 + Math.floor(i / 16) * 12;
+                ctx.beginPath();
+                ctx.arc(ex, ey, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Draw Leaf Pieces (Daun Kelor) below ruler
+            const leafY = 180 - Math.min(extraElectrons * 3, 70);
+            ctx.fillStyle = '#10b981';
+            for (let i = 0; i < 6; i++) {
+                const lx = w / 2 - 80 + i * 30;
+                ctx.beginPath();
+                ctx.ellipse(lx, leafY, 8, 12, Math.PI / 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.fillStyle = '#a7f3d0';
+            ctx.font = '11px Plus Jakarta Sans';
+            ctx.fillText('Serpihan Daun Kelor', w / 2 - 50, leafY + 30);
+        }
+
+        let circuitType = 'seri';
+        let isSwitchOn = true;
+
+        function setCircuitType(type) {
+            circuitType = type;
+            playTone(500);
+            document.getElementById('btn-circuit-seri').className = type === 'seri' ? "px-3.5 py-2 rounded-xl bg-cyan-600 text-white font-bold text-xs transition" : "px-3.5 py-2 rounded-xl bg-slate-800 text-cyan-200 font-bold text-xs transition border border-cyan-800";
+            document.getElementById('btn-circuit-paralel').className = type === 'paralel' ? "px-3.5 py-2 rounded-xl bg-cyan-600 text-white font-bold text-xs transition" : "px-3.5 py-2 rounded-xl bg-slate-800 text-cyan-200 font-bold text-xs transition border border-cyan-800";
+            updateCircuitSim();
+        }
+
+        function toggleCircuitSwitch() {
+            isSwitchOn = !isSwitchOn;
+            playTone(isSwitchOn ? 700 : 300);
+            const btn = document.getElementById('btn-switch-toggle');
+            if (isSwitchOn) {
+                btn.className = "px-4 py-1.5 bg-emerald-600 text-white font-bold rounded-lg text-xs transition";
+                btn.innerText = "SAKELAR TUTUP (ON)";
+            } else {
+                btn.className = "px-4 py-1.5 bg-rose-600 text-white font-bold rounded-lg text-xs transition";
+                btn.innerText = "SAKELAR BUKA (OFF)";
+            }
+            updateCircuitSim();
+        }
+
+        function updateCircuitSim() {
+            const v = parseFloat(document.getElementById('slider-circuit-v').value);
+            const r1 = parseFloat(document.getElementById('slider-circuit-r1').value);
+            const r2 = parseFloat(document.getElementById('slider-circuit-r2').value);
+
+            document.getElementById('val-circuit-v').innerText = `${v} Volt`;
+            document.getElementById('val-circuit-r1').innerText = `${r1} Ohm`;
+            document.getElementById('val-circuit-r2').innerText = `${r2} Ohm`;
+
+            let rTotal = 0;
+            if (circuitType === 'seri') {
+                rTotal = r1 + r2;
+            } else {
+                rTotal = (r1 * r2) / (r1 + r2);
+            }
+
+            const iTotal = isSwitchOn ? v / rTotal : 0;
+            const pTotal = isSwitchOn ? v * iTotal : 0;
+
+            document.getElementById('res-r-total').innerText = `${rTotal.toFixed(1)} Ω`;
+            document.getElementById('res-i-total').innerText = `${iTotal.toFixed(2)} A`;
+            document.getElementById('res-p-total').innerText = `${pTotal.toFixed(1)} Watt`;
+
+            drawCircuitCanvas(v, r1, r2, iTotal);
+        }
+
+        function drawCircuitCanvas(v, r1, r2, iTotal) {
+            const canvas = document.getElementById('canvasCircuit');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 300;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Circuit Wire Border
+            ctx.strokeStyle = isSwitchOn ? '#38bdf8' : '#64748b';
+            ctx.lineWidth = 4;
+
+            ctx.beginPath();
+            ctx.rect(50, 40, w - 100, h - 80);
+            ctx.stroke();
+
+            // Battery (Bottom Wire)
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(w / 2 - 30, h - 50, 60, 20);
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = 'bold 11px Plus Jakarta Sans';
+            ctx.fillText(`${v}V`, w / 2 - 12, h - 35);
+
+            // Bulbs Glow
+            const bulbGlow = isSwitchOn ? Math.min(iTotal * 30, 60) : 0;
+
+            if (circuitType === 'seri') {
+                // Bulb 1
+                ctx.fillStyle = isSwitchOn ? `rgba(251, 191, 36, ${Math.min(iTotal, 1)})` : '#334155';
+                ctx.beginPath();
+                ctx.arc(w / 3, 40, 16, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Bulb 2
+                ctx.beginPath();
+                ctx.arc((2 * w) / 3, 40, 16, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            } else {
+                // Parallel Wire Middle
+                ctx.beginPath();
+                ctx.moveTo(w / 2, 40);
+                ctx.lineTo(w / 2, h - 40);
+                ctx.stroke();
+
+                // Bulb 1 (Left branch)
+                ctx.fillStyle = isSwitchOn ? `rgba(251, 191, 36, ${Math.min(iTotal, 1)})` : '#334155';
+                ctx.beginPath();
+                ctx.arc(w / 3, 110, 16, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Bulb 2 (Right branch)
+                ctx.beginPath();
+                ctx.arc((2 * w) / 3, 110, 16, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            }
+        }
+
+        function calculatePowerCost() {
+            const watt = parseFloat(document.getElementById('calc-watt').value) || 0;
+            const hours = parseFloat(document.getElementById('calc-hours').value) || 0;
+
+            const kwhDay = (watt * hours) / 1000;
+            const kwhMonth = kwhDay * 30;
+            const costMonth = kwhMonth * 1444;
+
+            document.getElementById('res-kwh-day').innerText = `${kwhDay.toFixed(2)} kWh`;
+            document.getElementById('res-kwh-month').innerText = `${kwhMonth.toFixed(2)} kWh`;
+            document.getElementById('res-cost-month').innerText = `Rp ${Math.round(costMonth).toLocaleString('id-ID')},-`;
+        }
+
+        let magnetMode = 'attract';
+
+        function setMagnetMode(mode) {
+            magnetMode = mode;
+            playTone(550);
+            drawMagnetCanvas();
+        }
+
+        function drawMagnetCanvas() {
+            const canvas = document.getElementById('canvasMagnet');
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 240;
+
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Magnet 1 (Left)
+            ctx.fillStyle = '#f43f5e';
+            ctx.fillRect(80, h / 2 - 20, 70, 40);
+            ctx.fillStyle = '#0284c7';
+            ctx.fillRect(150, h / 2 - 20, 70, 40);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 14px Plus Jakarta Sans';
+            ctx.fillText('U', 110, h / 2 + 5);
+            ctx.fillText('S', 180, h / 2 + 5);
+
+            // Magnet 2 (Right)
+            if (magnetMode === 'attract') {
+                ctx.fillStyle = '#f43f5e';
+                ctx.fillRect(280, h / 2 - 20, 70, 40);
+                ctx.fillStyle = '#0284c7';
+                ctx.fillRect(350, h / 2 - 20, 70, 40);
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText('U', 310, h / 2 + 5);
+                ctx.fillText('S', 380, h / 2 + 5);
+            } else {
+                ctx.fillStyle = '#0284c7';
+                ctx.fillRect(280, h / 2 - 20, 70, 40);
+                ctx.fillStyle = '#f43f5e';
+                ctx.fillRect(350, h / 2 - 20, 70, 40);
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText('S', 310, h / 2 + 5);
+                ctx.fillText('U', 380, h / 2 + 5);
+            }
+
+            // Draw Magnetic Field Lines
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+            ctx.lineWidth = 1.5;
+
+            for (let i = 1; i <= 4; i++) {
+                ctx.beginPath();
+                if (magnetMode === 'attract') {
+                    ctx.arc(250, h / 2, i * 20, Math.PI, 0, false);
+                } else {
+                    ctx.arc(220, h / 2, i * 15, Math.PI * 0.5, Math.PI * 1.5, false);
+                }
+                ctx.stroke();
+            }
+        }
+
+        function calculateTrafo() {
+            const vp = parseFloat(document.getElementById('trafo-vp').value) || 0;
+            const np = parseFloat(document.getElementById('trafo-np').value) || 1;
+            const ns = parseFloat(document.getElementById('trafo-ns').value) || 0;
+
+            const vs = (ns / np) * vp;
+            const typeStr = vs > vp ? "Trafo Step-Up" : "Trafo Step-Down";
+
+            document.getElementById('res-trafo-vs').innerText = `${vs.toFixed(1)} Volt`;
+            document.getElementById('res-trafo-type').innerText = typeStr;
+            document.getElementById('res-trafo-type').className = vs > vp ? "text-emerald-300 font-bold" : "text-rose-300 font-bold";
+        }
+
+        const glossaryData = [
+            { term: "Kelistrikan Statis", desc: "Kumpulan muatan listrik dalam jumlah tetap (diam) yang tidak mengalir secara kontinu.", solor: "Gesekan kain tenun Solor & pelepasan elektron kilat petir di Selat Solor." },
+            { term: "Hukum Ohm", desc: "Kuat arus listrik ($I$) berbanding lurus dengan tegangan ($V$) dan berbanding terbalik dengan hambatan ($R$).", solor: "Formula dasar perhitungan pemasangan jaringan listrik rumah Wulublolong." },
+            { term: "PLTS (Panel Surya)", desc: "Pembangkit listrik yang mengubah radiasi sinar matahari menjadi energi listrik arus searah (DC).", solor: "Sumber energi terbarukan terpusat warga Solor Barat dan penerangan kapal nelayan." },
+            { term: "Kutub Magnet", desc: "Bagian ujung magnet yang memiliki gaya tarik atau gaya tolak magnetik paling kuat.", solor: "Prinsip kompas navigasi kapal nelayan Wulublolong melaut malam hari." },
+            { term: "Transformator (Trafo)", desc: "Alat yang digunakan untuk mengubah (menaikkan/menurunkan) tegangan listrik AC berdasarkan induksi.", solor: "Gardu listrik distribusi PLN di pulau Solor." },
+            { term: "Biomagnetisme", desc: "Fenomena hewan memanfaatkan medan magnet bumi untuk navigasi arah migrasi tempat tinggal.", solor: "Kemampuan navigasi alami Penyu Hijau perairan Solor Barat bertelur di pantai asal." }
+        ];
+
+        function populateGlossary() {
+            const container = document.getElementById('glossary-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            glossaryData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "glass-card p-4 rounded-xl border border-cyan-800 space-y-1.5 gloss-item";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <strong class="text-amber-300 font-bold text-sm">${item.term}</strong>
+                        <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded border border-cyan-500/30">Fisika IX</span>
+                    </div>
+                    <p class="text-xs text-cyan-100 leading-relaxed">${item.desc}</p>
+                    <div class="text-[11px] text-emerald-300 pt-1 border-t border-cyan-900/60">
+                        <i class="fa-solid fa-location-dot mr-1 text-amber-400"></i> Konteks Solor: ${item.solor}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterGlossary() {
+            const q = document.getElementById('glossary-search').value.toLowerCase();
+            document.querySelectorAll('.gloss-item').forEach(el => {
+                const text = el.innerText.toLowerCase();
+                if (text.includes(q)) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+        }
+
+        const quizQuestions = [
+            {
+                question: "Penggaris plastik yang digosokkan ke kain tenun Solor menjadi bermuatan negatif karena...",
+                category: "Kelistrikan Statis",
+                options: [
+                    "Penggaris menerima elektron dari kain tenun",
+                    "Penggaris kehilangan proton ke kain tenun",
+                    "Kain tenun menerima elektron dari penggaris",
+                    "Penggaris menerima proton dari udara Solor"
+                ],
+                correct: 0,
+                explanation: "Saat digosok, elektron berpindah dari kain wol/tenun ke penggaris plastik sehingga penggaris kelebihan elektron (bermuatan negatif)."
+            },
+            {
+                question: "Siswa SMPN SATAP Wulublolong menghubungkan dua lampu dengan baterai 12V secara SERI. Jika salah satu lampu dilepas, apa yang terjadi pada lampu lainnya?",
+                category: "Kelistrikan Dinamis",
+                options: [
+                    "Lampu lainnya langsung padam",
+                    "Lampu lainnya makin terang",
+                    "Lampu lainnya tetap menyala sama",
+                    "Baterai meledak"
+                ],
+                correct: 0,
+                explanation: "Rangkaian SERI bersifat terhubung tunggal. Jika satu komponen terputus/dilepas, seluruh arus listrik terhenti (lampu lain padam)."
+            },
+            {
+                question: "Penerangan rumah di desa Wulublolong menggunakan Rangkaian Paralel karena keuntungan utamanya adalah...",
+                category: "Kelistrikan Dinamis",
+                options: [
+                    "Jika satu lampu padam, lampu lain tetap menyala",
+                    "Menghemat biaya kabel hingga 90%",
+                    "Menghilangkan hambatan listrik total",
+                    "Membuat tegangan di setiap rumah menjadi nol"
+                ],
+                correct: 0,
+                explanation: "Rangkaian paralel memiliki percabangan independen sehingga jika satu lampu mati, cabang lain tetap terhubung arus listrik."
+            },
+            {
+                question: "Lampu LED kapal nelayan Wulublolong berdaya 20 Watt dinyalakan selama 10 jam setiap malam. Berapakah energi listrik harian yang digunakan?",
+                category: "Energi & PLTS",
+                options: [
+                    "0.20 kWh",
+                    "2.0 kWh",
+                    "200 kWh",
+                    "12 kWh"
+                ],
+                correct: 0,
+                explanation: "$E = P \\cdot t = 20\\text{ Watt} \\times 10\\text{ jam} = 200\\text{ Wh} = 0.20\\text{ kWh}$."
+            },
+            {
+                question: "Nelayan Selat Solor menggunakan kompas magnetik untuk menentukan arah pelayaran. Kutub Utara jarum kompas selalu menunjuk ke arah...",
+                category: "Kemagnetan",
+                options: [
+                    "Kutub Selatan Magnet Bumi (di dekat kutub utara geografis)",
+                    "Kutub Utara Magnet Bumi",
+                    "Arah terbit matahari Solor",
+                    "Arah angin laut malam"
+                ],
+                correct: 0,
+                explanation: "Kutub Utara jarum kompas ditarik oleh Kutub Selatan Magnetik Bumi yang terletak di dekat Kutub Utara Geografis Bumi."
+            },
+            {
+                question: "Transformator di gardu PLN Wulublolong memiliki $N_p = 1000$ lilitan dan $N_s = 100$ lilitan. Jika tegangan primer $V_p = 220\\text{ V}$, berapakah tegangan sekunder $V_s$?",
+                category: "Induksi & Trafo",
+                options: [
+                    "22 Volt (Step-Down)",
+                    "2200 Volt (Step-Up)",
+                    "110 Volt (Step-Down)",
+                    "440 Volt (Step-Up)"
+                ],
+                correct: 0,
+                explanation: "$V_s = \\frac{N_s}{N_p} \\times V_p = \\frac{100}{1000} \\times 220 = 22\\text{ Volt}$ (Menurunkan tegangan = Step-Down)."
+            },
+            {
+                question: "Penyu Hijau di perairan Solor Barat dapat kembali bertelur di pantai tempat ia lahir karena memiliki organ khusus yang peka terhadap...",
+                category: "Biomagnetisme",
+                options: [
+                    "Medan Magnet Bumi",
+                    "Gelombang Suara Kapal",
+                    "Suhu Air Laut Selat Solor",
+                    "Kadar Garam Air Laut"
+                ],
+                correct: 0,
+                explanation: "Penyu memanfaatkan partikel magnetit di otak/matanya untuk mendeteksi garis medan magnet bumi sebagai peta navigasi migrasi."
+            },
+            {
+                question: "Alat yang mengubah Energi Mekanik (Gerak) menjadi Energi Listrik pada genset perahu nelayan Solor adalah...",
+                category: "Induksi Elektromagnetik",
+                options: [
+                    "Generator / Dynamo",
+                    "Motor Listrik",
+                    "Aki / Baterai",
+                    "Kapasitor"
+                ],
+                correct: 0,
+                explanation: "Generator bekerja berdasarkan prinsip induksi elektromagnetik Faraday memutar kumparan dalam medan magnet untuk menghasilkan listrik."
+            },
+            {
+                question: "Dua buah kutub magnet batang masing-masing bernama Kutub Utara (U) dan Kutub Utara (U) didekatkan. Interaksi yang terjadi adalah...",
+                category: "Kemagnetan",
+                options: [
+                    "Tolak-Menolak",
+                    "Tarik-Menarik",
+                    "Tidak terjadi reaksi",
+                    "Menghasilkan arus listrik"
+                ],
+                correct: 0,
+                explanation: "Kutub magnet yang sejenis (U dengan U, atau S dengan S) akan saling tolak-menolak."
+            },
+            {
+                question: "Keuntungan utama pemanfaatan PLTS (Panel Surya) di pulau Solor Barat adalah...",
+                category: "Energi Listrik",
+                options: [
+                    "Ramah lingkungan dan memanfaatkan sinar matahari Solor yang melimpah",
+                    "Membutuhkan kabel listrik antar pulau",
+                    "Hanya bisa menyala saat hujan deras",
+                    "Menghasilkan limbah asap pembakaran"
+                ],
+                correct: 0,
+                explanation: "PLTS memanfaatkan potensi energi terbarukan foton matahari Solor tanpa menghasilkan emisi gas rumah kaca."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            const q = quizQuestions[currentQuizIndex];
+
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuizIndex + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quiz-category').innerText = q.category;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQuizIndex + 1) / quizQuestions.length) * 100}%`;
+            document.getElementById('quiz-question').innerText = `${currentQuizIndex + 1}. ${q.question}`;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 rounded-xl bg-slate-950 border border-cyan-800 hover:border-amber-400 text-cyan-100 text-xs sm:text-sm font-medium transition flex items-center justify-between";
+                btn.innerHTML = `<span>${String.fromCharCode(65 + idx)}. ${opt}</span> <i class="fa-regular fa-circle text-cyan-600"></i>`;
+                btn.onclick = () => selectOption(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+        }
+
+        function selectOption(selectedIndex, btnEl) {
+            if (answered) return;
+            answered = true;
+
+            const q = quizQuestions[currentQuizIndex];
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const allBtns = document.getElementById('quiz-options').children;
+
+            if (selectedIndex === q.correct) {
+                score += 10;
+                playTone(650);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-cyan-900 border-2 border-cyan-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-check text-cyan-300 text-lg"></i>`;
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-cyan-900/70 border border-cyan-500 text-cyan-200";
+                feedbackEl.innerHTML = `🎉 <strong>Benar Sekali!</strong> ${q.explanation}`;
+            } else {
+                playTone(220);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-rose-950 border-2 border-rose-500 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-xmark text-rose-400 text-lg"></i>`;
+
+                const correctBtn = allBtns[q.correct];
+                correctBtn.className = "w-full text-left p-3.5 rounded-xl bg-cyan-900 border-2 border-cyan-400 text-white text-xs sm:text-sm font-bold flex items-center justify-between";
+
+                feedbackEl.className = "p-4 rounded-xl text-xs sm:text-sm font-semibold mb-2 bg-rose-950/70 border border-rose-500 text-rose-200";
+                feedbackEl.innerHTML = `❌ <strong>Jawaban Kurang Tepat.</strong> ${q.explanation}`;
+            }
+
+            document.getElementById('quiz-score').innerText = score;
+            feedbackEl.classList.remove('hidden');
+            document.getElementById('btn-next-quiz').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            playTone(480);
+            currentQuizIndex++;
+            if (currentQuizIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('certificate-box').classList.remove('hidden');
+                generateCertificate();
+            }
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            document.getElementById('quiz-score').innerText = score;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('certificate-box').classList.add('hidden');
+            loadQuestion();
+        }
+
+        function generateCertificate() {
+            const name = document.getElementById('student-name-input').value || "Siswa SMPN SATAP Wulublolong";
+            const canvas = document.getElementById('canvasCert');
+            if (!canvas) return;
+            canvas.width = 800;
+            canvas.height = 500;
+
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            ctx.fillStyle = '#09131e';
+            ctx.fillRect(0, 0, 800, 500);
+
+            // Border
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(15, 15, 770, 470);
+            ctx.strokeStyle = '#06b6d4';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(25, 25, 750, 450);
+
+            // Watermark icon
+            ctx.fillStyle = 'rgba(6, 182, 212, 0.05)';
+            ctx.font = '160px Plus Jakarta Sans';
+            ctx.fillText('⚡', 330, 310);
+
+            // Title
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = 'bold 24px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('SERTIFIKAT KELULUSAN PEMBELAJARAN IPA', 400, 80);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = '14px Plus Jakarta Sans';
+            ctx.fillText('SMPN SATAP WULUBLOLONG • SOLOR BARAT', 400, 110);
+
+            ctx.fillStyle = '#f1f5f9';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Diberikan Kepada Siswa/i:', 400, 160);
+
+            // Student Name
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 28px Plus Jakarta Sans';
+            ctx.fillText(name, 400, 210);
+
+            // Description
+            ctx.fillStyle = '#e2e8f0';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Telah Menyelesaikan Modul Interaktif & Evaluasi Sains:', 400, 260);
+            ctx.font = 'bold 15px Plus Jakarta Sans';
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillText('MATERI KELISTRIKAN DAN KEMAGNETAN', 400, 290);
+
+            // Score Badge
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(300, 320, 200, 45);
+            ctx.strokeStyle = '#06b6d4';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(300, 320, 200, 45);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px Plus Jakarta Sans';
+            ctx.fillText(`NILAI EVALUASI: ${score} / 100`, 400, 348);
+
+            // Date & Location
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '12px Plus Jakarta Sans';
+            ctx.fillText('Wulublolong, Solor Barat, Flores Timur', 400, 410);
+            ctx.fillText('Media Pembelajaran Digital Kurikulum Merdeka IPA IX', 400, 430);
+        }
+
+        function downloadCertificate() {
+            playTone(600);
+            const canvas = document.getElementById('canvasCert');
+            const link = document.createElement('a');
+            link.download = `Sertifikat_Kelistrikan_Wulublolong_${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        window.onload = function() {
+            populateGlossary();
+            loadQuestion();
+            drawStaticCanvas();
+            updateCircuitSim();
+            calculatePowerCost();
+            drawMagnetCanvas();
+            calculateTrafo();
+
+            window.addEventListener('resize', () => {
+                const activeStatis = document.getElementById('section-statis');
+                if (activeStatis && !activeStatis.classList.contains('hidden')) drawStaticCanvas();
+
+                const activeDinamis = document.getElementById('section-dinamis');
+                if (activeDinamis && !activeDinamis.classList.contains('hidden')) updateCircuitSim();
+
+                const activeMagnet = document.getElementById('section-magnet');
+                if (activeMagnet && !activeMagnet.classList.contains('hidden')) drawMagnetCanvas();
+            });
+        };
+    </script>
+</body>
+</html>
