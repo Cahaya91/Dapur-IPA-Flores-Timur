@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papan Interaktif IPA IX - SMPN SATAP Wulublolong</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .tenun-pattern {
+            background-color: #0f172a;
+            background-image:  radial-gradient(#1e293b 2px, transparent 2px), radial-gradient(#1e293b 2px, #0f172a 2px);
+            background-size: 80px 80px;
+            background-position: 0 0, 40px 40px;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0d9488;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen tenun-pattern flex flex-col justify-between custom-scrollbar">
+
+    <!-- Navigation / Header -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-700/50 px-4 py-3 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500 via-teal-500 to-emerald-500 p-0.5 shadow-md flex-shrink-0">
+                    <div class="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center">
+                        <i class="fa-solid font-bold text-teal-400 text-xl">🌱</i>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-xs font-semibold tracking-wider text-amber-400 uppercase bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">Flores Timur Contextual Science</span>
+                    <h1 class="text-lg sm:text-xl font-bold text-white tracking-tight">Papan Interaktif Pertumbuhan & Perkembangan</h1>
+                    <p class="text-xs text-slate-400">IPA Kelas IX • SMPN SATAP Wulublolong (Solor Barat)</p>
+                </div>
+            </div>
+            
+            <!-- Quick Audio Toggle & Badges -->
+            <div class="flex items-center gap-2">
+                <button id="btn-sound" onclick="toggleSound()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 flex items-center gap-2 transition">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-teal-400"></i>
+                    <span id="sound-text">Efek Suara Aktif</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+        <!-- Tab Navigation Buttons -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-slate-800 pb-3">
+            <button onclick="switchTab('konsep')" id="tab-btn-konsep" class="nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-teal-600 text-white shadow-lg shadow-teal-900/30">
+                <i class="fa-solid fa-book-open"></i> Konsep Dasar
+            </button>
+            <button onclick="switchTab('tumbuhan')" id="tab-btn-tumbuhan" class="nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-seedling text-emerald-400"></i> Tumbuhan (Jagung Titi & Kelapa)
+            </button>
+            <button onclick="switchTab('hewan')" id="tab-btn-hewan" class="nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-turtle text-amber-400"></i> Hewan & Fauna Solor
+            </button>
+            <button onclick="switchTab('manusia')" id="tab-btn-manusia" class="nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-child text-indigo-400"></i> Manusia & Pubertas
+            </button>
+            <button onclick="switchTab('kuis')" id="tab-btn-kuis" class="nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-gamepad text-rose-400"></i> Kuis Jelajah Wulublolong
+            </button>
+        </div>
+
+        <div id="section-konsep" class="tab-content block space-y-6">
+            <!-- Header Banner -->
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-teal-500 relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl select-none">📊</div>
+                <h2 class="text-2xl font-bold text-white mb-2">Perbedaan Pertumbuhan dan Perkembangan</h2>
+                <p class="text-slate-300 text-sm max-w-3xl leading-relaxed">
+                    Dalam konteks alam pulau Solor, mari pahami perbedaan dua istilah biologi penting ini melalui pengamatan tanaman <span class="text-amber-400 font-semibold">Jagung Titi (Watena)</span> dan hewan ternak masyarakat Wulublolong.
+                </p>
+            </div>
+
+            <!-- Comparison Interactive Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Pertumbuhan -->
+                <div class="glass-panel p-6 rounded-2xl hover:border-teal-500/50 transition">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-teal-500/20 flex items-center justify-center text-teal-400 font-bold text-xl">
+                            <i class="fa-solid fa-arrow-up-right-dots"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Pertumbuhan (Growth)</h3>
+                            <span class="text-xs text-teal-400 font-medium">Kuantitatif (Dapat Diukur)</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-teal-400 mt-1"></i>
+                            <span>Proses bertambahnya ukuran, volume, berat, dan jumlah sel yang sifatnya <strong>irreversible</strong> (tidak dapat kembali ke bentuk semula).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-teal-400 mt-1"></i>
+                            <span><strong>Contoh Kontekstual:</strong> Tinggi batang tanaman jagung di kebun Wulublolong bertambah dari 5 cm menjadi 180 cm.</span>
+                        </li>
+                    </ul>
+                    <div class="mt-4 p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-xs text-slate-400">
+                        💡 <i>Alat Ukur:</i> Busur pertumbuhan (Auksanometer) atau penggaris biasa.
+                    </div>
+                </div>
+
+                <!-- Perkembangan -->
+                <div class="glass-panel p-6 rounded-2xl hover:border-amber-500/50 transition">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-xl">
+                            <i class="fa-solid fa-dna"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Perkembangan (Development)</h3>
+                            <span class="text-xs text-amber-400 font-medium">Kualitatif (Menuju Kedewasaan)</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-amber-400 mt-1"></i>
+                            <span>Proses menuju tingkat kedewasaan sel/jaringan yang ditandai dengan diferensiasi fungsi organ tubuh.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-amber-400 mt-1"></i>
+                            <span><strong>Contoh Kontekstual:</strong> Tanaman jagung mulai memunculkan bunga jantan (mayang) dan bunga betina (rambut jagung) untuk reproduksi.</span>
+                        </li>
+                    </ul>
+                    <div class="mt-4 p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-xs text-slate-400">
+                        💡 <i>Indikator:</i> Matangnya fungsi organ reproduksi dan perubahan struktur sel.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Faktor Pengaruh Interaktif -->
+            <div class="glass-panel p-6 rounded-2xl">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-teal-400"></i> Faktor-Faktor yang Mempengaruhi Pertumbuhan
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+                        <h4 class="font-bold text-emerald-400 text-sm mb-2"><i class="fa-solid fa-tree"></i> Faktor Internal (Dari Dalam)</h4>
+                        <div class="space-y-2 text-xs text-slate-300">
+                            <p><strong>1. Gen:</strong> Membawa sifat keturunan (misal: varitas unggul jagung lokal Solor).</p>
+                            <p><strong>2. Hormon:</strong></p>
+                            <div class="pl-3 border-l-2 border-emerald-500/40 space-y-1">
+                                <p>• <i>Auksin:</i> Merangsang pemanjangan sel (dominansi apikal).</p>
+                                <p>• <i>Giberelin:</i> Perkecambahan biji dan pembentukan buah.</p>
+                                <p>• <i>Sitokinin:</i> Pembelahan sel (sitokinesis).</p>
+                                <p>• <i>Gas Etilen:</i> Mempercepat pematangan buah kelapa/pisang.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+                        <h4 class="font-bold text-amber-400 text-sm mb-2"><i class="fa-solid fa-sun"></i> Faktor Eksternal (Lingkungan Solor Barat)</h4>
+                        <div class="space-y-2 text-xs text-slate-300">
+                            <p><strong>1. Cahaya Matahari:</strong> Intensitas tinggi di Wulublolong mendukung fotosintesis tetapi merusak hormon auksin (Etiolasi).</p>
+                            <p><strong>2. Air & Kelembapan:</strong> Mengaktifkan enzim saat imbibisi biji jagung.</p>
+                            <p><strong>3. Nutrisi (Unsur Hara):</strong> Makronutrien (N, P, K) dan Mikronutrien (Fe, Zn) di tanah volkanik Solor.</p>
+                            <p><strong>4. Suhu & pH Tanah:</strong> Suhu hangat iklim pesisir Flores Timur ideal untuk perkecambahan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-tumbuhan" class="tab-content hidden space-y-6">
+            <!-- Header Banner -->
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-emerald-500">
+                <h2 class="text-2xl font-bold text-white mb-2">Laboratorium Simulasi Perkecambahan</h2>
+                <p class="text-slate-300 text-sm">
+                    Eksperimen virtual interaktif perkecambahan biji <strong>Jagung Titi Solor (Monokotil)</strong> dan <strong>Biji Kelapa / Kacang (Dikotil)</strong> berdasarkan ketersediaan air, cahaya, dan suhu.
+                </p>
+            </div>
+
+            <!-- Interactive Germination Simulator -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Controls Panel -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-flask text-emerald-400"></i> Kontrol Lingkungan Kebun
+                    </h3>
+
+                    <!-- Tipe Tumbuhan -->
+                    <div>
+                        <label class="text-xs text-slate-400 font-semibold block mb-1">Jenis Biji Tanaman</label>
+                        <select id="sim-plant-type" onchange="updateSimulation()" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
+                            <option value="jagung">Jagung Titi (Perkecambahan Hipogeal)</option>
+                            <option value="kacang">Biji Kacang / Kelapa (Perkecambahan Epigeal)</option>
+                        </select>
+                    </div>
+
+                    <!-- Air Slider -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span class="text-slate-300">Penyiraman Air</span>
+                            <span id="val-water" class="text-cyan-400">Sedang (50%)</span>
+                        </div>
+                        <input type="range" id="sim-water" min="0" max="100" value="50" oninput="updateSimulation()" class="w-full accent-cyan-500 cursor-pointer">
+                    </div>
+
+                    <!-- Cahaya Slider -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span class="text-slate-300">Intensitas Sinar Matahari</span>
+                            <span id="val-light" class="text-amber-400">Cukup (50%)</span>
+                        </div>
+                        <input type="range" id="sim-light" min="0" max="100" value="50" oninput="updateSimulation()" class="w-full accent-amber-500 cursor-pointer">
+                    </div>
+
+                    <!-- Hari Slider -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span class="text-slate-300">Waktu Pengamatan (Hari ke-)</span>
+                            <span id="val-day" class="text-emerald-400">Hari 1</span>
+                        </div>
+                        <input type="range" id="sim-day" min="1" max="14" value="1" oninput="updateSimulation()" class="w-full accent-emerald-500 cursor-pointer">
+                    </div>
+
+                    <!-- Observation Status Box -->
+                    <div id="sim-status-box" class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 text-xs space-y-1">
+                        <div class="font-semibold text-emerald-400" id="sim-status-title">Tahap Imbibisi Air</div>
+                        <p class="text-slate-300" id="sim-status-desc">Biji menyerap air, mengaktifkan hormon giberelin untuk memecah cadangan makanan.</p>
+                    </div>
+                </div>
+
+                <!-- Interactive Canvas Canvas Display -->
+                <div class="lg:col-span-2 glass-panel p-5 rounded-2xl flex flex-col justify-between relative min-h-[360px]">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Visualisasi Tumbuh Tanaman</span>
+                        <span id="badge-etiolasi" class="hidden text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-full font-medium">⚠️ Mengalami Etiolasi (Kekurangan Cahaya)</span>
+                    </div>
+
+                    <!-- Canvas Area -->
+                    <div class="relative w-full h-[280px] bg-gradient-to-b from-sky-950 via-slate-900 to-amber-950 rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center">
+                        <canvas id="germinationCanvas" class="w-full h-full block"></canvas>
+                    </div>
+
+                    <div class="mt-3 flex justify-around text-xs text-slate-400">
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> Klorofil Daun</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-amber-700 inline-block"></span> Batang & Kotiledon</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-slate-300 inline-block"></span> Akar Radikula</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Epigeal vs Hipogeal Theory Card -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-panel p-5 rounded-2xl">
+                    <h3 class="font-bold text-amber-400 mb-2 text-base">1. Perkecambahan Epigeal</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                        Kotiledon terangkat ke atas permukaan tanah karena hipokotil memanjang.
+                    </p>
+                    <div class="bg-slate-900 p-3 rounded-xl text-xs text-slate-400">
+                        📌 <strong>Contoh di Wulublolong:</strong> Kacang hijau, pohon lontar/tuak muda, dan pohon jarak.
+                    </div>
+                </div>
+                <div class="glass-panel p-5 rounded-2xl">
+                    <h3 class="font-bold text-teal-400 mb-2 text-base">2. Perkecambahan Hipogeal</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                        Kotiledon tetap berada di dalam tanah karena epikotil yang memanjang ke atas.
+                    </p>
+                    <div class="bg-slate-900 p-3 rounded-xl text-xs text-slate-400">
+                        📌 <strong>Contoh di Wulublolong:</strong> Tanaman Jagung Titi (Watena) dan Padi Ladang Solor.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-hewan" class="tab-content hidden space-y-6">
+            <!-- Header Banner -->
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-amber-500">
+                <h2 class="text-2xl font-bold text-white mb-2">Metamorfosis & Perkembangan Hewan</h2>
+                <p class="text-slate-300 text-sm">
+                    Pelajari fase perkembangan hewan bertulang belakang (Vertebrata) dan tak bertulang belakang (Invertebrata) yang ada di lingkungan Solor Barat.
+                </p>
+            </div>
+
+            <!-- Interactive Metamorphosis Selector -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Insect Metamorphosis -->
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-bug text-emerald-400"></i> Metamorfosis Sempurna vs Tidak Sempurna
+                    </h3>
+
+                    <!-- Toggle Buttons -->
+                    <div class="flex gap-2 mb-4">
+                        <button onclick="setMetaType('sempurna')" id="btn-meta-sempurna" class="flex-1 py-1.5 px-3 rounded-lg text-xs font-bold bg-emerald-600 text-white">Sempurna (Ulat Grayak/Kupu-kupu)</button>
+                        <button onclick="setMetaType('tidak')" id="btn-meta-tidak" class="flex-1 py-1.5 px-3 rounded-lg text-xs font-bold bg-slate-800 text-slate-400">Tidak Sempurna (Belalang Kebun)</button>
+                    </div>
+
+                    <!-- Flow Visualizer -->
+                    <div id="meta-display" class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-4">
+                        <!-- Dynamic Content via JS -->
+                    </div>
+                </div>
+
+                <!-- Conservation & Animal Life Cycle (Penyu Solor & Ayam) -->
+                <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-turtle text-teal-400"></i> Daur Hidup Penyu Laut Solor
+                            </h3>
+                            <span class="text-[10px] bg-teal-500/20 text-teal-300 border border-teal-500/30 px-2 py-0.5 rounded-full font-semibold">Ovipar</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            Pesisir Solor Barat merupakan lintasan dan tempat penyu bertelur. Perkembangan embrio penyu terjadi di luar tubuh induk (dalam telur berekat pelindung).
+                        </p>
+
+                        <div class="grid grid-cols-4 gap-2 text-center text-xs">
+                            <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
+                                <div class="text-xl mb-1">🥚</div>
+                                <div class="font-bold text-white text-[11px]">Telur</div>
+                                <div class="text-[9px] text-slate-400">Di pasir pantai</div>
+                            </div>
+                            <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
+                                <div class="text-xl mb-1">🐢</div>
+                                <div class="font-bold text-white text-[11px]">Tukik</div>
+                                <div class="text-[9px] text-slate-400">Menetas ke laut</div>
+                            </div>
+                            <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
+                                <div class="text-xl mb-1">🌊</div>
+                                <div class="font-bold text-white text-[11px]">Penyu Muda</div>
+                                <div class="text-[9px] text-slate-400">Mencari makan</div>
+                            </div>
+                            <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
+                                <div class="text-xl mb-1">🐢✨</div>
+                                <div class="font-bold text-white text-[11px]">Dewasa</div>
+                                <div class="text-[9px] text-slate-400">Siap bertelur</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-300">
+                        🌿 <strong>Pesan Konservasi Wulublolong:</strong> Lindungi sarang telur penyu di pantai dari gangguan hewan liar maupun pengambilan liar agar populasi penyu Solor tetap lestari!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-manusia" class="tab-content hidden space-y-6">
+            <!-- Header Banner -->
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-indigo-500">
+                <h2 class="text-2xl font-bold text-white mb-2">Pertumbuhan Manusia & Pubertas Remaja</h2>
+                <p class="text-slate-300 text-sm">
+                    Memahami perubahan fisik dan psikologis siswa SMPN SATAP Wulublolong saat memasuki masa remaja (Pubertas).
+                </p>
+            </div>
+
+            <!-- Stages of Human Life -->
+            <div class="glass-panel p-6 rounded-2xl">
+                <h3 class="text-lg font-bold text-white mb-4">Tahapan Daur Hidup Manusia</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                        <div class="text-2xl mb-1">👶</div>
+                        <div class="font-bold text-white text-xs">Balita</div>
+                        <div class="text-[10px] text-slate-400">0 - 5 Tahun</div>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                        <div class="text-2xl mb-1">🧒</div>
+                        <div class="font-bold text-white text-xs">Anak-Anak</div>
+                        <div class="text-[10px] text-slate-400">6 - 11 Tahun</div>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-indigo-400 bg-indigo-950/30">
+                        <div class="text-2xl mb-1">🧑‍🎓</div>
+                        <div class="font-bold text-indigo-400 text-xs">Remaja (Siswa SMP)</div>
+                        <div class="text-[10px] text-indigo-300 font-medium">12 - 17 Tahun</div>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                        <div class="text-2xl mb-1">🧑‍💼</div>
+                        <div class="font-bold text-white text-xs">Dewasa</div>
+                        <div class="text-[10px] text-slate-400">18 - 50 Tahun</div>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                        <div class="text-2xl mb-1">👴</div>
+                        <div class="font-bold text-white text-xs">Lansia (Ebu/Tua)</div>
+                        <div class="text-[10px] text-slate-400">> 50 Tahun</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Puberty Features Explorer -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Remaja Laki-laki -->
+                <div class="glass-panel p-6 rounded-2xl border-t-4 border-t-cyan-500">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xl">♂</div>
+                        <h3 class="text-lg font-bold text-white">Pubertas Remaja Laki-Laki</h3>
+                    </div>
+                    <div class="space-y-3 text-xs text-slate-300">
+                        <div class="bg-slate-900 p-3 rounded-xl">
+                            <span class="font-bold text-cyan-400 block mb-1">Perubahan Primer:</span>
+                            Mimpi basah & dimulainya produksi sel sperma oleh testis.
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-xl space-y-1">
+                            <span class="font-bold text-cyan-400 block mb-1">Perubahan Sekunder:</span>
+                            <p>• Suara menjadi lebih berat (membesar).</p>
+                            <p>• Tumbuh jakun di leher.</p>
+                            <p>• Tumbuh rambut halus di dada, ketiak, dan area kemaluan.</p>
+                            <p>• Dada dan bahu tampak lebih bidang.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Remaja Perempuan -->
+                <div class="glass-panel p-6 rounded-2xl border-t-4 border-t-rose-500">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-xl">♀</div>
+                        <h3 class="text-lg font-bold text-white">Pubertas Remaja Perempuan</h3>
+                    </div>
+                    <div class="space-y-3 text-xs text-slate-300">
+                        <div class="bg-slate-900 p-3 rounded-xl">
+                            <span class="font-bold text-rose-400 block mb-1">Perubahan Primer:</span>
+                            Menstruasi (Haid) pertama & peluruhan sel telur yang tidak dibuahi.
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-xl space-y-1">
+                            <span class="font-bold text-rose-400 block mb-1">Perubahan Sekunder:</span>
+                            <p>• Payudara dan pinggul mulai membesar.</p>
+                            <p>• Tumbuh rambut halus di ketiak dan area kemaluan.</p>
+                            <p>• Kulit menjadi lebih halus.</p>
+                            <p>• Suara menjadi lebih nyaring.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-kuis" class="tab-content hidden space-y-6">
+            <!-- Quiz Card Header -->
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-rose-500 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white mb-1">Kuis Jelajah IPA Wulublolong</h2>
+                    <p class="text-slate-300 text-sm">Uji pemahamanmu tentang pertumbuhan & perkembangan makhluk hidup!</p>
+                </div>
+                <div class="bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-center">
+                    <span class="text-xs text-slate-400 block">Skor Saat Ini</span>
+                    <span id="quiz-score" class="text-2xl font-extrabold text-amber-400">0</span>
+                </div>
+            </div>
+
+            <!-- Quiz Main Box -->
+            <div id="quiz-container" class="glass-panel p-6 rounded-2xl">
+                <!-- Question Number & Progress -->
+                <div class="flex justify-between items-center mb-4 text-xs text-slate-400 font-semibold">
+                    <span id="quiz-progress-text">Soal 1 dari 5</span>
+                    <span id="quiz-category" class="text-teal-400">Konteks Tumbuhan Solor</span>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-800 h-2 rounded-full mb-6 overflow-hidden">
+                    <div id="quiz-progress-bar" class="bg-teal-500 h-full w-1/5 transition-all duration-300"></div>
+                </div>
+
+                <!-- Question Text -->
+                <h3 id="quiz-question" class="text-lg font-bold text-white mb-6 leading-snug">
+                    Memuat pertanyaan...
+                </h3>
+
+                <!-- Options Grid -->
+                <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                    <!-- Dynamic option buttons -->
+                </div>
+
+                <!-- Feedback Message -->
+                <div id="quiz-feedback" class="hidden p-4 rounded-xl text-sm font-semibold mb-4"></div>
+
+                <!-- Next Button -->
+                <button id="btn-next-quiz" onclick="nextQuestion()" class="hidden px-6 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-bold text-sm transition flex items-center gap-2 ml-auto">
+                    Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-panel border-t border-slate-800 py-4 px-4 text-center text-xs text-slate-400 mt-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© 2026 SMPN SATAP WULUBLOLONG • Kec. Solor Barat, Kab. Flores Timur, NTT</p>
+            <p class="text-slate-500">Dikembangkan untuk Pembelajaran IPA Kurikulum Merdeka / Kurtilas</p>
+        </div>
+    </footer>
+
+    <script>
+        let soundEnabled = true;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playTone(freq, type = 'sine', duration = 0.15) {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio not supported or waiting for user interaction");
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            const text = document.getElementById('sound-text');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-teal-400";
+                text.innerText = "Efek Suara Aktif";
+                playTone(523.25);
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-slate-500";
+                text.innerText = "Efek Suara Mute";
+            }
+        }
+
+        function switchTab(tabId) {
+            playTone(440);
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.className = "nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-slate-800 text-slate-300 hover:bg-slate-700";
+            });
+
+            const activeContent = document.getElementById(`section-${tabId}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "nav-tab px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-teal-600 text-white shadow-lg shadow-teal-900/30";
+            }
+
+            if (tabId === 'tumbuhan') {
+                setTimeout(updateSimulation, 50);
+            }
+        }
+
+        function updateSimulation() {
+            const plantType = document.getElementById('sim-plant-type').value;
+            const water = parseInt(document.getElementById('sim-water').value);
+            const light = parseInt(document.getElementById('sim-light').value);
+            const day = parseInt(document.getElementById('sim-day').value);
+
+            // Update Labels
+            document.getElementById('val-water').innerText = `${water}% (${water < 30 ? 'Kurang' : water > 80 ? 'Berlebih' : 'Ideal'})`;
+            document.getElementById('val-light').innerText = `${light}% (${light < 30 ? 'Gelap' : light > 80 ? 'Sangat Terang' : 'Cukup'})`;
+            document.getElementById('val-day').innerText = `Hari ke-${day}`;
+
+            // Check Etiolation
+            const badgeEtiolasi = document.getElementById('badge-etiolasi');
+            if (light < 25 && day > 3 && water > 20) {
+                badgeEtiolasi.classList.remove('hidden');
+            } else {
+                badgeEtiolasi.classList.add('hidden');
+            }
+
+            // Status Description Update
+            const statusTitle = document.getElementById('sim-status-title');
+            const statusDesc = document.getElementById('sim-status-desc');
+
+            if (water < 20) {
+                statusTitle.innerText = "🛑 Perkecambahan Terhambat";
+                statusTitle.className = "font-bold text-rose-400";
+                statusDesc.innerText = "Air kurang! Biji membutuhkan air untuk memecah dormansi (proses imbibisi).";
+            } else if (day <= 2) {
+                statusTitle.innerText = "🌱 Tahap 1: Imbibisi Air";
+                statusTitle.className = "font-bold text-cyan-400";
+                statusDesc.innerText = "Biji menyerap air di tanah Wulublolong, memicu sintesis hormon giberelin.";
+            } else if (day <= 6) {
+                statusTitle.innerText = "🌱 Tahap 2: Muncul Radikula (Akar Pertama)";
+                statusTitle.className = "font-bold text-emerald-400";
+                statusDesc.innerText = plantType === 'jagung' 
+                    ? "Akar menembus kulit biji. Pada jagung (Hipogeal), biji tetap di dalam tanah."
+                    : "Akar menembus tanah. Hipokotil melengkung siap mengangkat kotiledon (Epigeal).";
+            } else if (day <= 10) {
+                statusTitle.innerText = "🌿 Tahap 3: Pemanjangan Batang & Daun Pertama";
+                statusTitle.className = "font-bold text-emerald-400";
+                statusDesc.innerText = light < 25 
+                    ? "Etiolasi terjadi! Batang tumbuh sangat cepat & pucat karena auksin tidak terurai oleh sinar matahari."
+                    : "Klorofil terbentuk sempurna dengan bantuan sinar matahari pantai Solor.";
+            } else {
+                statusTitle.innerText = "🌳 Tahap 4: Tanaman Muda Mandiri";
+                statusTitle.className = "font-bold text-emerald-400";
+                statusDesc.innerText = "Tanaman mulai melakukan fotosintesis mandiri tanpa mengandalkan cadangan makanan kotiledon.";
+            }
+
+            // Draw Canvas
+            drawGerminationCanvas(plantType, water, light, day);
+        }
+
+        function drawGerminationCanvas(plantType, water, light, day) {
+            const canvas = document.getElementById('germinationCanvas');
+            if (!canvas) return;
+            
+            // Adjust internal canvas size
+            canvas.width = canvas.offsetWidth || 500;
+            canvas.height = canvas.offsetHeight || 280;
+
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            const groundY = height * 0.65;
+
+            // Clear
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw Sky / Ambient Background
+            const skyGradient = ctx.createLinearGradient(0, 0, 0, groundY);
+            skyGradient.addColorStop(0, light < 30 ? '#0284c7' : '#38bdf8');
+            skyGradient.addColorStop(1, light < 30 ? '#0f172a' : '#bae6fd');
+            ctx.fillStyle = skyGradient;
+            ctx.fillRect(0, 0, width, groundY);
+
+            // Draw Sun if Light > 40
+            if (light > 40) {
+                ctx.beginPath();
+                ctx.arc(width - 50, 40, 20 + light * 0.15, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(251, 191, 36, ${light / 100})`;
+                ctx.fill();
+            }
+
+            // Draw Ground / Soil
+            const soilGradient = ctx.createLinearGradient(0, groundY, 0, height);
+            soilGradient.addColorStop(0, '#78350f');
+            soilGradient.addColorStop(1, '#451a03');
+            ctx.fillStyle = soilGradient;
+            ctx.fillRect(0, groundY, width, height - groundY);
+
+            // Soil Surface Line
+            ctx.strokeStyle = '#92400e';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(0, groundY);
+            ctx.lineTo(width, groundY);
+            ctx.stroke();
+
+            // Seed Calculations
+            const centerX = width / 2;
+            const isEtiolated = (light < 25 && day > 3 && water > 20);
+            
+            if (water < 20) {
+                // Dormant / Unsprouted Seed
+                drawSeed(ctx, centerX, groundY + 25, plantType, false);
+                return;
+            }
+
+            // Root Length Factor
+            const rootLength = Math.min((day / 14) * 70, 70) * (water / 50);
+            // Stem Height Factor
+            let stemHeight = Math.min((day / 14) * 110, 110) * (water / 50);
+            if (isEtiolated) stemHeight *= 1.4; // Taller stem in darkness
+
+            // Draw Roots
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(centerX, groundY + 25);
+            ctx.lineTo(centerX, groundY + 25 + rootLength);
+            // Side roots
+            if (day > 4) {
+                ctx.moveTo(centerX, groundY + 35);
+                ctx.lineTo(centerX - 15, groundY + 45 + rootLength * 0.3);
+                ctx.moveTo(centerX, groundY + 45);
+                ctx.lineTo(centerX + 18, groundY + 55 + rootLength * 0.3);
+            }
+            ctx.stroke();
+
+            // Draw Stem & Seed based on Epigeal vs Hipogeal
+            const stemColor = isEtiolated ? '#fef08a' : '#22c55e'; // Yellowish if etiolated
+            ctx.strokeStyle = stemColor;
+            ctx.lineWidth = 5;
+
+            if (plantType === 'jagung') {
+                // HIPOGEAL: Biji tetap di tanah (groundY + 25)
+                drawSeed(ctx, centerX, groundY + 25, 'jagung', true);
+
+                if (day > 2) {
+                    // Shoot growing upwards
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, groundY + 25);
+                    const topY = Math.max(groundY + 25 - stemHeight, groundY - stemHeight + 25);
+                    ctx.lineTo(centerX, topY);
+                    ctx.stroke();
+
+                    // Leaves at top if above ground
+                    if (topY < groundY && day > 4) {
+                        drawLeaves(ctx, centerX, topY, stemColor, day, isEtiolated);
+                    }
+                }
+            } else {
+                // EPIGEAL: Kotiledon/Biji terangkat ke atas tanah jika day > 3
+                let seedY = groundY + 25;
+                if (day > 3) {
+                    seedY = Math.max(groundY - (stemHeight * 0.5), groundY - 40);
+                }
+
+                // Stem connection from underground root to elevated seed
+                ctx.beginPath();
+                ctx.moveTo(centerX, groundY + 25);
+                ctx.lineTo(centerX, seedY);
+                ctx.stroke();
+
+                drawSeed(ctx, centerX, seedY, 'kacang', true);
+
+                // Upper leaves growing from elevated seed
+                if (day > 5) {
+                    const topY = seedY - (stemHeight * 0.4);
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, seedY);
+                    ctx.lineTo(centerX, topY);
+                    ctx.stroke();
+                    drawLeaves(ctx, centerX, topY, stemColor, day, isEtiolated);
+                }
+            }
+        }
+
+        function drawSeed(ctx, x, y, type, sprouted) {
+            ctx.fillStyle = type === 'jagung' ? '#f59e0b' : '#b45309';
+            ctx.beginPath();
+            ctx.ellipse(x, y, 10, 7, type === 'jagung' ? 0.3 : 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#78350f';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        }
+
+        function drawLeaves(ctx, x, y, color, day, isEtiolated) {
+            ctx.fillStyle = color;
+            const leafSize = Math.min((day / 14) * 18, 18);
+
+            // Left Leaf
+            ctx.beginPath();
+            ctx.ellipse(x - leafSize, y - 5, leafSize, leafSize * 0.4, -0.4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Right Leaf
+            ctx.beginPath();
+            ctx.ellipse(x + leafSize, y - 5, leafSize, leafSize * 0.4, 0.4, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        const metaData = {
+            sempurna: {
+                title: "Metamorfosis Sempurna (Holometabola)",
+                example: "Kupu-kupu / Ulat Grayak Hama Jagung Solor",
+                steps: [
+                    { stage: "1. Telur", icon: "🥚", desc: "Diletakkan induk di bawah daun tanaman jagung." },
+                    { stage: "2. Larva (Ulat)", icon: "🐛", desc: "Fase aktif makan daun jagung (paling merusak)." },
+                    { stage: "3. Pupa (Kepompong)", icon: "🟤", desc: "Fase istirahat & transformasi jaringan organ." },
+                    { stage: "4. Imago (Dewasa)", icon: "🦋", desc: "Kupu-kupu dewasa siap bereproduksi." }
+                ]
+            },
+            tidak: {
+                title: "Metamorfosis Tidak Sempurna (Hemimetabola)",
+                example: "Belalang / Walangsangit di Perkebunan Wulublolong",
+                steps: [
+                    { stage: "1. Telur", icon: "🥚", desc: "Diletakkan di dalam tanah/serasah tanaman." },
+                    { stage: "2. Nimfa", icon: "🦗", desc: "Bentuk menyerupai dewasa tapi belum bersayap." },
+                    { stage: "3. Imago (Dewasa)", icon: "🦗✨", desc: "Tumbuh wings/sayap sempurna & organ reproduksi." }
+                ]
+            }
+        };
+
+        function setMetaType(type) {
+            playTone(500);
+            const btnSempurna = document.getElementById('btn-meta-sempurna');
+            const btnTidak = document.getElementById('btn-meta-tidak');
+
+            if (type === 'sempurna') {
+                btnSempurna.className = "flex-1 py-1.5 px-3 rounded-lg text-xs font-bold bg-emerald-600 text-white";
+                btnTidak.className = "flex-1 py-1.5 px-3 rounded-lg text-xs font-bold bg-slate-800 text-slate-400";
+            } else {
+                btnTidak.className = "flex-1 py-1.5 px-3 rounded-lg text-xs font-bold bg-emerald-600 text-white";
+                btnSempurna.className = "flex-1 py-1.5 px-3 rounded-lg text-xs font-bold bg-slate-800 text-slate-400";
+            }
+
+            const data = metaData[type];
+            let html = `<div class="font-bold text-sm text-amber-400 mb-1">${data.title}</div>`;
+            html += `<div class="text-xs text-slate-400 mb-3">📌 Contoh lokal: ${data.example}</div>`;
+            html += `<div class="grid grid-cols-1 sm:grid-cols-${data.steps.length} gap-2">`;
+
+            data.steps.forEach(s => {
+                html += `
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-center">
+                        <div class="text-2xl mb-1">${s.icon}</div>
+                        <div class="font-bold text-white text-xs">${s.stage}</div>
+                        <div class="text-[10px] text-slate-400 leading-tight mt-1">${s.desc}</div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            document.getElementById('meta-display').innerHTML = html;
+        }
+
+        const quizQuestions = [
+            {
+                question: "Masyarakat Wulublolong menanam jagung titi di kebun. Saat biji jagung berkecambah, biji (kotiledon) tetap berada di dalam tanah. Tipe perkecambahan ini disebut...",
+                category: "Pertumbuhan Tumbuhan",
+                options: ["Epigeal", "Hipogeal", "Metamorfosis", "Etiolasi"],
+                correct: 1,
+                explanation: "Perkecambahan Hipogeal ditandai dengan kotiledon yang tetap berada di dalam tanah, contohnya pada monokotil seperti jagung titi."
+            },
+            {
+                question: "Siswa SMPN SATAP Wulublolong mengamati bibit kelapa yang ditaruh di dalam ruang gelap tumbuh sangat cepat namun batangnya lemas dan daunnya pucat. Fenomena ini dinamakan...",
+                category: "Faktor Eksternal",
+                options: ["Dormansi", "Fotoperiodisme", "Etiolasi", "Fitohormon"],
+                correct: 2,
+                explanation: "Etiolasi adalah pertumbuhan sangat cepat di tempat gelap karena hormon auksin tidak terurai oleh sinar matahari."
+            },
+            {
+                question: "Ulat grayak yang sering menjadi hama tanaman jagung di Solor Barat merupakan tahap perkembangbiakan serangga pada fase...",
+                category: "Metamorfosis Hewan",
+                options: ["Pupa", "Imago", "Nimfa", "Larva"],
+                correct: 3,
+                explanation: "Ulat merupakan fase Larva pada metamorfosis sempurna (Holometabola) sebelum menjadi kepompong dan kupu-kupu."
+            },
+            {
+                question: "Perubahan sekunder yang dialami oleh remaja laki-laki di Wulublolong saat memasuki masa pubertas adalah...",
+                category: "Pubertas Manusia",
+                options: ["Mimpi basah", "Tumbuhnya jakun dan suara membesar", "Mengalami menstruasi", "Pinggul membesar"],
+                correct: 1,
+                explanation: "Mimpi basah adalah ciri primer, sedangkan tumbuh jakun dan suara membesar adalah ciri sekunder pada laki-laki."
+            },
+            {
+                question: "Proses bertambahnya ukuran, berat, dan jumlah sel pada makhluk hidup yang sifatnya tidak dapat kembali ke bentuk semula (irreversible) disebut...",
+                category: "Konsep Dasar IPA",
+                options: ["Perkembangan", "Pertumbuhan", "Adaptasi", "Reproduksi"],
+                correct: 1,
+                explanation: "Pertumbuhan bersifat kuantitatif & irreversible (bertambah tinggi/berat dan tidak bisa mengecil kembali)."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            const q = quizQuestions[currentQuizIndex];
+
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuizIndex + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quiz-category').innerText = q.category;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQuizIndex + 1) / quizQuestions.length) * 100}%`;
+            document.getElementById('quiz-question').innerText = q.question;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-teal-500 text-slate-200 text-sm font-medium transition flex items-center justify-between";
+                btn.innerHTML = `<span>${String.fromCharCode(65 + idx)}. ${opt}</span> <i class="fa-regular fa-circle text-slate-600"></i>`;
+                btn.onclick = () => selectOption(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+        }
+
+        function selectOption(selectedIndex, btnEl) {
+            if (answered) return;
+            answered = true;
+
+            const q = quizQuestions[currentQuizIndex];
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const allBtns = document.getElementById('quiz-options').children;
+
+            if (selectedIndex === q.correct) {
+                score += 20;
+                playTone(600);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-emerald-950/80 border-2 border-emerald-500 text-white text-sm font-semibold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>`;
+                feedbackEl.className = "p-4 rounded-xl text-sm font-semibold mb-4 bg-emerald-900/50 border border-emerald-500/50 text-emerald-300";
+                feedbackEl.innerHTML = `🎉 <strong>Benar!</strong> ${q.explanation}`;
+            } else {
+                playTone(200);
+                btnEl.className = "w-full text-left p-3.5 rounded-xl bg-rose-950/80 border-2 border-rose-500 text-white text-sm font-semibold flex items-center justify-between";
+                btnEl.innerHTML = `<span>${btnEl.innerText}</span> <i class="fa-solid fa-circle-xmark text-rose-400 text-lg"></i>`;
+
+                // Highlight correct
+                const correctBtn = allBtns[q.correct];
+                correctBtn.className = "w-full text-left p-3.5 rounded-xl bg-emerald-950/80 border-2 border-emerald-500 text-white text-sm font-semibold flex items-center justify-between";
+
+                feedbackEl.className = "p-4 rounded-xl text-sm font-semibold mb-4 bg-rose-900/50 border border-rose-500/50 text-rose-300";
+                feedbackEl.innerHTML = `❌ <strong>Kurang Tepat.</strong> ${q.explanation}`;
+            }
+
+            document.getElementById('quiz-score').innerText = score;
+            feedbackEl.classList.remove('hidden');
+            document.getElementById('btn-next-quiz').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            playTone(480);
+            currentQuizIndex++;
+            if (currentQuizIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                // Quiz Finish State
+                const container = document.getElementById('quiz-container');
+                container.innerHTML = `
+                    <div class="text-center py-8 space-y-4">
+                        <div class="text-5xl">🏆</div>
+                        <h3 class="text-2xl font-bold text-white">Selamat! Kuis Selesai!</h3>
+                        <p class="text-slate-300 text-sm">Kamu telah menyelesaikan Kuis Jelajah IPA Wulublolong.</p>
+                        <div class="inline-block bg-slate-900 px-6 py-3 rounded-2xl border border-slate-800">
+                            <span class="text-xs text-slate-400 block">Total Skor Akhir</span>
+                            <span class="text-4xl font-black text-amber-400">${score} / 100</span>
+                        </div>
+                        <div>
+                            <button onclick="resetQuiz()" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-bold text-sm transition">
+                                <i class="fa-solid fa-rotate-right mr-1"></i> Ulangi Kuis
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            document.getElementById('quiz-score').innerText = score;
+            location.reload();
+        }
+
+        window.onload = function() {
+            setMetaType('sempurna');
+            loadQuestion();
+            updateSimulation();
+
+            // Resize handle for Canvas
+            window.addEventListener('resize', () => {
+                const activeTab = document.getElementById('section-tumbuhan');
+                if (activeTab && !activeTab.classList.contains('hidden')) {
+                    updateSimulation();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
