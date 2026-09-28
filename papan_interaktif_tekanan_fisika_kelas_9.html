@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papan Interaktif Tekanan Fisika Kelas 9 SMP</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for math formula rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        .font-heading {
+            font-family: 'Outfit', sans-serif;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card-hover:hover {
+            transform: translateY(-3px);
+            border-color: rgba(168, 85, 247, 0.4);
+            box-shadow: 0 12px 30px -10px rgba(168, 85, 247, 0.25);
+        }
+        .btn-gradient-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+        }
+        .btn-gradient-primary:hover {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+        .btn-gradient-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+        }
+        .btn-gradient-accent {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .katex { font-size: 1.1em !important; }
+    </style>
+</head>
+<body class="p-3 md:p-6 custom-scrollbar">
+
+    <div class="max-w-7xl mx-mx-auto max-w-6xl space-y-6">
+        
+        <!-- Header Section -->
+        <header class="glass-card rounded-3xl p-5 md:p-6 shadow-2xl relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 relative z-10">
+                <div class="flex items-center gap-4 text-center md:text-left">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/30 shrink-0">
+                        <i data-lucide="gauge" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 justify-center md:justify-start flex-wrap">
+                            <span class="px-3 py-1 text-xs font-bold rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Fisika Kelas 9 SMP</span>
+                            <span class="px-3 py-1 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">10 Soal Kuis + Simulasi</span>
+                        </div>
+                        <h1 class="text-2xl md:text-3xl font-extrabold font-heading text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-purple-200 mt-1">
+                            Papan Interaktif Tekanan Fisika
+                        </h1>
+                    </div>
+                </div>
+
+                <!-- Audio Toggle & Quick Stats -->
+                <div class="flex items-center gap-3">
+                    <button id="soundToggle" onclick="toggleSound()" class="glass-card p-3 rounded-2xl hover:bg-slate-700/50 transition text-slate-300 flex items-center gap-2 text-sm">
+                        <i data-lucide="volume-2" id="soundIcon" class="w-5 h-5 text-emerald-400"></i>
+                        <span class="hidden sm:inline" id="soundText">Suara Aktif</span>
+                    </button>
+                    <button onclick="resetAllData()" class="glass-card p-3 rounded-2xl hover:bg-rose-900/30 text-rose-400 border-rose-500/30 transition flex items-center gap-2 text-sm" title="Reset Ulang Semuanya">
+                        <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                        <span class="hidden sm:inline">Reset</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="mt-6 flex flex-wrap gap-2 border-t border-slate-700/60 pt-4">
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-5 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2 bg-purple-600 text-white shadow-lg shadow-purple-600/30">
+                    <i data-lucide="brain-circuit" class="w-4 h-4"></i> Kuis Interaktif
+                </button>
+                <button onclick="switchTab('sim')" id="tab-sim" class="tab-btn px-5 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+                    <i data-lucide="sliders" class="w-4 h-4"></i> Simulasi & Kalkulator
+                </button>
+                <button onclick="switchTab('formulas')" id="tab-formulas" class="tab-btn px-5 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+                    <i data-lucide="book-open" class="w-4 h-4"></i> Papan Rumus
+                </button>
+                <button onclick="switchTab('achievements')" id="tab-achievements" class="tab-btn px-5 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+                    <i data-lucide="trophy" class="w-4 h-4"></i> Hasil & Lencana
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT AREA -->
+        <main>
+            <!-- TAB 1: KUIS INTERAKTIF -->
+            <section id="section-quiz" class="space-y-6">
+                
+                <!-- Quiz Progress Bar Header -->
+                <div class="glass-card rounded-2xl p-4 md:p-5 flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-semibold text-slate-400">Kemajuan Soal:</span>
+                        <span id="questionCounter" class="text-lg font-bold text-purple-400">Soal 1 / 10</span>
+                    </div>
+
+                    <!-- Progress Indicator Bar -->
+                    <div class="w-full md:w-64 h-3 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                        <div id="progressBar" class="h-full bg-gradient-to-r from-purple-500 to-indigo-400 rounded-full transition-all duration-500" style="width: 10%;"></div>
+                    </div>
+
+                    <!-- Timer & Score Badges -->
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2 text-amber-400 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20 text-sm font-semibold">
+                            <i data-lucide="clock" class="w-4 h-4"></i>
+                            <span id="quizTimer">00:00</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20 text-sm font-semibold">
+                            <i data-lucide="star" class="w-4 h-4"></i>
+                            <span id="scoreDisplay">Skor: 0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Question Card -->
+                <div class="glass-card rounded-3xl p-6 md:p-8 shadow-xl relative min-h-[420px] flex flex-col justify-between">
+                    
+                    <div>
+                        <!-- Category Tag & Hint Button -->
+                        <div class="flex items-center justify-between gap-2 mb-4">
+                            <span id="questionCategory" class="px-3.5 py-1 text-xs font-bold rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                                Category Tag
+                            </span>
+                            <button onclick="toggleHint()" class="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1.5 bg-amber-500/10 px-3 py-1.5 rounded-lg border border-amber-500/20 transition">
+                                <i data-lucide="lightbulb" class="w-4 h-4"></i> Petunjuk Petunjuk
+                            </button>
+                        </div>
+
+                        <!-- Question Text -->
+                        <div id="questionText" class="text-lg md:text-xl font-medium leading-relaxed text-slate-100 mb-6">
+                            Loading pertanyaan...
+                        </div>
+
+                        <!-- Hint Box (Hidden by default) -->
+                        <div id="hintBox" class="hidden mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-sm flex items-start gap-3">
+                            <i data-lucide="lightbulb" class="w-5 h-5 text-amber-400 shrink-0 mt-0.5"></i>
+                            <div id="hintContent">Petunjuk rumus akan muncul di sini.</div>
+                        </div>
+
+                        <!-- Answer Options Container -->
+                        <div id="optionsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 mb-6">
+                            <!-- Dynamic Options Rendered via JS -->
+                        </div>
+
+                        <!-- Explanation Box (Shows after answering) -->
+                        <div id="explanationBox" class="hidden p-5 rounded-2xl bg-slate-800/80 border border-indigo-500/30 text-slate-200 text-sm space-y-2">
+                            <div class="flex items-center gap-2 font-bold text-indigo-400">
+                                <i data-lucide="book-open-check" class="w-5 h-5"></i> Pembahasan Langkah Demi Langkah:
+                            </div>
+                            <div id="explanationContent" class="leading-relaxed">
+                                Explanations...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Action Buttons -->
+                    <div class="flex items-center justify-between pt-6 border-t border-slate-700/60 mt-6">
+                        <button id="prevBtn" onclick="navigateQuestion(-1)" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i> Sebelumnya
+                        </button>
+
+                        <div class="flex items-center gap-2">
+                            <button id="checkBtn" onclick="submitAnswer()" class="btn-gradient-primary px-6 py-2.5 rounded-xl text-sm font-bold text-white transition flex items-center gap-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4"></i> Kunci Jawaban
+                            </button>
+                            <button id="nextBtn" onclick="navigateQuestion(1)" class="btn-gradient-primary px-6 py-2.5 rounded-xl text-sm font-bold text-white transition flex items-center gap-2">
+                                Lanjut <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question Grid Navigation Palette -->
+                <div class="glass-card rounded-2xl p-5">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+                        <i data-lucide="grid" class="w-4 h-4 text-purple-400"></i> Navigasi Nomor Soal
+                    </h3>
+                    <div id="questionGridPalette" class="flex flex-wrap gap-2.5">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- TAB 2: SIMULASI & KALKULATOR -->
+            <section id="section-sim" class="hidden space-y-6">
+                
+                <div class="text-center max-w-2xl mx-auto space-y-2">
+                    <h2 class="text-2xl font-bold font-heading text-white">Laboratorium Simulasi Tekanan Fisika</h2>
+                    <p class="text-slate-400 text-sm">Ubah parameter angka di bawah ini untuk melihat bagaimana Tekanan Zat Padat, Tekanan Hidrostatis, dan Hukum Pascal bekerja secara visual!</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Simulasi 1: Tekanan Zat Padat -->
+                    <div class="glass-card rounded-3xl p-6 glass-card-hover flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="p-3 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+                                    <i data-lucide="box" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-lg text-white">1. Tekanan Zat Padat</h3>
+                                    <p class="text-xs text-slate-400">Rumus: $P = \frac{F}{A}$</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4 text-sm">
+                                <div>
+                                    <label class="flex justify-between font-semibold mb-1">
+                                        <span>Gaya Tekan ($F$):</span>
+                                        <span id="valF" class="text-indigo-400 font-bold">100 N</span>
+                                    </label>
+                                    <input type="range" id="inputF" min="10" max="1000" step="10" value="100" oninput="updateSolidSim()" class="w-full accent-indigo-500">
+                                </div>
+
+                                <div>
+                                    <label class="flex justify-between font-semibold mb-1">
+                                        <span>Luas Alas ($A$):</span>
+                                        <span id="valA" class="text-indigo-400 font-bold">2.0 m²</span>
+                                    </label>
+                                    <input type="range" id="inputA" min="0.1" max="10" step="0.1" value="2.0" oninput="updateSolidSim()" class="w-full accent-indigo-500">
+                                </div>
+
+                                <!-- Dynamic Box Visualizer -->
+                                <div class="bg-slate-900/80 rounded-2xl p-4 border border-slate-700 text-center flex flex-col items-center justify-center h-36 relative overflow-hidden">
+                                    <div id="blockVisual" class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-xs font-bold text-white shadow-lg transition-all" style="width: 100px; height: 50px;">
+                                        Balok
+                                    </div>
+                                    <div class="w-full border-b-2 border-slate-500 mt-2"></div>
+                                    <span class="text-xs text-slate-400 mt-1">Permukaan Lantai</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-slate-700/60 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-400">Hasil Tekanan ($P$):</span>
+                            <span id="resSolidP" class="text-xl font-extrabold text-indigo-300">50 N/m²</span>
+                        </div>
+                    </div>
+
+                    <!-- Simulasi 2: Tekanan Hidrostatis -->
+                    <div class="glass-card rounded-3xl p-6 glass-card-hover flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="p-3 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+                                    <i data-lucide="waves" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-lg text-white">2. Tekanan Hidrostatis</h3>
+                                    <p class="text-xs text-slate-400">Rumus: $P_h = \rho \cdot g \cdot h$</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4 text-sm">
+                                <div>
+                                    <label class="flex justify-between font-semibold mb-1">
+                                        <span>Kedalaman ($h$):</span>
+                                        <span id="valH" class="text-cyan-400 font-bold">10 m</span>
+                                    </label>
+                                    <input type="range" id="inputH" min="1" max="50" step="1" value="10" oninput="updateHydroSim()" class="w-full accent-cyan-500">
+                                </div>
+
+                                <div>
+                                    <label class="flex justify-between font-semibold mb-1">
+                                        <span>Zat Cair ($\rho$):</span>
+                                        <span id="valRho" class="text-cyan-400 font-bold">1000 kg/m³ (Air)</span>
+                                    </label>
+                                    <select id="selectFluid" onchange="updateHydroSim()" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-slate-200">
+                                        <option value="1000">Air murni (1000 kg/m³)</option>
+                                        <option value="1025">Air Laut (1025 kg/m³)</option>
+                                        <option value="800">Minyak (800 kg/m³)</option>
+                                        <option value="13600">Raksasa / Raksa (13600 kg/m³)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Dynamic Diver Visualizer -->
+                                <div class="bg-gradient-to-b from-cyan-900/40 to-blue-950/80 rounded-2xl p-3 border border-cyan-500/30 relative h-36 flex flex-col justify-between overflow-hidden">
+                                    <div class="text-[10px] text-cyan-300 font-semibold">Permukaan Air ($h = 0\text{ m}$)</div>
+                                    <div id="diverIcon" class="absolute left-1/2 -translate-x-1/2 transition-all duration-300 text-amber-300 flex flex-col items-center">
+                                        <i data-lucide="navigation-2" class="w-6 h-6 rotate-180"></i>
+                                        <span class="text-[9px] font-bold bg-slate-900/80 px-1 rounded">Penyelam</span>
+                                    </div>
+                                    <div class="text-[10px] text-cyan-500 font-semibold text-right">Dasar Laut</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-slate-700/60 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-400">Tekanan ($P_h$):</span>
+                            <span id="resHydroP" class="text-xl font-extrabold text-cyan-300">100.000 Pa</span>
+                        </div>
+                    </div>
+
+                    <!-- Simulasi 3: Dongkrak Hidrolik (Hukum Pascal) -->
+                    <div class="glass-card rounded-3xl p-6 glass-card-hover flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="p-3 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                    <i data-lucide="scale" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-lg text-white">3. Dongkrak Hidrolik</h3>
+                                    <p class="text-xs text-slate-400">$\frac{F_1}{A_1} = \frac{F_2}{A_2}$</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4 text-sm">
+                                <div>
+                                    <label class="flex justify-between font-semibold mb-1">
+                                        <span>Gaya Input ($F_1$):</span>
+                                        <span id="valF1" class="text-emerald-400 font-bold">200 N</span>
+                                    </label>
+                                    <input type="range" id="inputF1" min="10" max="1000" step="10" value="200" oninput="updatePascalSim()" class="w-full accent-emerald-500">
+                                </div>
+
+                                <div>
+                                    <label class="flex justify-between font-semibold mb-1">
+                                        <span>Rasio Luas Penampang ($A_2 / A_1$):</span>
+                                        <span id="valRatio" class="text-emerald-400 font-bold">25x Lebih Besar</span>
+                                    </label>
+                                    <input type="range" id="inputRatio" min="2" max="50" step="1" value="25" oninput="updatePascalSim()" class="w-full accent-emerald-500">
+                                </div>
+
+                                <!-- Dynamic Hydraulic Visualizer -->
+                                <div class="bg-slate-900/80 rounded-2xl p-4 border border-slate-700 h-36 flex items-end justify-around relative">
+                                    <!-- Small Piston -->
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-8 h-12 bg-emerald-500/40 border border-emerald-400 rounded-t flex items-center justify-center text-[10px] font-bold">A₁</div>
+                                        <span class="text-[10px] text-slate-400 mt-1">Input $F_1$</span>
+                                    </div>
+
+                                    <!-- Connecting Tube -->
+                                    <div class="h-3 bg-indigo-900/60 border-t border-indigo-500/50 w-20 self-end mb-2"></div>
+
+                                    <!-- Large Piston -->
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-16 h-20 bg-gradient-to-tr from-amber-500 to-emerald-500 border border-amber-300 rounded-t flex flex-col items-center justify-center text-xs font-bold text-slate-900 shadow-md">
+                                            <i data-lucide="truck" class="w-5 h-5"></i>
+                                            A₂
+                                        </div>
+                                        <span class="text-[10px] text-slate-400 mt-1">Output $F_2$</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-slate-700/60 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-400">Massa Beban Diangkat ($m$):</span>
+                            <span id="resPascalM" class="text-xl font-extrabold text-emerald-300">500 kg</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- TAB 3: PAPAN RUMUS & INFOGRAFIS -->
+            <section id="section-formulas" class="hidden space-y-6">
+                
+                <div class="text-center max-w-2xl mx-auto space-y-2">
+                    <h2 class="text-2xl font-bold font-heading text-white">Ringkasan Rumus & Konsep Kunci</h2>
+                    <p class="text-slate-400 text-sm">Pahami 5 Pilar Utama Materi Tekanan Fisika Kelas 9 SMP!</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Card 1 -->
+                    <div class="glass-card rounded-3xl p-6 border-l-4 border-purple-500 glass-card-hover space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="p-2.5 rounded-xl bg-purple-500/20 text-purple-400 font-bold text-xs">01</span>
+                            <h3 class="font-bold text-lg text-white">Tekanan Zat Padat</h3>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-900/80 text-center font-bold text-purple-300">
+                            $$P = \frac{F}{A}$$
+                        </div>
+                        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+                            <li><b>P</b> = Tekanan ($\text{N/m}^2$ atau Pascal / Pa)</li>
+                            <li><b>F</b> = Gaya tekan (Newton / N)</li>
+                            <li><b>A</b> = Luas bidang tekan ($\text{m}^2$)</li>
+                            <li><span class="text-amber-400 font-semibold">Trik:</span> Semakin kecil luas alas ($A$), maka tekanan ($P$) makin besar!</li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="glass-card rounded-3xl p-6 border-l-4 border-cyan-500 glass-card-hover space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="p-2.5 rounded-xl bg-cyan-500/20 text-cyan-400 font-bold text-xs">02</span>
+                            <h3 class="font-bold text-lg text-white">Tekanan Hidrostatis</h3>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-900/80 text-center font-bold text-cyan-300">
+                            $$P_h = \rho \cdot g \cdot h$$
+                        </div>
+                        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+                            <li><b>$\rho$</b> = Massa jenis cairan ($\text{kg/m}^3$)</li>
+                            <li><b>g</b> = Percepatan gravitasi ($10\text{ m/s}^2$)</li>
+                            <li><b>h</b> = Kedalaman dari permukaan air ($\text{m}$)</li>
+                            <li><span class="text-amber-400 font-semibold">Ingat:</span> Kedalaman diukur dari PERMUKAAN, bukan dari dasar!</li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="glass-card rounded-3xl p-6 border-l-4 border-emerald-500 glass-card-hover space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 font-bold text-xs">03</span>
+                            <h3 class="font-bold text-lg text-white">Hukum Pascal</h3>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-900/80 text-center font-bold text-emerald-300">
+                            $$\frac{F_1}{A_1} = \frac{F_2}{A_2}$$
+                        </div>
+                        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+                            <li>Tekanan pada zat cair di ruang tertutup diteruskan ke segala arah sama besar.</li>
+                            <li>Gaya kecil pada $A_1$ bisa menghasilkan gaya besar di $A_2$.</li>
+                            <li><b>Contoh Aplikasi:</b> Dongkrak hidrolik, rem hidrolik, pompa mobil.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="glass-card rounded-3xl p-6 border-l-4 border-amber-500 glass-card-hover space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="p-2.5 rounded-xl bg-amber-500/20 text-amber-400 font-bold text-xs">04</span>
+                            <h3 class="font-bold text-lg text-white">Hukum Archimedes</h3>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-900/80 text-center font-bold text-amber-300">
+                            $$F_A = \rho_{cair} \cdot g \cdot V_{celup}$$
+                        </div>
+                        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+                            <li><b>Gaya Apung ($F_A$):</b> Gaya ke atas yang dialami benda di cairan.</li>
+                            <li><b>Berat Semu ($W'$):</b> $W' = W - F_A$</li>
+                            <li><b>Benda Mengapung:</b> $\rho_{benda} = \frac{V_{celup}}{V_{total}} \cdot \rho_{cair}$</li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="glass-card rounded-3xl p-6 border-l-4 border-rose-500 glass-card-hover space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="p-2.5 rounded-xl bg-rose-500/20 text-rose-400 font-bold text-xs">05</span>
+                            <h3 class="font-bold text-lg text-white">Tekanan Udara & Gas</h3>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-900/80 text-center font-bold text-rose-300">
+                            $$P = 76 - \frac{h}{100} \text{ (cmHg)}$$
+                        </div>
+                        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+                            <li>Setiap naik $100\text{ m}$ dari permukaan laut, tekanan udara turun $1\text{ cmHg}$.</li>
+                            <li><b>Hukum Boyle:</b> $P_1 \cdot V_1 = P_2 \cdot V_2$ (pada suhu tetap).</li>
+                            <li><b>Contoh Aplikasi:</b> Barometer, Manometer, Balon udara.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 6 -->
+                    <div class="glass-card rounded-3xl p-6 border-l-4 border-indigo-500 glass-card-hover space-y-3 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="p-2.5 rounded-xl bg-indigo-500/20 text-indigo-400 font-bold text-xs">06</span>
+                                <h3 class="font-bold text-lg text-white">Tips Ujian Fisika</h3>
+                            </div>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Pastikan selalu mengubah satuan ke standar SI sebelum menghitung:
+                            </p>
+                            <div class="mt-2 text-xs space-y-1 text-indigo-300 font-mono bg-slate-900/60 p-2.5 rounded-xl border border-indigo-500/20">
+                                <div>• $1\text{ cm}^2 = 10^{-4}\text{ m}^2 = 0{,}0001\text{ m}^2$</div>
+                                <div>• $1\text{ cm} = 0{,}01\text{ m}$</div>
+                                <div>• $1\text{ g/cm}^3 = 1.000\text{ kg/m}^3$</div>
+                            </div>
+                        </div>
+                        <button onclick="switchTab('quiz')" class="btn-gradient-primary w-full py-2 rounded-xl text-xs font-bold text-white mt-3">
+                            Uji Pemahaman di Kuis →
+                        </button>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- TAB 4: PENCAPAIAN & ANALISIS -->
+            <section id="section-achievements" class="hidden space-y-6">
+                
+                <div class="glass-card rounded-3xl p-8 text-center max-w-2xl mx-auto space-y-4 relative overflow-hidden">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center mx-auto text-slate-900 shadow-xl shadow-amber-500/30">
+                        <i data-lucide="award" class="w-10 h-10"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold font-heading text-white">Hasil Kuis & Ringkasan Lencana</h2>
+                        <p class="text-slate-400 text-sm">Capaian performa pengerjaan kuis kamu sejauh ini:</p>
+                    </div>
+
+                    <!-- Score Card Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4">
+                        <div class="bg-slate-900/70 p-4 rounded-2xl border border-slate-700">
+                            <span class="text-xs text-slate-400 block">Total Nilai</span>
+                            <span id="finalScore" class="text-2xl font-extrabold text-amber-400">0 / 100</span>
+                        </div>
+                        <div class="bg-slate-900/70 p-4 rounded-2xl border border-slate-700">
+                            <span class="text-xs text-slate-400 block">Benar</span>
+                            <span id="finalCorrect" class="text-2xl font-extrabold text-emerald-400">0</span>
+                        </div>
+                        <div class="bg-slate-900/70 p-4 rounded-2xl border border-slate-700">
+                            <span class="text-xs text-slate-400 block">Salah / Lewat</span>
+                            <span id="finalWrong" class="text-2xl font-extrabold text-rose-400">0</span>
+                        </div>
+                        <div class="bg-slate-900/70 p-4 rounded-2xl border border-slate-700">
+                            <span class="text-xs text-slate-400 block">Akurasi</span>
+                            <span id="finalAccuracy" class="text-2xl font-extrabold text-indigo-400">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex justify-center gap-3">
+                        <button onclick="restartQuiz()" class="btn-gradient-primary px-6 py-2.5 rounded-xl font-bold text-sm text-white flex items-center gap-2">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Ulangi Kuis
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Badges unlocked gallery -->
+                <div class="glass-card rounded-3xl p-6">
+                    <h3 class="font-bold text-lg text-white mb-4 flex items-center gap-2">
+                        <i data-lucide="shield-check" class="w-5 h-5 text-indigo-400"></i> Lencana Keahlian Fisika Tekanan
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="badgesContainer">
+                        <!-- Badges rendered by JS -->
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           1. DATABASE 10 SOAL TEKANAN FISIKA KELAS 9
+           ========================================================================== */
+        const quizData = [
+            {
+                id: 1,
+                category: "Tekanan Zat Padat",
+                question: "Sebuah balok beton berukuran $20\\text{ cm} \\times 10\\text{ cm} \\times 5\\text{ cm}$ memiliki berat $60\\text{ N}$. Berapakah **tekanan maksimum** yang dapat dihasilkan oleh balok tersebut saat diletakkan di atas lantai?",
+                options: [
+                    "$3.000\\text{ N/m}^2$",
+                    "$6.000\\text{ N/m}^2$",
+                    "$12.000\\text{ N/m}^2$",
+                    "$24.000\\text{ N/m}^2$"
+                ],
+                correct: 2,
+                hint: "Tekanan maksimum dihasilkan ketika luas permukaan alas ($A$) bernilai paling MINIMUM ($10\\text{ cm} \\times 5\\text{ cm}$). Gunakan $P = \\frac{F}{A}$.",
+                explanation: "Untuk menghasilkan **tekanan maksimum**, luas alas ($A$) harus **seminimal mungkin**.<br>" +
+                             "• $A_{\\text{min}} = 10\\text{ cm} \\times 5\\text{ cm} = 50\\text{ cm}^2 = 0{,}005\\text{ m}^2$<br>" +
+                             "• $F = 60\\text{ N}$<br>" +
+                             "• $P_{\\text{maks}} = \\frac{F}{A_{\\text{min}}} = \\frac{60}{0{,}005} = 12.000\\text{ N/m}^2$."
+            },
+            {
+                id: 2,
+                category: "Aplikasi Tekanan Zat Padat",
+                question: "Berdasarkan prinsip tekanan zat padat, mengapa kaki bebek yang berselaput tidak mudah tenggelam di tanah berlumpur dibandingkan kaki ayam?",
+                options: [
+                    "Memiliki selaput dengan luas permukaan alas yang lebih besar.",
+                    "Kaki bebek menghasilkan gaya tekan yang lebih kecil daripada beratnya.",
+                    "Selaput bebek memperbesar tekanan ke tanah berlumpur.",
+                    "Kaki bebek memiliki massa jenis yang lebih ringan daripada lumpur."
+                ],
+                correct: 0,
+                hint: "Berdasarkan $P = \\frac{F}{A}$, jika luas permukaan ($A$) diperbesar, maka tekanan ($P$) akan semakin...",
+                explanation: "Kaki bebek berselaput memiliki **luas permukaan alas ($A$) yang lebih besar**. Karena $P = \\frac{F}{A}$, semakin besar luas penampang alasnya, maka **tekanan ($P$) yang diberikan ke tanah berlumpur semakin kecil**, sehingga bebek tidak mudah tenggelam."
+            },
+            {
+                id: 3,
+                category: "Tekanan Hidrostatis",
+                question: "Seorang penyelam sedang berenang pada kedalaman $15\\text{ m}$ di bawah permukaan air laut (massa jenis air laut $\\rho = 1.000\\text{ kg/m}^3$ dan $g = 10\\text{ m/s}^2$). Jika kedalaman total dasar laut di lokasi tersebut adalah $25\\text{ m}$, berapakah tekanan hidrostatis yang dialami penyelam?",
+                options: [
+                    "$100.000\\text{ Pa}$",
+                    "$150.000\\text{ Pa}$",
+                    "$250.000\\text{ Pa}$",
+                    "$400.000\\text{ Pa}$"
+                ],
+                correct: 1,
+                hint: "Tekanan hidrostatis dihitung berdasarkan kedalaman penyelam diukur dari PERMUKAAN air ($h = 15\\text{ m}$), bukan dasar laut.",
+                explanation: "Gunakan rumus Tekanan Hidrostatis $P_h = \\rho \\cdot g \\cdot h$:<br>" +
+                             "• $\\rho = 1.000\\text{ kg/m}^3$<br>" +
+                             "• $g = 10\\text{ m/s}^2$<br>" +
+                             "• $h = 15\\text{ m}$ (kedalaman dari permukaan)<br>" +
+                             "• $P_h = 1.000 \\times 10 \\times 15 = 150.000\\text{ Pa}$."
+            },
+            {
+                id: 4,
+                category: "Perbandingan Tekanan Hidrostatis",
+                question: "Titik A berada pada kedalaman $40\\text{ cm}$ dalam air ($\\rho_A = 1.000\\text{ kg/m}^3$), sedangkan titik B berada pada kedalaman $50\\text{ cm}$ dalam minyak ($\\rho_B = 800\\text{ kg/m}^3$). Bagaimana perbandingan tekanan hidrostatis di titik A ($P_A$) dan titik B ($P_B$)?",
+                options: [
+                    "$P_A : P_B = 1 : 1$",
+                    "$P_A : P_B = 4 : 5$",
+                    "$P_A : P_B = 5 : 4$",
+                    "$P_A : P_B = 2 : 1$"
+                ],
+                correct: 0,
+                hint: "Hitung masing-masing $P_A = \\rho_A \\cdot g \\cdot h_A$ dan $P_B = \\rho_B \\cdot g \\cdot h_B$ lalu bagikan.",
+                explanation: "Hitung nilai tekanan hidrostatis masing-masing:<br>" +
+                             "• $P_A = 1.000 \\times 10 \\times 0{,}4\\text{ m} = 4.000\\text{ Pa}$<br>" +
+                             "• $P_B = 800 \\times 10 \\times 0{,}5\\text{ m} = 4.000\\text{ Pa}$<br>" +
+                             "Maka $P_A : P_B = 4.000 : 4.000 = 1 : 1$."
+            },
+            {
+                id: 5,
+                category: "Hukum Pascal",
+                question: "Sebuah dongkrak hidrolik memiliki penampang kecil bernilai $20\\text{ cm}^2$ dan penampang besar bernilai $500\\text{ cm}^2$. Jika gaya sebesar $200\\text{ N}$ diberikan pada penampang kecil, berapa massa beban maksimum yang dapat diangkat pada penampang besar? ($g = 10\\text{ m/s}^2$)",
+                options: [
+                    "$250\\text{ kg}$",
+                    "$500\\text{ kg}$",
+                    "$1.000\\text{ kg}$",
+                    "$5.000\\text{ kg}$"
+                ],
+                correct: 1,
+                hint: "Gunakan Hukum Pascal: $\\frac{F_1}{A_1} = \\frac{F_2}{A_2}$. Setelah mendapat $F_2$, hitung massa $m = \\frac{F_2}{g}$.",
+                explanation: "Berdasarkan Hukum Pascal:<br>" +
+                             "• $\\frac{F_1}{A_1} = \\frac{F_2}{A_2} \\implies \\frac{200}{20} = \\frac{F_2}{500}$<br>" +
+                             "• $10 = \\frac{F_2}{500} \\implies F_2 = 5.000\\text{ N}$<br>" +
+                             "• $m = \\frac{F_2}{g} = \\frac{5.000}{10} = 500\\text{ kg}$."
+            },
+            {
+                id: 6,
+                category: "Hukum Archimedes (Berat Semu)",
+                question: "Sebuah benda bermassa $10\\text{ kg}$ dengan volume $0{,}004\\text{ m}^3$ dicelupkan seluruhnya ke dalam air ($\\rho = 1.000\\text{ kg/m}^3$, $g = 10\\text{ m/s}^2$). Berapakah **berat semu** benda tersebut saat berada di dalam air?",
+                options: [
+                    "$40\\text{ N}$",
+                    "$60\\text{ N}$",
+                    "$80\\text{ N}$",
+                    "$100\\text{ N}$"
+                ],
+                correct: 1,
+                hint: "Berat semu $W' = W - F_A$. Cari terlebih dahulu berat asli $W = m \\cdot g$ dan Gaya Apung $F_A = \\rho \\cdot g \\cdot V$.",
+                explanation: "1. Berat asli di udara $W = m \\cdot g = 10 \\times 10 = 100\\text{ N}$.<br>" +
+                             "2. Gaya Ke Atas (Archimedes) $F_A = \\rho \\cdot g \\cdot V_{celup} = 1.000 \\times 10 \\times 0{,}004 = 40\\text{ N}$.<br>" +
+                             "3. Berat semu $W' = W - F_A = 100\\text{ N} - 40\\text{ N} = 60\\text{ N}$."
+            },
+            {
+                id: 7,
+                category: "Hukum Archimedes (Terapung)",
+                question: "Sebuah benda mengapung di atas permukaan air dengan $\\frac{3}{4}$ bagian volumenya tenggelam di dalam air. Jika massa jenis air adalah $1.000\\text{ kg/m}^3$, berapakah massa jenis benda tersebut?",
+                options: [
+                    "$250\\text{ kg/m}^3$",
+                    "$500\\text{ kg/m}^3$",
+                    "$750\\text{ kg/m}^3$",
+                    "$1.333\\text{ kg/m}^3$"
+                ],
+                correct: 2,
+                hint: "Untuk benda terapung: $\\rho_{\\text{benda}} = \\left(\\frac{V_{\\text{celup}}}{V_{\\text{total}}}\\right) \\times \\rho_{\\text{cairan}}$.",
+                explanation: "Prinsip Keseimbangan Terapung:<br>" +
+                             "• $\\rho_{\\text{benda}} = \\frac{V_{\\text{celup}}}{V_{\\text{total}}} \\times \\rho_{\\text{air}}$<br>" +
+                             "• $\\rho_{\\text{benda}} = \\frac{3}{4} \\times 1.000\\text{ kg/m}^3 = 750\\text{ kg/m}^3$."
+            },
+            {
+                id: 8,
+                category: "Tekanan Udara / Atmosfer",
+                question: "Kota A terletak pada ketinggian $800\\text{ m}$ di atas permukaan laut. Jika tekanan udara di permukaan laut adalah $76\\text{ cmHg}$ dan setiap kenaikan $100\\text{ m}$ tekanan udara berkurang $1\\text{ cmHg}$, berapakah tekanan udara di Kota A?",
+                options: [
+                    "$68\\text{ cmHg}$",
+                    "$70\\text{ cmHg}$",
+                    "$72\\text{ cmHg}$",
+                    "$84\\text{ cmHg}$"
+                ],
+                correct: 0,
+                hint: "Gunakan rumus penurunan tekanan ketinggian: $P = 76 - \\frac{h}{100}$.",
+                explanation: "• Kenaikan tinggi $h = 800\\text{ m}$.<br>" +
+                             "• Penurunan tekanan = $\\frac{800}{100} = 8\\text{ cmHg}$.<br>" +
+                             "• Tekanan di Kota A = $76 - 8 = 68\\text{ cmHg}$."
+            },
+            {
+                id: 9,
+                category: "Hukum Boyle (Tekanan Gas)",
+                question: "Suatu gas ideal berada dalam wadah tertutup bertekanan $2\\text{ atm}$ dengan volume $6\\text{ liter}$. Jika volume wadah diperkecil menjadi $2\\text{ liter}$ pada suhu tetap, berapakah tekanan gas tersebut sekarang?",
+                options: [
+                    "$3\\text{ atm}$",
+                    "$4\\text{ atm}$",
+                    "$6\\text{ atm}$",
+                    "$12\\text{ atm}$"
+                ],
+                correct: 2,
+                hint: "Gunakan Hukum Boyle: $P_1 \\cdot V_1 = P_2 \\cdot V_2$.",
+                explanation: "Berdasarkan Hukum Boyle ($P_1 \\cdot V_1 = P_2 \\cdot V_2$):<br>" +
+                             "• $2 \\times 6 = P_2 \\times 2$<br>" +
+                             "• $12 = 2 P_2 \\implies P_2 = 6\\text{ atm}$."
+            },
+            {
+                id: 10,
+                category: "Aplikasi Teknologi Tekanan",
+                question: "Manakah pasangan antara alat teknologi dan prinsip dasar fisika tekanan yang paling tepat?",
+                options: [
+                    "Dongkrak hidrolik – Hukum Archimedes",
+                    "Kapal selam – Hukum Archimedes",
+                    "Balon udara – Hukum Pascal",
+                    "Rem piringan mobil – Hukum Boyle"
+                ],
+                correct: 1,
+                hint: "Kapal selam mengatur gaya apung dengan mengisi atau membuang air di tangki pemberatnya.",
+                explanation: "Pasangan yang tepat:<br>" +
+                             "• **Kapal selam**: Menggunakan **Hukum Archimedes** (gaya apung / melayang / tenggelam).<br>" +
+                             "• Dongkrak & rem hidrolik: Hukum Pascal.<br>" +
+                             "• Balon udara: Hukum Archimedes pada fluida gas."
+            }
+        ];
+
+        /* ==========================================================================
+           2. APP STATE MANAGEMENT
+           ========================================================================== */
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let answeredSubmitted = new Array(quizData.length).fill(false);
+        let soundEnabled = true;
+        let quizTimerSeconds = 0;
+        let timerInterval = null;
+
+        // Web Audio API Sound Synthesizer
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'correct') {
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3); // A5
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                    osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.3); // A2
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'click') {
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.08);
+                }
+            } catch (e) { console.log('Audio init error'); }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            const text = document.getElementById('soundText');
+            if (soundEnabled) {
+                icon.setAttribute('data-lucide', 'volume-2');
+                icon.className = 'w-5 h-5 text-emerald-400';
+                text.innerText = 'Suara Aktif';
+            } else {
+                icon.setAttribute('data-lucide', 'volume-x');
+                icon.className = 'w-5 h-5 text-slate-500';
+                text.innerText = 'Mute';
+            }
+            lucide.createIcons();
+        }
+
+        /* ==========================================================================
+           3. UI NAVIGATION & TABS
+           ========================================================================== */
+        function switchTab(tabName) {
+            playSound('click');
+            ['quiz', 'sim', 'formulas', 'achievements'].forEach(t => {
+                const sec = document.getElementById(`section-${t}`);
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tabName) {
+                    sec.classList.remove('hidden');
+                    btn.className = "tab-btn px-5 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2 bg-purple-600 text-white shadow-lg shadow-purple-600/30";
+                } else {
+                    sec.classList.add('hidden');
+                    btn.className = "tab-btn px-5 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800";
+                }
+            });
+
+            if (tabName === 'achievements') {
+                updateAchievementsView();
+            }
+            renderMathInElement(document.body);
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                quizTimerSeconds++;
+                const mins = String(Math.floor(quizTimerSeconds / 60)).padStart(2, '0');
+                const secs = String(quizTimerSeconds % 60).padStart(2, '0');
+                document.getElementById('quizTimer').innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        /* ==========================================================================
+           4. QUIZ ENGINE LOGIC
+           ========================================================================== */
+        function renderQuestion() {
+            const q = quizData[currentQuestionIndex];
+
+            // Render Header Info
+            document.getElementById('questionCategory').innerText = q.category;
+            document.getElementById('questionCounter').innerText = `Soal ${currentQuestionIndex + 1} / ${quizData.length}`;
+            document.getElementById('progressBar').style.width = `${((currentQuestionIndex + 1) / quizData.length) * 100}%`;
+            document.getElementById('questionText').innerHTML = q.question;
+            document.getElementById('hintContent').innerHTML = q.hint;
+
+            // Hide hint initially
+            document.getElementById('hintBox').classList.add('hidden');
+
+            // Render Options
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            const isSubmitted = answeredSubmitted[currentQuestionIndex];
+            const userChoice = userAnswers[currentQuestionIndex];
+
+            q.options.forEach((opt, idx) => {
+                const optBtn = document.createElement('button');
+                optBtn.onclick = () => selectOption(idx);
+
+                let btnStyle = "w-full p-4 rounded-2xl text-left border text-sm font-medium transition flex items-start gap-3 relative ";
+                
+                if (isSubmitted) {
+                    if (idx === q.correct) {
+                        btnStyle += "bg-emerald-500/20 border-emerald-500 text-emerald-200 font-bold ";
+                    } else if (idx === userChoice && userChoice !== q.correct) {
+                        btnStyle += "bg-rose-500/20 border-rose-500 text-rose-200 font-bold ";
+                    } else {
+                        btnStyle += "bg-slate-800/50 border-slate-700/60 text-slate-400 opacity-60 ";
+                    }
+                } else {
+                    if (userChoice === idx) {
+                        btnStyle += "bg-purple-600/30 border-purple-500 text-white font-semibold ring-2 ring-purple-500/50 ";
+                    } else {
+                        btnStyle += "bg-slate-800/80 border-slate-700 text-slate-200 hover:border-slate-500 hover:bg-slate-700/50 ";
+                    }
+                }
+
+                optBtn.className = btnStyle;
+
+                const letter = String.fromCharCode(65 + idx);
+                optBtn.innerHTML = `
+                    <span class="w-7 h-7 rounded-xl ${userChoice === idx ? 'bg-purple-500 text-white' : 'bg-slate-700 text-slate-300'} flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                        ${letter}
+                    </span>
+                    <span class="leading-relaxed flex-1">${opt}</span>
+                `;
+                container.appendChild(optBtn);
+            });
+
+            // Explanation box
+            const expBox = document.getElementById('explanationBox');
+            if (isSubmitted) {
+                expBox.classList.remove('hidden');
+                document.getElementById('explanationContent').innerHTML = q.explanation;
+            } else {
+                expBox.classList.add('hidden');
+            }
+
+            // Buttons enable/disable
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            
+            const checkBtn = document.getElementById('checkBtn');
+            if (isSubmitted) {
+                checkBtn.classList.add('hidden');
+            } else {
+                checkBtn.classList.remove('hidden');
+                checkBtn.disabled = userChoice === null;
+            }
+
+            renderPalette();
+            updateScoreDisplay();
+
+            // Re-render KaTeX math
+            setTimeout(() => {
+                renderMathInElement(document.getElementById('section-quiz'));
+            }, 50);
+        }
+
+        function selectOption(idx) {
+            if (answeredSubmitted[currentQuestionIndex]) return;
+            playSound('click');
+            userAnswers[currentQuestionIndex] = idx;
+            renderQuestion();
+        }
+
+        function submitAnswer() {
+            const userChoice = userAnswers[currentQuestionIndex];
+            if (userChoice === null) return;
+
+            answeredSubmitted[currentQuestionIndex] = true;
+            const q = quizData[currentQuestionIndex];
+
+            if (userChoice === q.correct) {
+                playSound('correct');
+            } else {
+                playSound('wrong');
+            }
+
+            renderQuestion();
+            checkAllCompleted();
+        }
+
+        function toggleHint() {
+            playSound('click');
+            const hintBox = document.getElementById('hintBox');
+            hintBox.classList.toggle('hidden');
+            renderMathInElement(hintBox);
+        }
+
+        function navigateQuestion(direction) {
+            playSound('click');
+            const newIndex = currentQuestionIndex + direction;
+            if (newIndex >= 0 && newIndex < quizData.length) {
+                currentQuestionIndex = newIndex;
+                renderQuestion();
+            }
+        }
+
+        function renderPalette() {
+            const palette = document.getElementById('questionGridPalette');
+            palette.innerHTML = '';
+
+            quizData.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.onclick = () => {
+                    playSound('click');
+                    currentQuestionIndex = idx;
+                    renderQuestion();
+                };
+
+                let cls = "w-9 h-9 rounded-xl font-bold text-xs transition flex items-center justify-center border ";
+                const isSubmitted = answeredSubmitted[idx];
+                const userChoice = userAnswers[idx];
+
+                if (idx === currentQuestionIndex) {
+                    cls += "ring-2 ring-purple-400 ring-offset-2 ring-offset-slate-900 ";
+                }
+
+                if (isSubmitted) {
+                    if (userChoice === q.correct) {
+                        cls += "bg-emerald-500/20 border-emerald-500 text-emerald-400";
+                    } else {
+                        cls += "bg-rose-500/20 border-rose-500 text-rose-400";
+                    }
+                } else if (userChoice !== null) {
+                    cls += "bg-purple-500/20 border-purple-500 text-purple-300";
+                } else {
+                    cls += "bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700";
+                }
+
+                btn.className = cls;
+                btn.innerText = idx + 1;
+                palette.appendChild(btn);
+            });
+        }
+
+        function updateScoreDisplay() {
+            let score = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (answeredSubmitted[idx] && ans === quizData[idx].correct) {
+                    score += 10;
+                }
+            });
+            document.getElementById('scoreDisplay').innerText = `Skor: ${score}`;
+            return score;
+        }
+
+        function checkAllCompleted() {
+            const totalSubmitted = answeredSubmitted.filter(Boolean).length;
+            if (totalSubmitted === quizData.length) {
+                // Trigger confetti if high score
+                const score = updateScoreDisplay();
+                if (score >= 70) {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
+            }
+        }
+
+        function restartQuiz() {
+            playSound('click');
+            userAnswers = new Array(quizData.length).fill(null);
+            answeredSubmitted = new Array(quizData.length).fill(false);
+            currentQuestionIndex = 0;
+            quizTimerSeconds = 0;
+            renderQuestion();
+            switchTab('quiz');
+        }
+
+        function resetAllData() {
+            if (confirm("Apakah kamu yakin ingin mereset seluruh kuis dan simulasi?")) {
+                restartQuiz();
+            }
+        }
+
+        /* ==========================================================================
+           5. INTERACTIVE CALCULATOR SIMULATORS
+           ========================================================================== */
+        function updateSolidSim() {
+            const F = parseFloat(document.getElementById('inputF').value);
+            const A = parseFloat(document.getElementById('inputA').value);
+            
+            document.getElementById('valF').innerText = `${F} N`;
+            document.getElementById('valA').innerText = `${A.toFixed(1)} m²`;
+
+            const P = F / A;
+            document.getElementById('resSolidP').innerText = `${P.toLocaleString('id-ID', {maximumFractionDigits: 1})} N/m²`;
+
+            // Adjust Visual Box Size
+            const box = document.getElementById('blockVisual');
+            const visualWidth = Math.max(40, Math.min(180, A * 25));
+            box.style.width = `${visualWidth}px`;
+        }
+
+        function updateHydroSim() {
+            const h = parseFloat(document.getElementById('inputH').value);
+            const rho = parseFloat(document.getElementById('selectFluid').value);
+            const g = 10;
+
+            document.getElementById('valH').innerText = `${h} m`;
+
+            const fluidNames = {
+                "1000": "Air murni (1000 kg/m³)",
+                "1025": "Air Laut (1025 kg/m³)",
+                "800": "Minyak (800 kg/m³)",
+                "13600": "Raksasa (13600 kg/m³)"
+            };
+            document.getElementById('valRho').innerText = fluidNames[document.getElementById('selectFluid').value] || `${rho} kg/m³`;
+
+            const Ph = rho * g * h;
+            document.getElementById('resHydroP').innerText = `${Ph.toLocaleString('id-ID')} Pa`;
+
+            // Move Diver Icon according to depth h (1-50m)
+            const diver = document.getElementById('diverIcon');
+            const topPercent = Math.min(75, 15 + (h / 50) * 60);
+            diver.style.top = `${topPercent}%`;
+        }
+
+        function updatePascalSim() {
+            const F1 = parseFloat(document.getElementById('inputF1').value);
+            const ratio = parseFloat(document.getElementById('inputRatio').value);
+            const g = 10;
+
+            document.getElementById('valF1').innerText = `${F1} N`;
+            document.getElementById('valRatio').innerText = `${ratio}x Lebih Besar`;
+
+            const F2 = F1 * ratio;
+            const m = F2 / g;
+
+            document.getElementById('resPascalM').innerText = `${m.toLocaleString('id-ID')} kg`;
+        }
+
+        /* ==========================================================================
+           6. ACHIEVEMENTS & BADGES
+           ========================================================================== */
+        function updateAchievementsView() {
+            let correctCount = 0;
+            let wrongCount = 0;
+
+            answeredSubmitted.forEach((sub, idx) => {
+                if (sub) {
+                    if (userAnswers[idx] === quizData[idx].correct) {
+                        correctCount++;
+                    } else {
+                        wrongCount++;
+                    }
+                }
+            });
+
+            const score = correctCount * 10;
+            const accuracy = quizData.length > 0 ? Math.round((correctCount / quizData.length) * 100) : 0;
+
+            document.getElementById('finalScore').innerText = `${score} / 100`;
+            document.getElementById('finalCorrect').innerText = correctCount;
+            document.getElementById('finalWrong').innerText = quizData.length - correctCount;
+            document.getElementById('finalAccuracy').innerText = `${accuracy}%`;
+
+            // Badges Data
+            const badges = [
+                {
+                    title: "Pemula Tekanan",
+                    desc: "Selesaikan minimal 1 soal dalam kuis.",
+                    icon: "zap",
+                    unlocked: answeredSubmitted.some(Boolean)
+                },
+                {
+                    title: "Pakar Archimedes",
+                    desc: "Jawab benar soal Hukum Archimedes.",
+                    icon: "ship",
+                    unlocked: (answeredSubmitted[5] && userAnswers[5] === quizData[5].correct) || (answeredSubmitted[6] && userAnswers[6] === quizData[6].correct)
+                },
+                {
+                    title: "Master Pascal",
+                    desc: "Jawab benar soal Dongkrak Hidrolik.",
+                    icon: "scale",
+                    unlocked: answeredSubmitted[4] && userAnswers[4] === quizData[4].correct
+                },
+                {
+                    title: "Jawara Fisika 100%",
+                    desc: "Dapatkan skor sempurna 100 pada kuis.",
+                    icon: "trophy",
+                    unlocked: score === 100
+                }
+            ];
+
+            const bContainer = document.getElementById('badgesContainer');
+            bContainer.innerHTML = '';
+
+            badges.forEach(b => {
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-2xl border flex items-center gap-3.5 transition ${
+                    b.unlocked 
+                    ? 'bg-purple-900/30 border-purple-500/50 text-white' 
+                    : 'bg-slate-900/40 border-slate-800 text-slate-500 opacity-60'
+                }`;
+
+                card.innerHTML = `
+                    <div class="w-12 h-12 rounded-xl ${b.unlocked ? 'bg-gradient-to-tr from-purple-500 to-indigo-500 text-white shadow-lg' : 'bg-slate-800 text-slate-600'} flex items-center justify-center shrink-0">
+                        <i data-lucide="${b.icon}" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm ${b.unlocked ? 'text-purple-200' : 'text-slate-400'}">${b.title}</h4>
+                        <p class="text-xs text-slate-400 mt-0.5">${b.desc}</p>
+                        <span class="text-[10px] font-bold mt-1 inline-block ${b.unlocked ? 'text-emerald-400' : 'text-slate-600'}">
+                            ${b.unlocked ? '✓ Terbuka' : '🔒 Terkunci'}
+                        </span>
+                    </div>
+                `;
+                bContainer.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        /* ==========================================================================
+           7. INITIALIZATION ON WINDOW LOAD
+           ========================================================================== */
+        window.onload = function() {
+            lucide.createIcons();
+            startTimer();
+            renderQuestion();
+            updateSolidSim();
+            updateHydroSim();
+            updatePascalSim();
+            
+            // Auto render KaTeX equation math strings
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        };
+    </script>
+</body>
+</html>
