@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Tekanan Zat Padat - Fase D</title>
+    
+    <!-- Memuat Tailwind CSS untuk tampilan (styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Memuat React dan ReactDOM untuk logika aplikasi -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Memuat Babel untuk membaca kode JSX di dalam browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .animate-slide-up { animation: slideUp 0.6s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Gaya khusus input range slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #3b82f6;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #e5e7eb;
+            border-radius: 4px;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+
+    <!-- Wadah utama tempat aplikasi React akan dimuat -->
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Komponen Utama Aplikasi
+        const App = () => {
+            const [currentTab, setCurrentTab] = useState('beranda');
+            const [completedTabs, setCompletedTabs] = useState({
+                beranda: true,
+                tujuan: false,
+                memahami: false,
+                simulasi: false,
+                tantangan: false,
+                asesmen: false,
+                refleksi: false
+            });
+
+            const markTabCompleted = (tab) => {
+                setCompletedTabs(prev => ({ ...prev, [tab]: true }));
+            };
+
+            const navigateTo = (tab) => {
+                setCurrentTab(tab);
+                window.scrollTo(0, 0);
+            };
+
+            const NavBar = () => {
+                const tabs = [
+                    { id: 'beranda', label: 'Beranda', icon: '🏠' },
+                    { id: 'tujuan', label: 'Tujuan', icon: '🎯' },
+                    { id: 'memahami', label: 'Memahami', icon: '💡' },
+                    { id: 'simulasi', label: 'Simulasi', icon: '🧪' },
+                    { id: 'tantangan', label: 'Tantangan', icon: '🏆' },
+                    { id: 'asesmen', label: 'Asesmen', icon: '📝' },
+                    { id: 'refleksi', label: 'Refleksi', icon: '🧠' }
+                ];
+
+                return (
+                    <nav className="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50 overflow-x-auto">
+                        <div className="flex justify-start sm:justify-center space-x-2 sm:space-x-4 min-w-max">
+                            {tabs.map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => navigateTo(tab.id)}
+                                    className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-colors ${currentTab === tab.id
+                                        ? 'bg-blue-800 font-bold shadow-inner'
+                                        : 'hover:bg-blue-500'
+                                        } ${completedTabs[tab.id] && currentTab !== tab.id ? 'border-b-2 border-green-400' : ''}`}
+                                >
+                                    <span>{tab.icon}</span>
+                                    <span className="hidden sm:inline">{tab.label}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </nav>
+                );
+            };
+
+            const Beranda = () => (
+                <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center animate-fade-in">
+                    <div className="bg-white p-8 rounded-2xl shadow-xl max-w-2xl w-full transform hover:scale-105 transition-transform duration-300 border-t-8 border-blue-500">
+                        <h1 className="text-4xl sm:text-5xl font-extrabold text-blue-700 mb-6 tracking-tight">Tekanan Zat Padat</h1>
+                        <p className="text-xl text-gray-700 mb-8 leading-relaxed">
+                            Halo, Ilmuwan Muda! 🚀 Siap menjelajahi rahasia di balik paku yang runcing dan sepatu yang kamu pakai?
+                        </p>
+                        <div className="grid grid-cols-2 gap-4 mb-8">
+                            <div className="bg-blue-50 p-4 rounded-xl flex flex-col items-center">
+                                <span className="text-4xl mb-2">👠</span>
+                                <p className="font-semibold text-gray-700">Sepatu Hak Tinggi</p>
+                            </div>
+                            <div className="bg-green-50 p-4 rounded-xl flex flex-col items-center">
+                                <span className="text-4xl mb-2">👟</span>
+                                <p className="font-semibold text-gray-700">Sepatu Olahraga</p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => { markTabCompleted('beranda'); navigateTo('tujuan'); }}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-full text-xl shadow-lg hover:shadow-xl transition-all w-full sm:w-auto"
+                        >
+                            Mulai Belajar
+                        </button>
+                    </div>
+                </div>
+            );
+
+            const Tujuan = () => (
+                <div className="p-6 max-w-4xl mx-auto animate-fade-in">
+                    <div className="bg-white rounded-2xl shadow-lg p-8 border-l-8 border-green-500">
+                        <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                            <span className="text-4xl mr-3">🎯</span> Tujuan Perjalanan Kita
+                        </h2>
+                        <p className="text-lg text-gray-600 mb-6">Setelah menyelesaikan petualangan ini, kamu akan bisa:</p>
+                        <ul className="space-y-4">
+                            {[
+                                "Menjelaskan apa itu tekanan dan faktor yang memengaruhinya.",
+                                "Menghitung besar tekanan menggunakan gaya dan luas permukaan.",
+                                "Menganalisis mengapa bentuk benda memengaruhi tekanan dalam kehidupan sehari-hari."
+                            ].map((item, idx) => (
+                                <li key={idx} className="flex items-start bg-green-50 p-4 rounded-lg">
+                                    <span className="text-green-500 mr-3 text-xl">✔️</span>
+                                    <span className="text-gray-700 font-medium">{item}</span>
+                                </li>
+                            ))}
+                        </ul>
+
+                        <div className="mt-10 bg-yellow-50 p-6 rounded-xl border border-yellow-200">
+                            <h3 className="text-xl font-bold text-yellow-800 mb-4 flex items-center">
+                                <span className="mr-2">💡</span> Mengapa ini penting? (Berkesadaran)
+                            </h3>
+                            <p className="text-gray-700 leading-relaxed">
+                                Konsep tekanan ada di mana-mana! Dari alasan mengapa pisau harus tajam, mengapa ban truk besar dibuat lebar, hingga memilih tas punggung yang nyaman. Dengan memahami ini, kamu bisa memecahkan banyak masalah sehari-hari.
+                            </p>
+                        </div>
+
+                        <div className="mt-8 flex justify-between">
+                            <button onClick={() => navigateTo('beranda')} className="text-gray-500 hover:text-gray-700 font-medium px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                                Kembali
+                            </button>
+                            <button
+                                onClick={() => { markTabCompleted('tujuan'); navigateTo('memahami'); }}
+                                className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full shadow-md transition-all flex items-center"
+                            >
+                                Lanjut <span className="ml-2">➡️</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const Memahami = () => {
+                const [step, setStep] = useState(1);
+
+                return (
+                    <div className="p-4 sm:p-6 max-w-4xl mx-auto animate-fade-in">
+                        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+                            <div className="flex items-center justify-between mb-8 border-b pb-4">
+                                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Mari Pahami Konsepnya</h2>
+                                <div className="text-sm font-semibold text-blue-600 bg-blue-100 px-3 py-1 rounded-full">
+                                    Langkah {step} dari 3
+                                </div>
+                            </div>
+
+                            {step === 1 && (
+                                <div className="space-y-6 animate-slide-up">
+                                    <h3 className="text-xl font-bold text-gray-800 flex items-center">
+                                        <span className="text-3xl mr-2">🤔</span> Pertanyaan Pemantik
+                                    </h3>
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div className="bg-blue-50 p-6 rounded-xl border border-blue-100 hover:shadow-md transition-shadow">
+                                            <div className="text-5xl text-center mb-4">🔨📍</div>
+                                            <p className="text-lg font-medium text-gray-800 text-center">
+                                                Mengapa ujung paku dibuat runcing, bukan datar?
+                                            </p>
+                                        </div>
+                                        <div className="bg-pink-50 p-6 rounded-xl border border-pink-100 hover:shadow-md transition-shadow">
+                                            <div className="text-5xl text-center mb-4">👠👟</div>
+                                            <p className="text-lg font-medium text-gray-800 text-center">
+                                                Jika orang yang sama menginjak kakimu, mana yang lebih sakit: pakai sepatu hak tinggi atau sepatu olahraga?
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="bg-gray-50 p-4 rounded-lg italic text-gray-600 text-center mt-4">
+                                        Pikirkan sejenak alasan di baliknya...
+                                    </div>
+                                </div>
+                            )}
+
+                            {step === 2 && (
+                                <div className="space-y-6 animate-slide-up">
+                                    <h3 className="text-xl font-bold text-blue-700 border-l-4 border-blue-500 pl-3">
+                                        Apa itu Tekanan?
+                                    </h3>
+                                    <p className="text-gray-700 text-lg">
+                                        Tekanan adalah <strong>besarnya gaya</strong> yang bekerja pada <strong>luas permukaan</strong> tertentu.
+                                    </p>
+
+                                    <div className="bg-indigo-50 p-6 rounded-xl mt-6">
+                                        <h4 className="font-bold text-indigo-900 mb-4 text-center">Rahasia Tekanan</h4>
+                                        <div className="flex flex-col md:flex-row justify-center items-center gap-8">
+                                            <div className="text-center p-4 bg-white rounded-lg shadow-sm w-full">
+                                                <p className="font-bold text-lg text-gray-800 mb-2">Gaya (F)</p>
+                                                <p className="text-gray-600 text-sm mb-3">Semakin besar gaya dorong/berat...</p>
+                                                <div className="text-2xl text-blue-500">⬆️ Tekanan makin BESA️R</div>
+                                            </div>
+                                            <div className="text-3xl text-gray-400 font-bold">+</div>
+                                            <div className="text-center p-4 bg-white rounded-lg shadow-sm w-full">
+                                                <p className="font-bold text-lg text-gray-800 mb-2">Luas Permukaan (A)</p>
+                                                <p className="text-gray-600 text-sm mb-3">Semakin KECIL/runcing permukaan sentuh...</p>
+                                                <div className="text-2xl text-red-500">⬆️ Tekanan makin BESAR</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {step === 3 && (
+                                <div className="space-y-6 animate-slide-up">
+                                    <h3 className="text-xl font-bold text-blue-700">Rumus Ajaib</h3>
+                                    <div className="bg-gray-800 text-white p-8 rounded-2xl flex flex-col items-center justify-center shadow-lg relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl">📐</div>
+                                        <div className="text-5xl font-extrabold flex items-center mb-6 z-10 text-yellow-300">
+                                            <span>P = </span>
+                                            <div className="flex flex-col items-center ml-4">
+                                                <span className="border-b-4 border-yellow-300 px-2 pb-1 text-green-400">F</span>
+                                                <span className="pt-1 text-blue-300">A</span>
+                                            </div>
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-2xl z-10 mt-4">
+                                            <div className="bg-gray-700 p-4 rounded-xl text-center border-l-4 border-yellow-300">
+                                                <p className="font-bold text-yellow-300 text-xl mb-1">P (Pressure)</p>
+                                                <p className="text-sm text-gray-300">Tekanan</p>
+                                                <p className="text-xs font-mono mt-2 bg-gray-900 py-1 rounded">N/m² atau Pascal (Pa)</p>
+                                            </div>
+                                            <div className="bg-gray-700 p-4 rounded-xl text-center border-l-4 border-green-400">
+                                                <p className="font-bold text-green-400 text-xl mb-1">F (Force)</p>
+                                                <p className="text-sm text-gray-300">Gaya / Berat</p>
+                                                <p className="text-xs font-mono mt-2 bg-gray-900 py-1 rounded">Newton (N)</p>
+                                            </div>
+                                            <div className="bg-gray-700 p-4 rounded-xl text-center border-l-4 border-blue-300">
+                                                <p className="font-bold text-blue-300 text-xl mb-1">A (Area)</p>
+                                                <p className="text-sm text-gray-300">Luas Permukaan</p>
+                                                <p className="text-xs font-mono mt-2 bg-gray-900 py-1 rounded">Meter persegi (m²)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-blue-50 p-5 rounded-xl border border-blue-200 mt-6">
+                                        <h4 className="font-bold text-blue-800 mb-2">Contoh Menghitung:</h4>
+                                        <p className="text-gray-700 mb-2">Sebuah balok memiliki berat <strong>100 N</strong> (ini adalah Gayanya/F). Balok itu diletakkan di lantai. Luas sisi bawah balok yang menyentuh lantai adalah <strong>2 m²</strong> (ini adalah Luas Permukaan/A).</p>
+                                        <div className="bg-white p-4 rounded-lg mt-3 font-mono text-gray-800">
+                                            <p>1. Diketahui: F = 100 N, A = 2 m²</p>
+                                            <p>2. Ditanya: P = ?</p>
+                                            <p>3. Jawab: P = F ÷ A</p>
+                                            <p className="ml-[6.5rem]">P = 100 N ÷ 2 m²</p>
+                                            <p className="ml-[6.5rem] font-bold text-blue-600">P = 50 N/m²</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="mt-10 flex justify-between">
+                                <button
+                                    onClick={() => step > 1 ? setStep(step - 1) : navigateTo('tujuan')}
+                                    className="text-gray-500 hover:text-gray-800 font-medium px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                >
+                                    Kembali
+                                </button>
+
+                                {step < 3 ? (
+                                    <button
+                                        onClick={() => setStep(step + 1)}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-md transition-all"
+                                    >
+                                        Selanjutnya
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={() => { markTabCompleted('memahami'); navigateTo('simulasi'); }}
+                                        className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full shadow-md transition-all animate-pulse"
+                                    >
+                                        Ke Lab Simulasi 🧪
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            const Simulasi = () => {
+                const [force, setForce] = useState(100);
+                const [area, setArea] = useState(2);
+
+                const pressure = force / area;
+                const blockWidth = 50 + (area * 30);
+                const indentDepth = Math.min(pressure * 2, 80);
+
+                return (
+                    <div className="p-4 sm:p-6 max-w-5xl mx-auto animate-fade-in">
+                        <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-8">
+                            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2 flex items-center">
+                                <span className="text-3xl mr-3">🧪</span> Lab Simulasi Interaktif
+                            </h2>
+                            <p className="text-gray-600 mb-8">Geser slider untuk mengubah Gaya (Berat) dan Luas Permukaan, lalu amati apa yang terjadi pada tekanan!</p>
+
+                            <div className="flex flex-col lg:flex-row gap-8">
+                                <div className="lg:w-1/2 space-y-8 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                    {/* Slider Gaya */}
+                                    <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-400">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <label className="font-bold text-gray-700">Berat Benda (Gaya - F)</label>
+                                            <span className="bg-green-100 text-green-800 font-bold py-1 px-3 rounded-full">{force} N</span>
+                                        </div>
+                                        <input
+                                            type="range"
+                                            min="10"
+                                            max="200"
+                                            step="10"
+                                            value={force}
+                                            onChange={(e) => setForce(Number(e.target.value))}
+                                            className="w-full"
+                                        />
+                                        <div className="flex justify-between text-xs text-gray-400 mt-2">
+                                            <span>Ringan (10 N)</span>
+                                            <span>Berat (200 N)</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Slider Luas Area */}
+                                    <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-400">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <label className="font-bold text-gray-700">Luas Permukaan (A)</label>
+                                            <span className="bg-blue-100 text-blue-800 font-bold py-1 px-3 rounded-full">{area} m²</span>
+                                        </div>
+                                        <input
+                                            type="range"
+                                            min="0.5"
+                                            max="5"
+                                            step="0.5"
+                                            value={area}
+                                            onChange={(e) => setArea(Number(e.target.value))}
+                                            className="w-full"
+                                        />
+                                        <div className="flex justify-between text-xs text-gray-400 mt-2">
+                                            <span>Runcing (0.5 m²)</span>
+                                            <span>Lebar (5 m²)</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-gray-800 text-white p-6 rounded-xl text-center relative overflow-hidden">
+                                        <p className="text-gray-300 font-medium mb-2">Tekanan yang Dihasilkan (P)</p>
+                                        <div className="text-4xl sm:text-5xl font-black mb-2 font-mono flex items-center justify-center">
+                                            {pressure.toFixed(1)} <span className="text-2xl ml-2 text-gray-400">N/m²</span>
+                                        </div>
+                                        <p className="text-sm text-gray-400 font-mono">P = {force} ÷ {area}</p>
+
+                                        <div className="w-full bg-gray-700 h-3 mt-4 rounded-full overflow-hidden">
+                                            <div
+                                                className={`h-full transition-all duration-300 ${pressure > 100 ? 'bg-red-500' : pressure > 40 ? 'bg-yellow-400' : 'bg-green-400'}`}
+                                                style={{ width: `${Math.min((pressure / 400) * 100, 100)}%` }}
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="lg:w-1/2 bg-blue-50 p-6 rounded-xl border border-blue-100 flex flex-col items-center justify-center relative min-h-[300px]">
+                                    <h3 className="absolute top-4 left-4 font-bold text-blue-800 text-sm">Visualisasi Benda pada Spons</h3>
+
+                                    <div className="flex flex-col items-center mt-8 relative">
+                                        <div className="flex flex-col items-center mb-2 transition-all duration-300" style={{ transform: `scale(${0.8 + (force / 400)})` }}>
+                                            <span className="font-bold text-red-600 mb-1">Gaya: {force}N ↓</span>
+                                            <div className="w-1 bg-red-500 h-10 relative">
+                                                <div className="absolute -bottom-2 -left-1.5 w-4 h-4 border-b-2 border-r-2 border-red-500 transform rotate-45"></div>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            className="bg-gray-600 rounded-t-sm shadow-md transition-all duration-300 z-10 flex items-center justify-center text-white text-xs font-bold"
+                                            style={{
+                                                width: `${blockWidth}px`,
+                                                height: '60px',
+                                                transform: `translateY(${indentDepth}px)`
+                                            }}
+                                        >
+                                            Luas: {area}m²
+                                        </div>
+
+                                        <div className="relative w-full max-w-[300px] h-32 bg-[#d4a373] rounded-md mt-0 border-t-2 border-[#b07d4b] overflow-hidden">
+                                            <div
+                                                className="absolute bg-blue-50 transition-all duration-300"
+                                                style={{
+                                                    width: `${blockWidth + 4}px`,
+                                                    height: `${indentDepth}px`,
+                                                    left: `calc(50% - ${(blockWidth + 4) / 2}px)`,
+                                                    top: 0,
+                                                    borderBottomLeftRadius: '4px',
+                                                    borderBottomRightRadius: '4px'
+                                                }}
+                                            ></div>
+                                            {pressure > 0 && (
+                                                <div
+                                                    className="absolute transition-all duration-300 opacity-40 rounded-full bg-red-500 blur-md"
+                                                    style={{
+                                                        width: `${blockWidth * 1.5}px`,
+                                                        height: `${pressure}px`,
+                                                        left: `calc(50% - ${(blockWidth * 1.5) / 2}px)`,
+                                                        top: `${indentDepth}px`,
+                                                    }}
+                                                ></div>
+                                            )}
+                                            <div className="absolute bottom-2 right-2 text-white/50 text-xs font-bold">Permukaan lunak</div>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-8 text-center bg-white p-3 rounded-lg shadow-sm border text-sm w-full">
+                                        <span className="font-bold text-gray-700">Kesimpulan Visual:</span>
+                                        {pressure > 100 ? (
+                                            <span className="text-red-600 ml-1">Tekanan SANGAT BESAR! Benda amblas dalam.</span>
+                                        ) : pressure > 40 ? (
+                                            <span className="text-yellow-600 ml-1">Tekanan Sedang. Benda sedikit amblas.</span>
+                                        ) : (
+                                            <span className="text-green-600 ml-1">Tekanan Kecil. Benda hampir tidak amblas.</span>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-10 flex justify-between border-t pt-6">
+                                <button onClick={() => navigateTo('memahami')} className="text-gray-500 hover:text-gray-800 font-medium px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                                    Kembali
+                                </button>
+                                <button
+                                    onClick={() => { markTabCompleted('simulasi'); navigateTo('tantangan'); }}
+                                    className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-8 rounded-full shadow-md transition-all flex items-center"
+                                >
+                                    Mulai Tantangan 🏆
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            const Tantangan = () => {
+                const [challenge1, setChallenge1] = useState(null);
+                const [challenge2, setChallenge2] = useState(null);
+                const [showHint1, setShowHint1] = useState(false);
+
+                return (
+                    <div className="p-4 sm:p-6 max-w-4xl mx-auto animate-fade-in">
+                        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-t-8 border-purple-500">
+                            <h2 className="text-3xl font-bold text-gray-800 mb-2 flex items-center">
+                                <span className="text-4xl mr-3">🏆</span> Tantangan Analisis
+                            </h2>
+                            <p className="text-gray-600 mb-8">Gunakan pemahamanmu dari simulasi tadi untuk memecahkan masalah ini!</p>
+
+                            <div className="space-y-8">
+                                <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                    <h3 className="text-xl font-bold text-purple-700 mb-4 flex justify-between items-center">
+                                        <span>Misi 1: Menyelamatkan Gajah</span>
+                                        {challenge1 === 'correct' && <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Berhasil!</span>}
+                                    </h3>
+                                    <p className="text-gray-700 mb-4">
+                                        Seekor gajah (berat 40.000 N) dan seorang wanita (berat 500 N) berjalan di tanah berlumpur. Gajah memiliki 4 kaki yang lebar (total luas 0.4 m²), sedangkan wanita memakai sepatu hak tinggi (total luas 0.001 m²).
+                                        <br /><br /><strong>Siapa yang kemungkinan besar akan lebih amblas ke dalam lumpur?</strong>
+                                    </p>
+
+                                    <div className="flex flex-col sm:flex-row gap-3 mb-4">
+                                        <button
+                                            onClick={() => setChallenge1('wrong')}
+                                            className={`flex-1 py-3 px-4 rounded-lg border-2 font-semibold transition-all ${challenge1 === 'wrong' ? 'bg-red-100 border-red-500 text-red-700' : 'bg-white border-gray-300 hover:border-purple-400'}`}
+                                        >
+                                            🐘 Gajah (karena lebih berat)
+                                        </button>
+                                        <button
+                                            onClick={() => setChallenge1('correct')}
+                                            className={`flex-1 py-3 px-4 rounded-lg border-2 font-semibold transition-all ${challenge1 === 'correct' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-white border-gray-300 hover:border-purple-400'}`}
+                                        >
+                                            👠 Wanita berhak tinggi
+                                        </button>
+                                    </div>
+
+                                    {challenge1 === 'wrong' && (
+                                        <div className="bg-red-50 text-red-800 p-4 rounded-lg text-sm flex items-start">
+                                            <span className="mr-2">❌</span>
+                                            <div>
+                                                <p className="font-bold">Kurang tepat!</p>
+                                                <p>Jangan hanya melihat beratnya (Gaya). Ingat rumusnya: <strong>P = F ÷ A</strong>. Coba hitung tekanan masing-masing!</p>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {challenge1 === 'correct' && (
+                                        <div className="bg-green-50 text-green-800 p-4 rounded-lg text-sm border border-green-200">
+                                            <p className="font-bold mb-2 flex items-center"><span className="text-lg mr-2">🎉</span> Tepat Sekali!</p>
+                                            <ul className="list-disc pl-5 space-y-1">
+                                                <li>Tekanan Gajah = 40.000 ÷ 0.4 = <strong>100.000 N/m²</strong></li>
+                                                <li>Tekanan Wanita = 500 ÷ 0.001 = <strong>500.000 N/m²</strong></li>
+                                            </ul>
+                                            <p className="mt-2">Karena hak tinggi luas permukaannya sangat kecil, tekanannya menjadi 5x lipat lebih besar dari gajah!</p>
+                                        </div>
+                                    )}
+
+                                    {!challenge1 && (
+                                        <button onClick={() => setShowHint1(!showHint1)} className="text-purple-600 text-sm font-semibold hover:underline">
+                                            {showHint1 ? 'Sembunyikan Petunjuk' : '💡 Butuh Petunjuk (Scaffolding)?'}
+                                        </button>
+                                    )}
+                                    {showHint1 && !challenge1 && (
+                                        <div className="mt-2 bg-yellow-50 p-3 rounded text-sm text-yellow-800 border-l-4 border-yellow-400">
+                                            Coba hitung P = F ÷ A untuk keduanya. Bagilah berat dengan luas permukaannya. Mana hasil pembagian yang lebih besar?
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                    <h3 className="text-xl font-bold text-purple-700 mb-4 flex justify-between items-center">
+                                        <span>Misi 2: Desain Tas Ransel</span>
+                                        {challenge2 === 'correct' && <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Berhasil!</span>}
+                                    </h3>
+                                    <p className="text-gray-700 mb-4">
+                                        Kamu diminta merancang tas ransel untuk siswa sekolah yang sering membawa banyak buku (Gaya beratnya besar). Agar pundak siswa tidak sakit, bagaimana kamu merancang tali tas tersebut?
+                                    </p>
+
+                                    <div className="grid sm:grid-cols-2 gap-3 mb-4">
+                                        <button
+                                            onClick={() => setChallenge2('wrong1')}
+                                            className={`py-3 px-4 rounded-lg border-2 font-semibold transition-all text-left ${challenge2 === 'wrong1' ? 'bg-red-100 border-red-500 text-red-700' : 'bg-white border-gray-300 hover:border-purple-400'}`}
+                                        >
+                                            A. Membuat tali tas sangat tipis
+                                        </button>
+                                        <button
+                                            onClick={() => setChallenge2('correct')}
+                                            className={`py-3 px-4 rounded-lg border-2 font-semibold transition-all text-left ${challenge2 === 'correct' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-white border-gray-300 hover:border-purple-400'}`}
+                                        >
+                                            B. Membuat tali tas yang lebar dan berbusa
+                                        </button>
+                                    </div>
+
+                                    {challenge2 === 'correct' && (
+                                        <div className="bg-green-50 text-green-800 p-4 rounded-lg text-sm border border-green-200">
+                                            <p className="font-bold mb-2 flex items-center"><span className="text-lg mr-2">🎉</span> Tepat Sekali!</p>
+                                            <p>Membuat tali tas yang lebar berarti <strong>memperbesar luas permukaan (A)</strong>. Jika luas permukaan membesar, maka <strong>Tekanan (P) akan mengecil</strong>.</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="mt-10 flex justify-between border-t pt-6">
+                                <button onClick={() => navigateTo('simulasi')} className="text-gray-500 hover:text-gray-800 font-medium px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                                    Kembali
+                                </button>
+                                <button
+                                    onClick={() => { markTabCompleted('tantangan'); navigateTo('asesmen'); }}
+                                    disabled={challenge1 !== 'correct' || challenge2 !== 'correct'}
+                                    className={`font-bold py-3 px-8 rounded-full shadow-md transition-all flex items-center ${challenge1 === 'correct' && challenge2 === 'correct' ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+                                >
+                                    Uji Kemampuanmu 📝
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            const Asesmen = () => {
+                const [currentQuestion, setCurrentQuestion] = useState(0);
+                const [selectedAnswer, setSelectedAnswer] = useState(null);
+                const [showExplanation, setShowExplanation] = useState(false);
+                const [score, setScore] = useState(0);
+                const [finished, setFinished] = useState(false);
+
+                const questions = [
+                    {
+                        context: "Keluarga Budi sedang berkemah. Saat mendirikan tenda, tanah agak keras. Budi membawa dua pasak: Pasak A ujungnya tumpul, Pasak B ujungnya runcing.",
+                        question: "Jika Budi memukul kedua pasak dengan palu menggunakan gaya dorong yang sama besar, apa yang akan terjadi?",
+                        options: [
+                            "Pasak A lebih mudah masuk karena luasnya besar.",
+                            "Pasak B lebih mudah masuk karena luas permukaannya kecil sehingga tekanannya besar.",
+                            "Keduanya masuk dengan mudah yang sama."
+                        ],
+                        correct: 1,
+                        explanation: "Konsep: P = F / A. Karena Gaya (F) sama, Pasak B runcing berarti Luas (A) kecil. Luas kecil menghasilkan Tekanan (P) yang besar."
+                    },
+                    {
+                        context: "Sebuah mobil memuat 1 ton beras. Bannya bocor. Sopir punya Dongkrak X (alas 0.2 m²) dan Dongkrak Y (alas 0.05 m²).",
+                        question: "Mereka berhenti di tanah gembur (mudah amblas). Dongkrak mana yang paling aman digunakan agar tidak amblas?",
+                        options: [
+                            "Dongkrak Y, karena alasnya kecil.",
+                            "Dongkrak X, karena alasnya lebar sehingga memperkecil tekanan ke tanah.",
+                            "Keduanya sama saja."
+                        ],
+                        correct: 1,
+                        explanation: "Untuk mencegah amblas, kita harus MEMPERKECIL Tekanan (P). Caranya adalah dengan MEMPERBESAR Luas Permukaan (A). Dongkrak X lebih lebar, sehingga tekanannya menyebar."
+                    }
+                ];
+
+                const handleAnswer = (index) => {
+                    if (showExplanation) return;
+                    setSelectedAnswer(index);
+                };
+
+                const submitAnswer = () => {
+                    setShowExplanation(true);
+                    if (selectedAnswer === questions[currentQuestion].correct) {
+                        setScore(score + 50); // 2 pertanyaan, masing-masing 50 poin
+                    }
+                };
+
+                const nextQuestion = () => {
+                    if (currentQuestion < questions.length - 1) {
+                        setCurrentQuestion(currentQuestion + 1);
+                        setSelectedAnswer(null);
+                        setShowExplanation(false);
+                    } else {
+                        setFinished(true);
+                        markTabCompleted('asesmen');
+                    }
+                };
+
+                if (finished) {
+                    return (
+                        <div className="p-6 max-w-2xl mx-auto animate-fade-in text-center">
+                            <div className="bg-white rounded-2xl shadow-lg p-8 border-t-8 border-orange-500">
+                                <h2 className="text-4xl font-bold text-gray-800 mb-4">Misi Selesai! 🎉</h2>
+                                <div className="text-5xl font-extrabold text-orange-500 mb-8">{score} / 100</div>
+                                <button
+                                    onClick={() => navigateTo('refleksi')}
+                                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-md transition-all"
+                                >
+                                    Lanjut ke Refleksi Diri 🧠
+                                </button>
+                            </div>
+                        </div>
+                    );
+                }
+
+                const q = questions[currentQuestion];
+
+                return (
+                    <div className="p-4 sm:p-6 max-w-4xl mx-auto animate-fade-in">
+                        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-t-8 border-orange-500">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-6">📝 Uji Pemahaman</h2>
+                            <div className="bg-gray-50 p-5 rounded-lg border border-gray-200 mb-4">
+                                <p className="text-gray-600 mb-3 italic">{q.context}</p>
+                                <p className="font-bold text-lg text-gray-800">{q.question}</p>
+                            </div>
+                            <div className="space-y-3">
+                                {q.options.map((opt, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => handleAnswer(idx)}
+                                        disabled={showExplanation}
+                                        className={`w-full text-left p-4 rounded-lg border-2 ${showExplanation ? (idx === q.correct ? 'bg-green-100 border-green-500' : 'bg-gray-100') : (selectedAnswer === idx ? 'bg-orange-100 border-orange-500' : 'bg-white border-gray-300')}`}
+                                    >
+                                        {String.fromCharCode(65 + idx)}. {opt}
+                                    </button>
+                                ))}
+                            </div>
+                            {showExplanation && (
+                                <div className="mt-4 p-4 bg-blue-50 border-l-4 border-blue-500 rounded text-blue-800">
+                                    <strong>Pembahasan:</strong> {q.explanation}
+                                </div>
+                            )}
+                            <div className="mt-6 text-right">
+                                {!showExplanation ? (
+                                    <button onClick={submitAnswer} disabled={selectedAnswer === null} className="bg-orange-500 text-white px-6 py-2 rounded-full font-bold">Cek Jawaban</button>
+                                ) : (
+                                    <button onClick={nextQuestion} className="bg-blue-600 text-white px-6 py-2 rounded-full font-bold">Selanjutnya</button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            const Refleksi = () => {
+                const [submitted, setSubmitted] = useState(false);
+
+                return (
+                    <div className="p-4 sm:p-6 max-w-4xl mx-auto animate-fade-in">
+                        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-t-8 border-indigo-500">
+                            <h2 className="text-3xl font-bold text-gray-800 mb-8">🧠 Jurnal Refleksi</h2>
+                            {!submitted ? (
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-gray-700 font-semibold mb-2">1. Apa satu konsep baru yang paling kamu ingat?</label>
+                                        <textarea className="w-full border-2 rounded-lg p-3" rows="2"></textarea>
+                                    </div>
+                                    <button
+                                        onClick={() => { setSubmitted(true); markTabCompleted('refleksi'); }}
+                                        className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl shadow-md"
+                                    >
+                                        Simpan Jurnal Refleksi
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="text-center py-10 animate-slide-up">
+                                    <div className="text-6xl mb-4">🌟</div>
+                                    <h3 className="text-2xl font-bold text-indigo-800 mb-4">Terima Kasih, Ilmuwan Muda!</h3>
+                                    <p className="text-gray-600 mb-8">Kamu telah menyelesaikan seluruh perjalanan belajar dengan sangat baik.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="min-h-screen bg-gray-100 font-sans text-gray-800 pb-12">
+                    <NavBar />
+                    <main className="mt-4">
+                        {currentTab === 'beranda' && <Beranda />}
+                        {currentTab === 'tujuan' && <Tujuan />}
+                        {currentTab === 'memahami' && <Memahami />}
+                        {currentTab === 'simulasi' && <Simulasi />}
+                        {currentTab === 'tantangan' && <Tantangan />}
+                        {currentTab === 'asesmen' && <Asesmen />}
+                        {currentTab === 'refleksi' && <Refleksi />}
+                    </main>
+                </div>
+            );
+        };
+
+        // Render aplikasi React ke dalam elemen HTML
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
