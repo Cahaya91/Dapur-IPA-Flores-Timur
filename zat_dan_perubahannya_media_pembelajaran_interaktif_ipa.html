@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zat dan Perubahannya - Media Pembelajaran Interaktif IPA Kelas VII</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React 18 UMD & Babel Standalone -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .animate-fade-in { 
+      animation: fadeIn 0.5s ease-out forwards; 
+    }
+    .animate-slide-up { 
+      animation: slideUp 0.6s ease-out forwards; 
+    }
+    
+    /* Custom Keyframes for Particle Models */
+    @keyframes fadeIn { 
+      from { opacity: 0; } 
+      to { opacity: 1; } 
+    }
+    @keyframes slideUp { 
+      from { opacity: 0; transform: translateY(20px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
+    @keyframes jiggle { 
+      0%, 100% { transform: translate(0, 0); } 
+      25% { transform: translate(1px, -1px); } 
+      50% { transform: translate(-1px, 1px); } 
+      75% { transform: translate(1px, 1px); } 
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) translateX(0px); }
+      50% { transform: translateY(-5px) translateX(3px); }
+    }
+    @keyframes bounce-crazy {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(20px, -30px); }
+      50% { transform: translate(-20px, -50px); }
+      75% { transform: translate(-40px, 20px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    .animate-jiggle { animation: jiggle 0.5s infinite; }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    .animate-bounce-crazy { animation: bounce-crazy 4s linear infinite alternate; }
+    
+    /* Hide scrollbar for navigation tab bar */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 selection:bg-indigo-500 selection:text-white">
+
+  <!-- Root element for React application -->
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // Main Application Component
+    const App = () => {
+      const [currentTab, setCurrentTab] = useState('beranda');
+      const [completedTabs, setCompletedTabs] = useState({
+        beranda: true,
+        materi: false,
+        eksplorasi: false,
+        praktikum: false,
+        massajenis: false,
+        tantangan: false,
+        asesmen: false,
+        refleksi: false
+      });
+
+      const markTabCompleted = (tab) => {
+        setCompletedTabs(prev => ({ ...prev, [tab]: true }));
+      };
+
+      const navigateTo = (tab) => {
+        setCurrentTab(tab);
+        window.scrollTo(0, 0);
+      };
+
+      const NavBar = () => {
+        const tabs = [
+          { id: 'beranda', label: 'Beranda', icon: '🏠' },
+          { id: 'materi', label: 'Materi', icon: '📚' },
+          { id: 'eksplorasi', label: 'Eksplorasi', icon: '🔬' },
+          { id: 'praktikum', label: 'Praktikum', icon: '🧪' },
+          { id: 'massajenis', label: 'Massa Jenis', icon: '🧮' },
+          { id: 'tantangan', label: 'Tantangan', icon: '🎯' },
+          { id: 'asesmen', label: 'Asesmen', icon: '📝' },
+          { id: 'refleksi', label: 'Refleksi', icon: '💭' }
+        ];
+
+        return (
+          <nav className="bg-indigo-600 text-white p-3 shadow-md sticky top-0 z-50 overflow-x-auto no-scrollbar">
+            <div className="flex justify-start lg:justify-center space-x-1 sm:space-x-2 min-w-max">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => navigateTo(tab.id)}
+                  className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-colors text-sm sm:text-base ${
+                    currentTab === tab.id
+                      ? 'bg-indigo-800 font-bold shadow-inner border-b-2 border-yellow-400'
+                      : 'hover:bg-indigo-500'
+                  } ${completedTabs[tab.id] && currentTab !== tab.id ? 'text-indigo-200' : ''}`}
+                >
+                  <span>{tab.icon}</span>
+                  <span className={`${currentTab === tab.id ? 'inline' : 'hidden md:inline'}`}>{tab.label}</span>
+                </button>
+              ))}
+            </div>
+          </nav>
+        );
+      };
+
+      const Beranda = () => (
+        <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center animate-fade-in">
+          <div className="bg-white p-8 rounded-2xl shadow-xl max-w-3xl w-full transform hover:scale-[1.01] transition-transform duration-300 border-t-8 border-indigo-500 relative overflow-hidden">
+            
+            {/* Decorative elements */}
+            <div className="absolute top-[-20px] left-[-20px] text-6xl opacity-20">🧊</div>
+            <div className="absolute bottom-[-20px] right-[-20px] text-6xl opacity-20">🔥</div>
+            <div className="absolute top-10 right-10 text-4xl opacity-20 animate-bounce">💧</div>
+
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-4 tracking-tight">
+              Zat dan Perubahannya
+            </h1>
+            <div className="inline-block bg-yellow-100 text-yellow-800 font-bold px-4 py-1 rounded-full mb-6 text-sm">
+              IPA Kelas VII - Fase D 🚀
+            </div>
+            
+            <p className="text-lg sm:text-xl text-gray-700 mb-8 leading-relaxed">
+              Halo, Ilmuwan Muda! Pernahkah kamu berpikir mengapa es bisa mencair, atau mengapa besi bisa berkarat? Mari kita ungkap rahasia alam semesta yang tersusun dari materi!
+            </p>
+            
+            <div className="bg-indigo-50 p-6 rounded-xl mb-8 text-left">
+              <h3 className="font-bold text-indigo-800 mb-3 flex items-center"><span className="text-2xl mr-2">🎯</span> Tujuan Misi Kita:</h3>
+              <ul className="space-y-2 text-gray-700">
+                <li className="flex items-start"><span className="text-green-500 mr-2">✔️</span> Memahami wujud zat dan model partikelnya.</li>
+                <li className="flex items-start"><span className="text-green-500 mr-2">✔️</span> Membedakan sifat fisika dan kimia.</li>
+                <li className="flex items-start"><span className="text-green-500 mr-2">✔️</span> Menghitung massa jenis (kerapatan) zat.</li>
+                <li className="flex items-start"><span className="text-green-500 mr-2">✔️</span> Mengetahui cara memisahkan campuran.</li>
+              </ul>
+            </div>
+
+            <button
+              onClick={() => { markTabCompleted('beranda'); navigateTo('materi'); }}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 rounded-full text-xl shadow-lg hover:shadow-xl transition-all w-full sm:w-auto flex items-center justify-center mx-auto"
+            >
+              Mulai Petualangan <span className="ml-2">➡️</span>
+            </button>
+          </div>
+        </div>
+      );
+
+      const Materi = () => {
+        const [activeMateri, setActiveMateri] = useState('wujud');
+
+        const menu = [
+          { id: 'wujud', label: 'Wujud Zat' },
+          { id: 'sifat', label: 'Sifat Fisika & Kimia' },
+          { id: 'perubahan', label: 'Perubahan Zat' },
+          { id: 'campuran', label: 'Pemisahan Campuran' }
+        ];
+
+        return (
+          <div className="p-4 sm:p-6 max-w-5xl mx-auto animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col md:flex-row gap-6">
+              {/* Sidebar Menu */}
+              <div className="md:w-1/3 flex flex-col gap-2">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                  <span className="mr-2">📚</span> Pustaka
+                </h2>
+                {menu.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveMateri(item.id)}
+                    className={`text-left px-4 py-3 rounded-xl font-medium transition-all ${
+                      activeMateri === item.id 
+                        ? 'bg-indigo-100 text-indigo-700 border-l-4 border-indigo-500 font-bold' 
+                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Content Area */}
+              <div className="md:w-2/3 bg-gray-50 rounded-xl p-6 border border-gray-100 animate-slide-up">
+                {activeMateri === 'wujud' && (
+                  <div>
+                    <h3 className="text-2xl font-bold text-indigo-700 mb-4">Apa itu Zat/Materi?</h3>
+                    <p className="text-gray-700 mb-4">Materi adalah segala sesuatu yang <strong>menempati ruang</strong> (memiliki volume) dan <strong>memiliki massa</strong>. Berdasarkan wujudnya, materi dibagi menjadi 3:</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                      <div className="bg-white p-4 rounded-lg shadow-sm text-center border-t-4 border-blue-400">
+                        <div className="text-4xl mb-2">🧱</div>
+                        <h4 className="font-bold text-gray-800">Zat Padat</h4>
+                        <p className="text-sm text-gray-600">Bentuk & volume tetap.</p>
+                      </div>
+                      <div className="bg-white p-4 rounded-lg shadow-sm text-center border-t-4 border-teal-400">
+                        <div className="text-4xl mb-2">💧</div>
+                        <h4 className="font-bold text-gray-800">Zat Cair</h4>
+                        <p className="text-sm text-gray-600">Volume tetap, bentuk mengikuti wadah.</p>
+                      </div>
+                      <div className="bg-white p-4 rounded-lg shadow-sm text-center border-t-4 border-gray-400">
+                        <div className="text-4xl mb-2">💨</div>
+                        <h4 className="font-bold text-gray-800">Zat Gas</h4>
+                        <p className="text-sm text-gray-600">Bentuk & volume berubah-ubah.</p>
+                      </div>
+                    </div>
+                    <button onClick={() => navigateTo('eksplorasi')} className="mt-4 bg-blue-100 text-blue-700 px-4 py-2 rounded-lg font-semibold hover:bg-blue-200 transition-colors w-full text-center">
+                      Cek Model Partikelnya di Tab Eksplorasi 👉
+                    </button>
+                  </div>
+                )}
+
+                {activeMateri === 'sifat' && (
+                  <div>
+                    <h3 className="text-2xl font-bold text-indigo-700 mb-4">Sifat Fisika vs Kimia</h3>
+                    <div className="space-y-4">
+                      <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                        <h4 className="font-bold text-blue-800 text-lg mb-2">Sifat Fisika 👁️</h4>
+                        <p className="text-gray-700 text-sm">Sifat yang dapat diamati atau diukur tanpa mengubah identitas zat pembentuknya.</p>
+                        <div className="mt-2 text-sm text-blue-700 bg-white p-2 rounded inline-block">
+                          <strong>Contoh:</strong> Warna, Bau, Titik Didih, Titik Leleh, Kerapatan (Massa Jenis), Kelarutan.
+                        </div>
+                      </div>
+                      <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                        <h4 className="font-bold text-orange-800 text-lg mb-2">Sifat Kimia 💥</h4>
+                        <p className="text-gray-700 text-sm">Kemampuan suatu zat untuk berubah menjadi zat baru (bereaksi kimia).</p>
+                        <div className="mt-2 text-sm text-orange-700 bg-white p-2 rounded inline-block">
+                          <strong>Contoh:</strong> Mudah terbakar, Mudah berkarat (korosi), Beracun, Mudah meledak.
+                        </div>
+                      </div>
+                    </div>
+                    <button onClick={() => navigateTo('praktikum')} className="mt-6 bg-orange-100 text-orange-700 px-4 py-2 rounded-lg font-semibold hover:bg-orange-200 transition-colors w-full text-center">
+                      Mainkan Game Pengamatan di Tab Praktikum 👉
+                    </button>
+                  </div>
+                )}
+
+                {activeMateri === 'perubahan' && (
+                  <div>
+                    <h3 className="text-2xl font-bold text-indigo-700 mb-4">Perubahan Zat</h3>
+                    <p className="text-gray-700 mb-4">Materi dapat mengalami perubahan. Ada dua jenis perubahan utama:</p>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                        <h4 className="font-bold text-blue-600 mb-2 border-b pb-2">Perubahan Fisika 🧊➡️💧</h4>
+                        <p className="text-sm text-gray-600 mb-2">Tidak menghasilkan zat baru. Biasanya hanya berubah wujud atau bentuk.</p>
+                        <ul className="text-sm text-gray-700 space-y-1 list-disc pl-4">
+                          <li>Es mencair</li>
+                          <li>Air menguap</li>
+                          <li>Kayu dipotong jadi kursi</li>
+                          <li>Garam dilarutkan ke air</li>
+                        </ul>
+                      </div>
+                      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                        <h4 className="font-bold text-red-600 mb-2 border-b pb-2">Perubahan Kimia 🪵➡️🔥</h4>
+                        <p className="text-sm text-gray-600 mb-2">Menghasilkan zat baru. Sifatnya tidak bisa kembali seperti semula (irreversible).</p>
+                        <ul className="text-sm text-gray-700 space-y-1 list-disc pl-4">
+                          <li>Kayu dibakar jadi abu</li>
+                          <li>Besi berkarat</li>
+                          <li>Susu menjadi basi</li>
+                          <li>Singkong menjadi tape (fermentasi)</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeMateri === 'campuran' && (
+                  <div>
+                    <h3 className="text-2xl font-bold text-indigo-700 mb-4">Pemisahan Campuran</h3>
+                    <p className="text-gray-700 mb-4">Campuran adalah gabungan dua zat atau lebih. Kita bisa memisahkannya dengan metode fisika sederhana:</p>
+                    <div className="space-y-3">
+                      <div className="bg-white p-3 rounded-lg flex items-start shadow-sm border border-gray-100">
+                        <span className="text-2xl mr-3 mt-1">☕</span>
+                        <div>
+                          <h4 className="font-bold text-gray-800">Filtrasi (Penyaringan)</h4>
+                          <p className="text-sm text-gray-600">Memisahkan zat padat dari zat cair menggunakan penyaring. Contoh: Menyaring bubuk kopi, menyaring air keruh.</p>
+                        </div>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg flex items-start shadow-sm border border-gray-100">
+                        <span className="text-2xl mr-3 mt-1">🧂</span>
+                        <div>
+                          <h4 className="font-bold text-gray-800">Evaporasi (Penguapan)</h4>
+                          <p className="text-sm text-gray-600">Memisahkan zat padat yang larut dalam air dengan cara dipanaskan. Contoh: Petani garam membuat garam dari air laut.</p>
+                        </div>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg flex items-start shadow-sm border border-gray-100">
+                        <span className="text-2xl mr-3 mt-1">🧪</span>
+                        <div>
+                          <h4 className="font-bold text-gray-800">Dekantasi</h4>
+                          <p className="text-sm text-gray-600">Menuangkan cairan secara perlahan untuk memisahkan endapan. Contoh: Memisahkan air dari endapan pasir.</p>
+                        </div>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg flex items-start shadow-sm border border-gray-100">
+                        <span className="text-2xl mr-3 mt-1">🌈</span>
+                        <div>
+                          <h4 className="font-bold text-gray-800">Kromatografi</h4>
+                          <p className="text-sm text-gray-600">Memisahkan warna atau zat berdasarkan perbedaan kecepatan merambat. Contoh: Memisahkan warna tinta.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                <div className="mt-8 flex justify-end pt-4 border-t border-gray-200">
+                  <button 
+                    onClick={() => { markTabCompleted('materi'); navigateTo('eksplorasi'); }}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full shadow-md transition-all"
+                  >
+                    Lanjut Eksplorasi 🔬
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      const Eksplorasi = () => {
+        const [state, setState] = useState('padat'); // padat, cair, gas
+        
+        // Generate particles array
+        const particles = Array.from({ length: 45 }).map((_, i) => i);
+
+        return (
+          <div className="p-4 sm:p-6 max-w-4xl mx-auto animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-t-8 border-teal-500">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold text-gray-800 flex items-center justify-center">
+                  <span className="text-4xl mr-3">🔬</span> Observasi Mikroskopis
+                </h2>
+                <p className="text-gray-600 mt-2">Pilih wujud zat di bawah ini untuk mengintip bagaimana partikel (atom/molekul) penyusunnya bergerak!</p>
+              </div>
+
+              <div className="flex flex-col md:flex-row gap-8 items-center justify-center">
+                
+                {/* Control Panel */}
+                <div className="flex md:flex-col gap-4 w-full md:w-1/3">
+                  <button 
+                    onClick={() => setState('padat')}
+                    className={`py-3 px-6 rounded-xl font-bold text-lg transition-all transform hover:scale-105 ${state === 'padat' ? 'bg-blue-600 text-white shadow-lg shadow-blue-300' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                  >
+                    🧱 Padat
+                  </button>
+                  <button 
+                    onClick={() => setState('cair')}
+                    className={`py-3 px-6 rounded-xl font-bold text-lg transition-all transform hover:scale-105 ${state === 'cair' ? 'bg-teal-500 text-white shadow-lg shadow-teal-300' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                  >
+                    💧 Cair
+                  </button>
+                  <button 
+                    onClick={() => setState('gas')}
+                    className={`py-3 px-6 rounded-xl font-bold text-lg transition-all transform hover:scale-105 ${state === 'gas' ? 'bg-gray-600 text-white shadow-lg shadow-gray-400' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                  >
+                    💨 Gas
+                  </button>
+                </div>
+
+                {/* Visualizer Container */}
+                <div className="w-64 h-64 border-4 border-gray-800 rounded-full bg-blue-50 relative overflow-hidden flex items-center justify-center shadow-inner mx-auto">
+                  {/* Microscope Overlay */}
+                  <div className="absolute inset-0 border-[16px] border-black opacity-10 rounded-full pointer-events-none z-20"></div>
+                  
+                  <div className={`relative w-48 h-48 transition-all duration-700 ease-in-out ${
+                    state === 'padat' ? 'flex flex-wrap justify-center content-center gap-1' :
+                    state === 'cair' ? 'flex flex-wrap justify-center content-end gap-2 pb-4' :
+                    'relative w-full h-full' // Gas uses absolute positioning
+                  }`}>
+                    {particles.map((p) => {
+                      // Specific logic for gas random positioning
+                      const gasStyle = state === 'gas' ? {
+                        position: 'absolute',
+                        top: `${Math.random() * 80 + 10}%`,
+                        left: `${Math.random() * 80 + 10}%`,
+                        animationDelay: `${Math.random() * 2}s`
+                      } : {};
+
+                      return (
+                        <div 
+                          key={p} 
+                          className={`w-4 h-4 rounded-full shadow-sm transition-all duration-1000 ${
+                            state === 'padat' ? 'bg-blue-600 animate-jiggle' :
+                            state === 'cair' ? 'bg-teal-500 animate-float' :
+                            'bg-gray-600 animate-bounce-crazy'
+                          }`}
+                          style={gasStyle}
+                        ></div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Explanation Box */}
+              <div className="mt-8 bg-gray-50 p-6 rounded-xl border border-gray-200 min-h-[140px]">
+                <h3 className="font-bold text-xl text-gray-800 mb-2">
+                  Karakteristik Partikel Zat {state === 'padat' ? 'Padat' : state === 'cair' ? 'Cair' : 'Gas'}
+                </h3>
+                {state === 'padat' && (
+                  <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                    <li>Jarak antar partikel <strong>sangat rapat</strong>.</li>
+                    <li>Gaya tarik menarik antar partikel <strong>sangat kuat</strong>.</li>
+                    <li>Partikel hanya bisa <strong>bergetar</strong> di tempatnya (tidak bisa berpindah).</li>
+                    <li><strong>Akibatnya:</strong> Bentuk dan volume zat padat selalu tetap!</li>
+                  </ul>
+                )}
+                {state === 'cair' && (
+                  <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                    <li>Jarak antar partikel <strong>agak renggang</strong>.</li>
+                    <li>Gaya tarik menarik antar partikel <strong>lebih lemah</strong> dibanding padat.</li>
+                    <li>Partikel bisa <strong>bergerak bebas</strong> dan berpindah tempat, namun terbatas.</li>
+                    <li><strong>Akibatnya:</strong> Volume tetap, tetapi bentuknya mengikuti wadah (bisa mengalir).</li>
+                  </ul>
+                )}
+                {state === 'gas' && (
+                  <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                    <li>Jarak antar partikel <strong>sangat berjauhan</strong>.</li>
+                    <li>Gaya tarik menarik antar partikel <strong>sangat lemah</strong>.</li>
+                    <li>Partikel <strong>bergerak sangat bebas dan cepat</strong> ke segala arah.</li>
+                    <li><strong>Akibatnya:</strong> Gas akan mengisi seluruh ruangan (Bentuk dan volume berubah).</li>
+                  </ul>
+                )}
+              </div>
+
+              <div className="mt-8 flex justify-between border-t pt-4">
+                <button onClick={() => navigateTo('materi')} className="text-gray-500 hover:text-gray-800 font-medium px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                  Kembali
+                </button>
+                <button 
+                  onClick={() => { markTabCompleted('eksplorasi'); navigateTo('praktikum'); }}
+                  className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-6 rounded-full shadow-md transition-all"
+                >
+                  Ke Ruang Praktikum 🧪
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      const Praktikum = () => {
+        const cases = [
+          { id: 1, text: "Es batu yang dibiarkan di meja menjadi air.", type: "Fisika", hint: "Apakah terbentuk zat baru? Air es dan air cair itu zat yang sama H2O." },
+          { id: 2, text: "Pagar besi yang terkena hujan lama-lama berkarat.", type: "Kimia", hint: "Karat adalah zat baru (oksida besi) yang sifatnya beda dengan besi asli." },
+          { id: 3, text: "Garam dilarutkan ke dalam kuah bakso.", type: "Fisika", hint: "Jika kuahnya diuapkan, garamnya masih ada. Tidak ada zat baru." },
+          { id: 4, text: "Kertas dibakar menjadi abu.", type: "Kimia", hint: "Abu tidak bisa diubah kembali menjadi kertas." },
+          { id: 5, text: "Beras ditumbuk menjadi tepung beras.", type: "Fisika", hint: "Bentuk dan ukurannya berubah, tapi bahannya tetap beras." }
+        ];
+
+        const [currentIndex, setCurrentIndex] = useState(0);
+        const [score, setScore] = useState(0);
+        const [feedback, setFeedback] = useState(null); // 'correct', 'wrong', null
+        const [isFinished, setIsFinished] = useState(false);
+
+        const handleAnswer = (answerType) => {
+          if (feedback) return; // Prevent clicking while showing feedback
+
+          const isCorrect = cases[currentIndex].type === answerType;
+          
+          if (isCorrect) {
+            setScore(score + 1);
+            setFeedback('correct');
+          } else {
+            setFeedback('wrong');
+          }
+
+          setTimeout(() => {
+            setFeedback(null);
+            if (currentIndex < cases.length - 1) {
+              setCurrentIndex(currentIndex + 1);
+            } else {
+              setIsFinished(true);
+            }
+          }, 2500); // Wait 2.5s to show feedback before moving on
+        };
+
+        return (
+          <div className="p-4 sm:p-6 max-w-4xl mx-auto animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-t-8 border-orange-500">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-3xl font-bold text-gray-800 flex items-center">
+                  <span className="text-4xl mr-3">🧪</span> Ruang Praktikum: Amati & Tentukan!
+                </h2>
+                <div className="bg-orange-100 text-orange-800 px-4 py-2 rounded-full font-bold">
+                  Skor: {score}
+                </div>
+              </div>
+
+              {!isFinished ? (
+                <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 text-center relative min-h-[300px] flex flex-col justify-center">
+                  <p className="text-sm text-gray-500 mb-4 font-semibold uppercase tracking-wider">Kasus {currentIndex + 1} dari {cases.length}</p>
+                  
+                  <div className="bg-white p-6 rounded-lg shadow-sm mb-8 text-xl text-gray-800 font-medium">
+                    "{cases[currentIndex].text}"
+                  </div>
+
+                  {!feedback ? (
+                    <div>
+                      <p className="text-gray-600 mb-4 text-sm">Termasuk perubahan apakah peristiwa di atas?</p>
+                      <div className="flex justify-center gap-4">
+                        <button 
+                          onClick={() => handleAnswer('Fisika')}
+                          className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-2 border-blue-400 font-bold py-3 px-8 rounded-xl transition-transform transform hover:scale-105"
+                        >
+                          🧊 Perubahan Fisika
+                        </button>
+                        <button 
+                          onClick={() => handleAnswer('Kimia')}
+                          className="bg-red-100 text-red-700 hover:bg-red-200 border-2 border-red-400 font-bold py-3 px-8 rounded-xl transition-transform transform hover:scale-105"
+                        >
+                          🔥 Perubahan Kimia
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={`p-4 rounded-xl animate-fade-in ${feedback === 'correct' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                      <h4 className="font-bold text-lg mb-2">
+                        {feedback === 'correct' ? '🎉 Tepat Sekali!' : '😅 Kurang Tepat!'}
+                      </h4>
+                      <p className="text-sm">
+                        <strong>Alasan:</strong> {cases[currentIndex].hint}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-10 bg-gray-50 rounded-xl border border-gray-200">
+                  <div className="text-6xl mb-4">🏆</div>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-2">Praktikum Selesai!</h3>
+                  <p className="text-gray-600 mb-6">Kamu berhasil mengidentifikasi {score} dari {cases.length} kasus dengan benar.</p>
+                  <button 
+                    onClick={() => { markTabCompleted('praktikum'); navigateTo('massajenis'); }}
+                    className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full shadow-md transition-all"
+                  >
+                    Lanjut ke Kalkulator Massa Jenis 👉
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      };
+
+      const MassaJenis = () => {
+        const [mass, setMass] = useState(100); // gram
+        const [volume, setVolume] = useState(100); // cm3
+
+        const density = (mass / volume).toFixed(2);
+
+        // Reference densities to identify materials
+        const materials = [
+          { name: 'Air', rho: 1.0, color: 'bg-blue-300' },
+          { name: 'Minyak Goreng', rho: 0.8, color: 'bg-yellow-300' },
+          { name: 'Aluminium', rho: 2.7, color: 'bg-gray-400' },
+          { name: 'Besi', rho: 7.9, color: 'bg-gray-700' },
+          { name: 'Emas', rho: 19.3, color: 'bg-yellow-500' },
+          { name: 'Gabus / Kayu Ringan', rho: 0.2, color: 'bg-orange-200' }
+        ];
+
+        // Find closest material match
+        let closestMaterial = { name: "Zat Tidak Diketahui", color: "bg-gray-200" };
+        let minDiff = 1000;
+        
+        materials.forEach(mat => {
+          const diff = Math.abs(parseFloat(density) - mat.rho);
+          if (diff < 0.2) { // Tolerance
+            if (diff < minDiff) {
+              minDiff = diff;
+              closestMaterial = mat;
+            }
+          }
+        });
+
+        return (
+          <div className="p-4 sm:p-6 max-w-5xl mx-auto animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-t-8 border-purple-500">
+              <h2 className="text-3xl font-bold text-gray-800 mb-4 flex items-center">
+                <span className="text-4xl mr-3">🧮</span> Kalkulator Kerapatan (Massa Jenis)
+              </h2>
+              <p className="text-gray-600 mb-6">Massa jenis (Kerapatan) menunjukkan seberapa padat partikel-partikel tersusun dalam suatu benda. Benda yang ringan namun volumenya besar (seperti balon) memiliki massa jenis kecil.</p>
+
+              <div className="flex flex-col lg:flex-row gap-8">
+                
+                {/* Input Controls */}
+                <div className="lg:w-1/2 space-y-6">
+                  
+                  <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-inner">
+                    <div className="mb-6">
+                      <div className="flex justify-between items-end mb-2">
+                        <label className="font-bold text-gray-700 flex items-center"><span className="text-xl mr-2">⚖️</span> Massa (m)</label>
+                        <span className="bg-white px-3 py-1 rounded border font-mono font-bold text-purple-700">{mass} gram</span>
+                      </div>
+                      <input
+                        type="range" min="10" max="1000" step="10" value={mass}
+                        onChange={(e) => setMass(Number(e.target.value))}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                      />
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between items-end mb-2">
+                        <label className="font-bold text-gray-700 flex items-center"><span className="text-xl mr-2">📏</span> Volume (V)</label>
+                        <span className="bg-white px-3 py-1 rounded border font-mono font-bold text-purple-700">{volume} cm³</span>
+                      </div>
+                      <input
+                        type="range" min="10" max="500" step="10" value={volume}
+                        onChange={(e) => setVolume(Number(e.target.value))}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Step by Step Calculation */}
+                  <div className="bg-indigo-50 p-5 rounded-xl border border-indigo-100">
+                    <h4 className="font-bold text-indigo-800 mb-3 text-sm uppercase">Langkah Perhitungan Menguraikan Rumus</h4>
+                    <div className="font-mono text-gray-800 space-y-2 bg-white p-4 rounded-lg text-sm sm:text-base border shadow-sm">
+                      <p>1. <strong>Rumus:</strong> ρ (rho) = m / V</p>
+                      <p>2. <strong>Masukkan Nilai:</strong> ρ = {mass} g / {volume} cm³</p>
+                      <div className="border-t border-dashed my-2 border-gray-300"></div>
+                      <p className="font-bold text-indigo-700 text-xl">3. Hasil: ρ = {density} g/cm³</p>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* Visualizer & Prediction */}
+                <div className="lg:w-1/2 flex flex-col justify-between space-y-6">
+                  
+                  <div className="bg-gray-800 text-white rounded-xl p-6 text-center shadow-lg relative overflow-hidden">
+                    <h4 className="text-gray-300 font-semibold mb-2">Nilai Massa Jenis (ρ)</h4>
+                    <div className="text-5xl font-black text-yellow-400 font-mono mb-2">
+                      {density} <span className="text-xl text-gray-400">g/cm³</span>
+                    </div>
+                    
+                    <div className="mt-6 p-4 bg-gray-700 rounded-lg">
+                      <p className="text-sm text-gray-400 mb-1">Mendeteksi jenis material berdasarkan kerapatan...</p>
+                      <div className="flex items-center justify-center space-x-3 mt-3">
+                        <div className={`w-8 h-8 rounded-md shadow-inner ${closestMaterial.color}`}></div>
+                        <span className="font-bold text-xl text-white">{closestMaterial.name}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Water interaction simulator */}
+                  <div className="bg-blue-50 rounded-xl p-4 border border-blue-200 text-center relative h-48 overflow-hidden flex flex-col justify-end">
+                    <div className="absolute top-2 left-0 w-full text-sm font-bold text-blue-800">Uji Terapung / Tenggelam di Air</div>
+                    
+                    {/* The Object */}
+                    <div 
+                      className={`absolute left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-md shadow-md border-2 border-white transition-all duration-700 ease-in-out ${closestMaterial.color} z-10 flex items-center justify-center text-xs font-bold font-mono text-black`}
+                      style={{ 
+                        // If density < 1 (water), it floats. If > 1, it sinks.
+                        bottom: parseFloat(density) < 1.0 ? '60%' : '10%' 
+                      }}
+                    >
+                      {density}
+                    </div>
+
+                    {/* Water level */}
+                    <div className="w-full h-1/2 bg-blue-300 opacity-70 relative">
+                      <div className="absolute w-full top-0 h-2 bg-blue-200"></div>
+                      <span className="absolute bottom-2 left-2 text-xs font-bold text-blue-700 opacity-60">Air (ρ = 1.0 g/cm³)</span>
+                    </div>
+                  </div>
+                  
+                  <p className="text-sm text-center text-gray-600 bg-gray-50 p-2 rounded">
+                    *Benda akan <strong>terapung</strong> jika massa jenisnya lebih kecil dari air (&lt; 1.0 g/cm³) dan <strong>tenggelam</strong> jika lebih besar (&gt; 1.0 g/cm³).
+                  </p>
+
+                </div>
+              </div>
+
+              <div className="mt-8 flex justify-end border-t pt-4">
+                <button 
+                  onClick={() => { markTabCompleted('massajenis'); navigateTo('tantangan'); }}
+                  className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full shadow-md transition-all flex items-center animate-pulse"
+                >
+                  Mulai Tantangan Pemisahan 🎯
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      const Tantangan = () => {
+        const scenarios = [
+          {
+            id: 1,
+            title: "Krisis Air Bersih",
+            desc: "Saat berkemah, kamu hanya menemukan air sungai yang keruh bercampur tanah dan dedaunan mati. Kamu butuh air yang jernih untuk dimasak. Metode apa yang paling tepat?",
+            options: ["Evaporasi", "Filtrasi", "Kromatografi"],
+            correct: 1,
+            explanation: "Tepat! Filtrasi (Penyaringan) menggunakan kain bersih atau alat penyaring pasir bisa memisahkan zat padat (tanah/daun) dari zat cair (air)."
+          },
+          {
+            id: 2,
+            title: "Petani Tambak",
+            desc: "Seorang petani garam ingin memisahkan garam dari air laut murni yang telah ditampungnya di tambak. Bagaimana cara terbaik memisahkannya?",
+            options: ["Evaporasi", "Dekantasi", "Filtrasi"],
+            correct: 0,
+            explanation: "Benar! Evaporasi (Penguapan) memanfaatkan panas matahari untuk menguapkan air, sehingga menyisakan kristal garam padat."
+          }
+        ];
+
+        const [activeScenario, setActiveScenario] = useState(0);
+        const [selected, setSelected] = useState(null);
+        const [status, setStatus] = useState(null); // 'correct', 'wrong', null
+
+        const checkAnswer = (idx) => {
+          setSelected(idx);
+          if (idx === scenarios[activeScenario].correct) {
+            setStatus('correct');
+          } else {
+            setStatus('wrong');
+          }
+        };
+
+        const nextScenario = () => {
+          if (activeScenario < scenarios.length - 1) {
+            setActiveScenario(activeScenario + 1);
+            setSelected(null);
+            setStatus(null);
+          } else {
+            markTabCompleted('tantangan');
+            navigateTo('asesmen');
+          }
+        };
+
+        const s = scenarios[activeScenario];
+
+        return (
+          <div className="p-4 sm:p-6 max-w-4xl mx-auto animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-t-8 border-yellow-400">
+              <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <span className="text-4xl mr-3">🎯</span> Tantangan Pemecahan Masalah
+              </h2>
+              
+              <div className="bg-yellow-50 p-6 rounded-xl border border-yellow-200">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-bold text-yellow-800">Kasus {activeScenario + 1}: {s.title}</h3>
+                </div>
+                
+                <p className="text-gray-700 text-lg mb-6 leading-relaxed">{s.desc}</p>
+                
+                <div className="grid sm:grid-cols-3 gap-4 mb-6">
+                  {s.options.map((opt, idx) => (
+                    <button 
+                      key={idx}
+                      onClick={() => !status && checkAnswer(idx)}
+                      disabled={status !== null}
+                      className={`py-3 px-4 rounded-xl font-bold border-2 transition-all ${
+                        selected === idx 
+                          ? (status === 'correct' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700')
+                          : 'bg-white border-gray-300 text-gray-700 hover:border-yellow-400 hover:bg-yellow-50'
+                      } ${status !== null && selected !== idx && idx === s.correct ? 'bg-green-50 border-green-300 text-green-700 opacity-70' : ''}`}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+
+                {status && (
+                  <div className={`p-4 rounded-lg mt-4 animate-slide-up ${status === 'correct' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
+                    <div className="font-bold mb-1 flex items-center">
+                      <span className="mr-2 text-xl">{status === 'correct' ? '🎉' : '💡'}</span> 
+                      {status === 'correct' ? 'Kerja Bagus!' : 'Mari Kita Pikirkan Lagi'}
+                    </div>
+                    <p className="text-sm">{status === 'correct' ? s.explanation : 'Metode yang kamu pilih kurang tepat untuk memisahkan campuran tersebut. Coba perhatikan lagi wujud zat yang ingin dipisahkan.'}</p>
+                  </div>
+                )}
+
+                {status && (
+                  <div className="mt-6 flex justify-end">
+                    <button onClick={status === 'correct' ? nextScenario : () => {setSelected(null); setStatus(null);}} className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-full transition-colors">
+                      {status === 'correct' ? (activeScenario < scenarios.length - 1 ? 'Misi Selanjutnya' : 'Ke Ujian Akhir (Asesmen) 📝') : 'Coba Lagi'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      const Asesmen = () => {
+        const questions = [
+          {
+            q: "Budi mengamati sebatang lilin yang menyala. Pada sumbu lilin terjadi pembakaran, sementara di bagian bawah lilin yang panas, lilin padat berubah menjadi cair. Manakah pernyataan yang benar?",
+            opts: [
+              "Kedua peristiwa adalah perubahan fisika.",
+              "Sumbu yang terbakar adalah perubahan kimia, sedangkan lilin yang mencair adalah perubahan fisika.",
+              "Sumbu yang terbakar adalah perubahan fisika, sedangkan lilin mencair adalah perubahan kimia.",
+              "Semuanya adalah perubahan kimia karena melibatkan api."
+            ],
+            ans: 1,
+            exp: "Lilin mencair hanya berubah wujud (Fisika). Sumbu terbakar menghasilkan zat baru berupa gas dan abu (Kimia)."
+          },
+          {
+            q: "Sebuah balok kayu memiliki massa 150 gram dan volume 300 cm³. Jika balok tersebut dimasukkan ke dalam air (massa jenis air = 1 g/cm³), apa yang akan terjadi?",
+            opts: [
+              "Balok akan tenggelam karena massanya besar.",
+              "Balok akan melayang di tengah air.",
+              "Balok akan mengapung karena massa jenisnya 0.5 g/cm³ (lebih kecil dari air).",
+              "Balok akan mengapung karena massa jenisnya 2.0 g/cm³ (lebih besar dari air)."
+            ],
+            ans: 2,
+            exp: "Hitung ρ = m / V = 150/300 = 0.5 g/cm³. Karena 0.5 < 1.0 (air), benda akan mengapung."
+          },
+          {
+            q: "Berdasarkan model partikel, mengapa gas sangat mudah dimampatkan (ditekan menjadi volume yang lebih kecil) dibandingkan zat cair atau padat?",
+            opts: [
+              "Karena gas tidak memiliki massa.",
+              "Karena partikel gas bergerak lambat.",
+              "Karena jarak antar partikel gas sangat berjauhan sehingga masih banyak ruang kosong.",
+              "Karena partikel gas berukuran paling kecil dibanding partikel lainnya."
+            ],
+            ans: 2,
+            exp: "Sifat utama gas adalah jarak antar partikelnya yang sangat renggang (berjauhan). Ruang kosong ini memungkinkan gas ditekan/dimampatkan."
+          }
+        ];
+
+        const [current, setCurrent] = useState(0);
+        const [selected, setSelected] = useState(null);
+        const [showExp, setShowExp] = useState(false);
+        const [score, setScore] = useState(0);
+        const [finished, setFinished] = useState(false);
+
+        const submitAnswer = () => {
+          setShowExp(true);
+          if (selected === questions[current].ans) {
+            setScore(score + 100/questions.length);
+          }
+        };
+
+        const nextQuestion = () => {
+          if (current < questions.length - 1) {
+            setCurrent(current + 1);
+            setSelected(null);
+            setShowExp(false);
+          } else {
+            setFinished(true);
+            markTabCompleted('asesmen');
+          }
+        };
+
+        if (finished) {
+          return (
+            <div className="p-6 max-w-2xl mx-auto animate-fade-in text-center">
+              <div className="bg-white rounded-2xl shadow-lg p-8 border-t-8 border-blue-500">
+                <h2 className="text-4xl font-bold text-gray-800 mb-4">Evaluasi Selesai! 🎉</h2>
+                <div className="text-6xl font-extrabold text-blue-500 mb-2">{Math.round(score)}</div>
+                <p className="text-gray-500 mb-8">Skor Pemahamanmu</p>
+                <button
+                  onClick={() => navigateTo('refleksi')}
+                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full shadow-md transition-all"
+                >
+                  Tahap Terakhir: Refleksi Diri 🧠
+                </button>
+              </div>
+            </div>
+          );
+        }
+
+        const q = questions[current];
+
+        return (
+          <div className="p-4 sm:p-6 max-w-4xl mx-auto animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-t-8 border-blue-500">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-800">Uji Pemahaman HOTS</h2>
+                <span className="text-sm font-bold bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Soal {current + 1}/{questions.length}</span>
+              </div>
+
+              <p className="font-medium text-gray-800 text-lg mb-6 leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-200">{q.q}</p>
+              
+              <div className="space-y-3 mb-6">
+                {q.opts.map((opt, idx) => (
+                  <button
+                    key={idx}
+                    disabled={showExp}
+                    onClick={() => setSelected(idx)}
+                    className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
+                      showExp 
+                        ? (idx === q.ans ? 'bg-green-100 border-green-500 text-green-900 font-medium' : (idx === selected ? 'bg-red-100 border-red-400 text-red-800' : 'bg-gray-50 opacity-50 border-gray-200'))
+                        : (selected === idx ? 'bg-blue-100 border-blue-500 text-blue-800 font-medium' : 'bg-white border-gray-300 hover:border-blue-300 hover:bg-gray-50')
+                    }`}
+                  >
+                    {String.fromCharCode(65 + idx)}. {opt}
+                  </button>
+                ))}
+              </div>
+
+              {showExp && (
+                <div className="mb-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg text-blue-800 animate-slide-up">
+                  <span className="font-bold">Penjelasan:</span> {q.exp}
+                </div>
+              )}
+
+              <div className="flex justify-end">
+                {!showExp ? (
+                  <button onClick={submitAnswer} disabled={selected === null} className="bg-blue-600 text-white px-8 py-3 rounded-full font-bold shadow-md disabled:bg-gray-300 transition-colors">
+                    Kunci Jawaban
+                  </button>
+                ) : (
+                  <button onClick={nextQuestion} className="bg-blue-800 text-white px-8 py-3 rounded-full font-bold shadow-md hover:bg-blue-900 transition-colors">
+                    Selanjutnya
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      const Refleksi = () => {
+        const [submitted, setSubmitted] = useState(false);
+
+        return (
+          <div className="p-4 sm:p-6 max-w-4xl mx-auto animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-t-8 border-green-500">
+              <h2 className="text-3xl font-bold text-gray-800 mb-4 flex items-center">
+                <span className="text-4xl mr-3">💭</span> Jurnal Refleksi Belajar
+              </h2>
+              
+              {!submitted ? (
+                <div className="space-y-6 mt-6">
+                  <p className="text-gray-600 bg-green-50 p-4 rounded-xl border border-green-100">
+                    Luar biasa! Kamu telah melalui proses Memahami, Mengaplikasi, dan Mengevaluasi. Sekarang, luangkan waktu sejenak untuk <strong>Berkesadaran</strong> memikirkan proses belajarmu hari ini.
+                  </p>
+                  
+                  <div>
+                    <label className="block text-gray-700 font-bold mb-2">1. Konsep mana yang menurutmu paling mudah dipahami hari ini, dan mengapa?</label>
+                    <textarea className="w-full border-2 border-gray-300 rounded-xl p-3 focus:border-green-500 outline-none transition-colors" rows="3" placeholder="Contoh: Saya paling mudah memahami Wujud Zat karena model partikelnya terlihat jelas..."></textarea>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-gray-700 font-bold mb-2">2. Apa kesulitan yang kamu alami (misal: saat menghitung rumus), dan bagaimana caramu mengatasinya?</label>
+                    <textarea className="w-full border-2 border-gray-300 rounded-xl p-3 focus:border-green-500 outline-none transition-colors" rows="3" placeholder="Tuliskan refleksimu di sini..."></textarea>
+                  </div>
+
+                  <button
+                    onClick={() => { setSubmitted(true); markTabCompleted('refleksi'); }}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl shadow-md transition-all text-lg"
+                  >
+                    Simpan Jurnal & Selesai
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center py-12 animate-slide-up">
+                  <div className="text-6xl mb-4">🌟</div>
+                  <h3 className="text-3xl font-bold text-green-700 mb-4">Misi Berhasil Diselesaikan!</h3>
+                  <p className="text-gray-600 mb-8 max-w-lg mx-auto text-lg">
+                    Selamat! Kamu telah membuktikan dirimu sebagai penjelajah sains yang tangguh. Teruslah kritis, mandiri, dan bersemangat mengamati keajaiban materi di sekitarmu!
+                  </p>
+                  <button
+                    onClick={() => navigateTo('beranda')}
+                    className="bg-gray-100 text-gray-700 font-bold py-3 px-8 rounded-full border border-gray-300 hover:bg-gray-200 transition-colors"
+                  >
+                    Kembali ke Beranda
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      };
+
+      return (
+        <div className="min-h-screen bg-gray-100 font-sans text-gray-800 pb-16">
+          <NavBar />
+          
+          <main className="mt-6">
+            {currentTab === 'beranda' && <Beranda />}
+            {currentTab === 'materi' && <Materi />}
+            {currentTab === 'eksplorasi' && <Eksplorasi />}
+            {currentTab === 'praktikum' && <Praktikum />}
+            {currentTab === 'massajenis' && <MassaJenis />}
+            {currentTab === 'tantangan' && <Tantangan />}
+            {currentTab === 'asesmen' && <Asesmen />}
+            {currentTab === 'refleksi' && <Refleksi />}
+          </main>
+          
+          <footer className="fixed bottom-0 w-full text-center p-3 text-xs sm:text-sm text-gray-500 bg-white border-t z-40 shadow-inner">
+            Pembelajaran Mendalam | IPA Fase D SMP - Zat dan Perubahannya
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
